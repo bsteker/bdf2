@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ViewConfig listener="spring:bdf2.registerWizard#onInit">
+  <Arguments/>
+  <Context/>
+  <Model>
+    <DataType name="dataTypeCompany">
+      <PropertyDef name="id">
+        <Property name="dataType">String</Property>
+        <Property name="label">公司ID</Property>
+        <Property name="required">true</Property>
+        <Validator type="length">
+          <Property name="minLength">2</Property>
+          <Property name="maxLength">60</Property>
+          <Property name="resultMessage">公司ID长度需要在2~60位之间</Property>
+        </Validator>
+        <Validator type="ajax">
+          <Property name="service">bdf2.registerWizard#checkCompanyExist</Property>
+        </Validator>
+      </PropertyDef>
+      <PropertyDef name="name">
+        <Property name="dataType">String</Property>
+        <Property name="label">公司名</Property>
+      </PropertyDef>
+      <PropertyDef name="desc">
+        <Property name="dataType">String</Property>
+        <Property name="label">描述</Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="dataTypeUser" parent="global:$dataTypeUser">
+      <PropertyDef name="username">
+        <Property name="dataType">String</Property>
+        <Property name="label">用户名</Property>
+        <Property name="required">true</Property>
+        <Validator type="ajax">
+          <Property name="service">bdf2.registerWizard#checkUserExist</Property>
+        </Validator>
+        <Validator type="length">
+          <Property name="minLength">5</Property>
+          <Property name="maxLength">60</Property>
+          <Property name="resultMessage">用户名长度要在5~60之间</Property>
+        </Validator>
+      </PropertyDef>
+      <PropertyDef name="password">
+        <Property name="dataType">String</Property>
+        <Property name="label">密码</Property>
+        <Property name="required">true</Property>
+        <Validator type="length">
+          <Property name="minLength">5</Property>
+          <Property name="maxLength">60</Property>
+          <Property name="resultMessage">密码长度需要在5~60位之间</Property>
+        </Validator>
+      </PropertyDef>
+      <PropertyDef name="confirmPassword">
+        <Property name="dataType">String</Property>
+        <Property name="label">重复密码</Property>
+        <Property name="required">true</Property>
+        <Validator type="length">
+          <Property name="minLength">5</Property>
+          <Property name="maxLength">60</Property>
+          <Property name="resultMessage">密码长度需要在5~60位之间</Property>
+        </Validator>
+        <Validator type="custom">
+          <ClientEvent name="onValidate">var password=arg.entity.get(&quot;password&quot;);&#xD;
+if(arg.data!=password){&#xD;
+	arg.result={text:&quot;两次输入的密码不一致&quot;};&#xD;
+}&#xD;
+</ClientEvent>
+        </Validator>
+      </PropertyDef>
+      <PropertyDef name="cname">
+        <Property name="dataType">String</Property>
+        <Property name="label">中文名</Property>
+      </PropertyDef>
+      <PropertyDef name="ename">
+        <Property name="dataType">String</Property>
+        <Property name="label">英文名</Property>
+      </PropertyDef>
+      <PropertyDef name="mobile">
+        <Property name="dataType">String</Property>
+        <Property name="label">手机号</Property>
+      </PropertyDef>
+      <PropertyDef name="email">
+        <Property name="dataType">String</Property>
+        <Property name="label">邮件地址</Property>
+      </PropertyDef>
+    </DataType>
+  </Model>
+  <View layout="vbox align:center">
+    <Property name="title">系统管理员用户初始化注册</Property>
+    <DataSet id="dataSetCompany">
+      <ClientEvent name="onReady">var ds=view.id(&quot;dataSetCompany&quot;);&#xD;
+ds.set(&quot;data&quot;,{name:&quot;XXXX&quot;,desc:&quot;XXXX有限公司&quot;});&#xD;
+ds.getData().setState(dorado.Entity.STATE_MODIFIED); </ClientEvent>
+      <Property name="dataType">dataTypeCompany</Property>
+    </DataSet>
+    <DataSet id="dataSetUser">
+      <ClientEvent name="onReady">var ds=view.id(&quot;dataSetUser&quot;);&#xD;
+ds.set(&quot;data&quot;,{cname:&quot;系统管理员&quot;,ename:&quot;administrator&quot;,mobile:&quot;18917888888&quot;,email:&quot;xxxx@xxxx.com&quot;});&#xD;
+ds.getData().setState(dorado.Entity.STATE_MODIFIED); </ClientEvent>
+      <Property name="dataType">dataTypeUser</Property>
+    </DataSet>
+    <Label layoutConstraint="align:center">
+      <Property name="style">
+        <Property name="background">yellow</Property>
+        <Property name="padding">10px</Property>
+        <Property name="border">solid gray 1px</Property>
+        <Property name="text-align">center</Property>
+      </Property>
+      <Property name="text">系统管理员注册时，需要提供公司相关信息，注册时用户名请不要包含中文，否则将无法登录系统</Property>
+    </Label>
+    <Panel layoutConstraint="padding:5">
+      <Property name="caption">公司信息</Property>
+      <Property name="width">400</Property>
+      <Buttons/>
+      <Children>
+        <AutoForm>
+          <Property name="dataSet">dataSetCompany</Property>
+          <Property name="cols">*</Property>
+          <AutoFormElement>
+            <Property name="name">id</Property>
+            <Property name="property">id</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="property">name</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="property">desc</Property>
+            <Property name="editorType">TextArea</Property>
+            <Editor/>
+          </AutoFormElement>
+        </AutoForm>
+      </Children>
+      <Tools/>
+    </Panel>
+    <Panel layoutConstraint="padding:5">
+      <Property name="caption">用户信息</Property>
+      <Property name="width">400</Property>
+      <Buttons>
+        <Button id="buttonSubmit">
+          <Property name="caption">提交注册</Property>
+          <Property name="action">updateActionSubmit</Property>
+        </Button>
+      </Buttons>
+      <Children>
+        <AutoForm>
+          <Property name="dataSet">dataSetUser</Property>
+          <Property name="cols">*</Property>
+          <AutoFormElement>
+            <Property name="name">username</Property>
+            <Property name="property">username</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">password</Property>
+            <Property name="property">password</Property>
+            <Property name="editorType">PasswordEditor</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">confirmPassword</Property>
+            <Property name="property">confirmPassword</Property>
+            <Property name="editorType">PasswordEditor</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">cname</Property>
+            <Property name="property">cname</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">ename</Property>
+            <Property name="property">ename</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">email</Property>
+            <Property name="property">email</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">mobile</Property>
+            <Property name="property">mobile</Property>
+            <Editor/>
+          </AutoFormElement>
+        </AutoForm>
+      </Children>
+      <Tools/>
+    </Panel>
+    <UpdateAction id="updateActionSubmit">
+      <ClientEvent name="onSuccess">view.id(&quot;dataSetCompany&quot;).set(&quot;readOnly&quot;,true);&#xD;
+view.id(&quot;dataSetUser&quot;).set(&quot;readOnly&quot;,true);&#xD;
+view.id(&quot;buttonSubmit&quot;).set(&quot;disabled&quot;,true);&#xD;
+dorado.MessageBox.alert(&quot;注册成功，点击确认后登录系统！&quot;,function(){&#xD;
+	var url=&quot;${request.getContextPath()}&quot;+&quot;${configure.getString(&quot;bdf2.formLoginUrl&quot;)}&quot;;&#xD;
+	open(url,&quot;_self&quot;);&#xD;
+})&#xD;
+</ClientEvent>
+      <Property name="dataResolver">bdf2.registerWizard#registerCompanyAndUser</Property>
+      <UpdateItem>
+        <Property name="dataSet">dataSetCompany</Property>
+        <Property name="alias">company</Property>
+      </UpdateItem>
+      <UpdateItem>
+        <Property name="dataSet">dataSetUser</Property>
+        <Property name="alias">user</Property>
+      </UpdateItem>
+    </UpdateAction>
+  </View>
+</ViewConfig>

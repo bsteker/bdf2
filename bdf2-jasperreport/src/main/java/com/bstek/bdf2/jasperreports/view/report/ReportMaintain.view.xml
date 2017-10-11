@@ -1,0 +1,588 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ViewConfig>
+  <Arguments/>
+  <Context/>
+  <Model>
+    <DataType name="dataTypeReportDefinition">
+      <ClientEvent name="onDataChange">if(arg.property==&quot;dataSourceType&quot;){&#xD;
+	var value=arg.newValue;&#xD;
+	if(value==&quot;Jdbc&quot;){&#xD;
+		view.tag(&quot;dataSourceEditor&quot;).set(&quot;trigger&quot;,view.id(&quot;triggerDataSource&quot;));&#xD;
+	}else{&#xD;
+		view.tag(&quot;dataSourceEditor&quot;).set(&quot;trigger&quot;,view.id(&quot;triggerDataSourceProvider&quot;));&#xD;
+	}&#xD;
+}</ClientEvent>
+      <Property name="creationType">com.bstek.bdf2.jasperreports.model.ReportDefinition</Property>
+      <PropertyDef name="id">
+        <Property name="dataType">String</Property>
+        <Property name="label">ID</Property>
+        <Property name="required">true</Property>
+        <Validator type="ajax">
+          <Property name="service">bdf2.reportDefinition#checkDefinitionExist</Property>
+        </Validator>
+      </PropertyDef>
+      <PropertyDef name="name">
+        <Property name="dataType">String</Property>
+        <Property name="label">名称</Property>
+        <Property name="required">true</Property>
+      </PropertyDef>
+      <PropertyDef name="reportFile">
+        <Property name="dataType">String</Property>
+        <Property name="required">true</Property>
+      </PropertyDef>
+      <PropertyDef name="reportFileName">
+        <Property name="dataType">String</Property>
+        <Property name="label">报表文件</Property>
+      </PropertyDef>
+      <PropertyDef name="createDate">
+        <Property name="dataType">Date</Property>
+        <Property name="label">创建日期</Property>
+      </PropertyDef>
+      <PropertyDef name="dataSourceType">
+        <Property name="label">数据源类型</Property>
+        <Property name="mapping">
+          <Property name="keyProperty">key</Property>
+          <Property name="valueProperty">value</Property>
+          <Property name="mapValues">
+            <Collection>
+              <Entity>
+                <Property name="key">Jdbc</Property>
+                <Property name="value">Jdbc</Property>
+              </Entity>
+              <Entity>
+                <Property name="key">Map</Property>
+                <Property name="value">Map</Property>
+              </Entity>
+              <Entity>
+                <Property name="key">JavaBean</Property>
+                <Property name="value">JavaBean</Property>
+              </Entity>
+            </Collection>
+          </Property>
+        </Property>
+        <Property name="defaultValue">Jdbc</Property>
+      </PropertyDef>
+      <PropertyDef name="dataSource">
+        <Property name="dataType">String</Property>
+        <Property name="label">数据来源</Property>
+      </PropertyDef>
+      <Reference name="parameters">
+        <Property name="dataType">[dataTypeReportParameter]</Property>
+        <Property name="dataProvider">bdf2.reportDefinition#loadParameters</Property>
+        <Property name="parameter">$${this.id}</Property>
+      </Reference>
+      <Reference name="resources">
+        <Property name="dataProvider">bdf2.reportDefinition#loadResources</Property>
+        <Property name="dataType">[dataTypeReportResource]</Property>
+        <Property name="parameter">$${this.id}</Property>
+      </Reference>
+    </DataType>
+    <DataType name="dataTypeReportParameter">
+      <Property name="creationType">com.bstek.bdf2.jasperreports.model.ReportParameter</Property>
+      <PropertyDef name="id">
+        <Property name="dataType">String</Property>
+      </PropertyDef>
+      <PropertyDef name="name">
+        <Property name="dataType">String</Property>
+        <Property name="label">参数名称</Property>
+        <Property name="required">true</Property>
+      </PropertyDef>
+      <PropertyDef name="value">
+        <Property name="dataType">String</Property>
+        <Property name="label">参数值</Property>
+        <Property name="required">true</Property>
+      </PropertyDef>
+      <PropertyDef name="reportDefinitionId">
+        <Property name="dataType">String</Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="dataTypeReportResource">
+      <Property name="creationType">com.bstek.bdf2.jasperreports.model.ReportResource</Property>
+      <PropertyDef name="id">
+        <Property name="dataType">String</Property>
+      </PropertyDef>
+      <PropertyDef name="name">
+        <Property name="dataType">String</Property>
+        <Property name="label">名称</Property>
+        <Property name="required">true</Property>
+      </PropertyDef>
+      <PropertyDef name="resourceFile">
+        <Property name="dataType">String</Property>
+      </PropertyDef>
+      <PropertyDef name="resourceFileName">
+        <Property name="dataType">String</Property>
+        <Property name="label">资源文件</Property>
+      </PropertyDef>
+      <PropertyDef name="reportDefinitionId">
+        <Property name="dataType">String</Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="dataTypeDataSource">
+      <PropertyDef name="name">
+        <Property name="label">可用数据源名称</Property>
+        <Property name="dataType">String</Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="dataTypeDataSourceProvider">
+      <PropertyDef name="name">
+        <Property name="label">IReportDataProvider接口实现类BeanId</Property>
+        <Property name="dataType">String</Property>
+      </PropertyDef>
+    </DataType>
+  </Model>
+  <View>
+    <DataSet id="dataSetReportDefinition">
+      <Property name="dataType">[dataTypeReportDefinition]</Property>
+      <Property name="dataProvider">bdf2.reportDefinition#loadDefinitions</Property>
+      <Property name="pageSize">20</Property>
+    </DataSet>
+    <DataSet id="dataSetDataSourceProvider">
+      <Property name="dataType">[dataTypeDataSourceProvider]</Property>
+      <Property name="dataProvider">bdf2.reportDefinition#loadDataSourceProviders</Property>
+    </DataSet>
+    <DataSet id="dataSetDataSource">
+      <Property name="dataType">[dataTypeDataSource]</Property>
+      <Property name="dataProvider">bdf2.reportDefinition#loadDataSources</Property>
+    </DataSet>
+    <SplitPanel>
+      <Property name="position">50%</Property>
+      <MainControl>
+        <Container>
+          <TabControl>
+            <ControlTab>
+              <Property name="caption">报表参数定义</Property>
+              <Container>
+                <ToolBar>
+                  <DataPilot>
+                    <ClientEvent name="onSubControlAction">var ds=view.id(&quot;dataSetReportDefinition&quot;);&#xD;
+switch(arg.code){&#xD;
+	case &quot;+&quot;:&#xD;
+		ds.getData(&quot;#.parameters&quot;).insert({reportDefinitionId:ds.getData(&quot;#.id&quot;)});&#xD;
+		arg.processDefault=false;&#xD;
+		break;&#xD;
+}</ClientEvent>
+                    <Property name="dataSet">dataSetReportDefinition</Property>
+                    <Property name="dataPath">#.parameters</Property>
+                    <Property name="itemCodes">+,-</Property>
+                  </DataPilot>
+                  <ToolBarButton>
+                    <Property name="caption">保存</Property>
+                    <Property name="icon">url(skin>common/icons.gif) -140px -20px</Property>
+                    <Property name="action">updateActionReport</Property>
+                  </ToolBarButton>
+                </ToolBar>
+                <DataGrid>
+                  <Property name="dataSet">dataSetReportDefinition</Property>
+                  <Property name="dataPath">#.parameters</Property>
+                  <DataColumn name="name">
+                    <Property name="property">name</Property>
+                  </DataColumn>
+                  <DataColumn name="value">
+                    <Property name="property">value</Property>
+                  </DataColumn>
+                </DataGrid>
+              </Container>
+            </ControlTab>
+            <ControlTab>
+              <Property name="caption">报表用到的资源文件</Property>
+              <Container>
+                <ToolBar>
+                  <DataPilot>
+                    <ClientEvent name="onSubControlAction">var ds=view.id(&quot;dataSetReportDefinition&quot;);&#xD;
+switch(arg.code){&#xD;
+	case &quot;+&quot;:&#xD;
+		ds.getData(&quot;#.resources&quot;).insert({reportDefinitionId:ds.getData(&quot;#.id&quot;)});&#xD;
+		view.id(&quot;dialogResource&quot;).show();&#xD;
+		arg.processDefault=false;&#xD;
+		break;&#xD;
+	case &quot;-&quot;:&#xD;
+		dorado.MessageBox.confirm(&quot;真的要删除当前报表资源信息吗？&quot;,function(){&#xD;
+			ds.getData(&quot;#.#resources&quot;).remove();&#xD;
+			view.id(&quot;updateActionReport&quot;).execute();&#xD;
+		});&#xD;
+		arg.processDefault=false;&#xD;
+		break;&#xD;
+}</ClientEvent>
+                    <Property name="dataSet">dataSetReportDefinition</Property>
+                    <Property name="dataPath">#.resources</Property>
+                    <Property name="itemCodes">+,-</Property>
+                  </DataPilot>
+                  <ToolBarButton>
+                    <ClientEvent name="onClick">var ds=view.id(&quot;dataSetReportDefinition&quot;);&#xD;
+if(ds.getData(&quot;#.#resources&quot;)){&#xD;
+	view.id(&quot;dialogResource&quot;).show();&#xD;
+}else{&#xD;
+	dorado.MessageBox.alert(&quot;当前没有数据可供编辑！&quot;);&#xD;
+}</ClientEvent>
+                    <Property name="caption">修改</Property>
+                    <Property name="icon">url(skin>common/icons.gif) -200px 0px</Property>
+                  </ToolBarButton>
+                </ToolBar>
+                <DataGrid>
+                  <Property name="dataSet">dataSetReportDefinition</Property>
+                  <Property name="dataPath">#.resources</Property>
+                  <Property name="readOnly">true</Property>
+                  <DataColumn name="name">
+                    <Property name="property">name</Property>
+                  </DataColumn>
+                  <DataColumn>
+                    <Property name="property">resourceFileName</Property>
+                    <Property name="name">resourceFileName</Property>
+                  </DataColumn>
+                </DataGrid>
+                <Dialog id="dialogResource">
+                  <Property name="center">true</Property>
+                  <Property name="modal">true</Property>
+                  <Property name="width">500</Property>
+                  <Property name="height">200</Property>
+                  <Buttons>
+                    <Button>
+                      <ClientEvent name="onClick">view.id(&quot;updateActionReport&quot;).execute(function(){&#xD;
+	view.id(&quot;dialogResource&quot;).hide();&#xD;
+});</ClientEvent>
+                      <Property name="caption">确定</Property>
+                      <Property name="icon">url(skin>common/icons.gif) -140px -20px</Property>
+                    </Button>
+                    <Button>
+                      <ClientEvent name="onClick">view.id(&quot;dataSetReportDefinition&quot;).getData(&quot;#.resources&quot;).cancel();&#xD;
+view.id(&quot;dialogResource&quot;).hide();</ClientEvent>
+                      <Property name="icon">url(skin>common/icons.gif) -40px 0px</Property>
+                      <Property name="caption">取消</Property>
+                    </Button>
+                  </Buttons>
+                  <Children>
+                    <AutoForm>
+                      <Property name="cols">*</Property>
+                      <Property name="dataSet">dataSetReportDefinition</Property>
+                      <Property name="dataPath">#.#resources</Property>
+                      <AutoFormElement>
+                        <Property name="name">name</Property>
+                        <Property name="property">name</Property>
+                        <Editor/>
+                      </AutoFormElement>
+                      <AutoFormElement>
+                        <Property name="name">resourceFileName</Property>
+                        <Property name="property">resourceFileName</Property>
+                        <Editor>
+                          <Container layout="hbox">
+                            <TextEditor>
+                              <Property name="dataSet">dataSetReportDefinition</Property>
+                              <Property name="dataPath">#.#resources</Property>
+                              <Property name="property">resourceFileName</Property>
+                              <Property name="readOnly">true</Property>
+                              <Property name="width">250</Property>
+                            </TextEditor>
+                            <RichUploader>
+                              <ClientEvent name="onSuccess">var data=view.id(&quot;dataSetReportDefinition&quot;).getData(&quot;#.#resources&quot;);&#xD;
+data.set(&quot;resourceFile&quot;,arg.id);&#xD;
+data.set(&quot;resourceFileName&quot;,arg.filename);</ClientEvent>
+                              <ClientEvent name="onFail">dorado.MessageBox.alert(&quot;文件上传失败：&quot;+arg.errorMessage);</ClientEvent>
+                              <Property name="caption">上传资源文件</Property>
+                              <Property name="width">100</Property>
+                            </RichUploader>
+                          </Container>
+                        </Editor>
+                      </AutoFormElement>
+                    </AutoForm>
+                  </Children>
+                  <Tools/>
+                </Dialog>
+              </Container>
+            </ControlTab>
+          </TabControl>
+        </Container>
+      </MainControl>
+      <SideControl>
+        <Container>
+          <ToolBar>
+            <DataPilot>
+              <ClientEvent name="onSubControlAction">var ds=view.id(&quot;dataSetReportDefinition&quot;);&#xD;
+switch(arg.code){&#xD;
+	case &quot;+&quot;:&#xD;
+		ds.insert();&#xD;
+		view.tag(&quot;reportId&quot;).set(&quot;readOnly&quot;,false);&#xD;
+		view.id(&quot;dialogReport&quot;).show();&#xD;
+		arg.processDefault=false;&#xD;
+		break;&#xD;
+	case &quot;-&quot;:&#xD;
+		dorado.MessageBox.confirm(&quot;真的要删除当前报表信息吗？&quot;,function(){&#xD;
+			ds.getData(&quot;#&quot;).remove();&#xD;
+			view.id(&quot;updateActionReport&quot;).execute();&#xD;
+		});&#xD;
+		arg.processDefault=false;&#xD;
+		break;&#xD;
+}</ClientEvent>
+              <Property name="dataSet">dataSetReportDefinition</Property>
+              <Property name="itemCodes">pages,+,-</Property>
+            </DataPilot>
+            <ToolBarButton>
+              <ClientEvent name="onClick">var ds=view.id(&quot;dataSetReportDefinition&quot;);&#xD;
+if(ds.getData(&quot;#&quot;)){&#xD;
+	view.id(&quot;dialogReport&quot;).show();&#xD;
+	view.tag(&quot;reportId&quot;).set(&quot;readOnly&quot;,true);&#xD;
+}else{&#xD;
+	dorado.MessageBox.alert(&quot;当前没有数据可供编辑！&quot;);&#xD;
+}</ClientEvent>
+              <Property name="caption">修改</Property>
+              <Property name="icon">url(skin>common/icons.gif) -200px 0px</Property>
+            </ToolBarButton>
+            <ToolBarButton>
+              <ClientEvent name="onClick">var data=view.id(&quot;dataSetReportDefinition&quot;).getData(&quot;#&quot;);&#xD;
+if(data){&#xD;
+	view.id(&quot;dialogExportReport&quot;).show();&#xD;
+}else{&#xD;
+	dorado.MessageBox.alert(&quot;请先选择要导出的报表！&quot;)&#xD;
+}</ClientEvent>
+              <Property name="caption">预览报表</Property>
+              <Property name="icon">url(skin>common/icons.gif) -120px -120px</Property>
+            </ToolBarButton>
+          </ToolBar>
+          <DataGrid>
+            <Property name="dataSet">dataSetReportDefinition</Property>
+            <Property name="showFilterBar">true</Property>
+            <Property name="filterMode">serverSide</Property>
+            <Property name="readOnly">true</Property>
+            <DataColumn name="id">
+              <Property name="property">id</Property>
+            </DataColumn>
+            <DataColumn name="name">
+              <Property name="property">name</Property>
+            </DataColumn>
+            <DataColumn name="dataSourceType">
+              <Property name="property">dataSourceType</Property>
+            </DataColumn>
+            <DataColumn name="dataSource">
+              <Property name="property">dataSource</Property>
+            </DataColumn>
+            <DataColumn>
+              <Property name="property">reportFileName</Property>
+              <Property name="filterable">false</Property>
+              <Property name="name">reportFileName</Property>
+            </DataColumn>
+          </DataGrid>
+          <Dialog id="dialogReport">
+            <Property name="center">true</Property>
+            <Property name="width">500</Property>
+            <Property name="height">260</Property>
+            <Property name="modal">true</Property>
+            <Buttons>
+              <Button>
+                <ClientEvent name="onClick">view.id(&quot;updateActionReport&quot;).execute(function(){&#xD;
+	view.id(&quot;dialogReport&quot;).hide();&#xD;
+});</ClientEvent>
+                <Property name="caption">确定</Property>
+                <Property name="icon">url(skin>common/icons.gif) -140px -20px</Property>
+              </Button>
+              <Button>
+                <ClientEvent name="onClick">view.id(&quot;dataSetReportDefinition&quot;).getData().cancel();&#xD;
+view.id(&quot;dialogReport&quot;).hide();</ClientEvent>
+                <Property name="icon">url(skin>common/icons.gif) -40px 0px</Property>
+                <Property name="caption">取消</Property>
+              </Button>
+            </Buttons>
+            <Children>
+              <AutoForm>
+                <Property name="dataSet">dataSetReportDefinition</Property>
+                <Property name="cols">*</Property>
+                <AutoFormElement>
+                  <Property name="name">id</Property>
+                  <Property name="property">id</Property>
+                  <Property name="tags">reportId</Property>
+                  <Editor/>
+                </AutoFormElement>
+                <AutoFormElement>
+                  <Property name="name">name</Property>
+                  <Property name="property">name</Property>
+                  <Editor/>
+                </AutoFormElement>
+                <AutoFormElement>
+                  <Property name="name">reportFileName</Property>
+                  <Property name="property">reportFileName</Property>
+                  <Editor>
+                    <Container layout="hbox">
+                      <TextEditor>
+                        <Property name="dataSet">dataSetReportDefinition</Property>
+                        <Property name="property">reportFileName</Property>
+                        <Property name="width">252</Property>
+                        <Property name="readOnly">true</Property>
+                      </TextEditor>
+                      <RichUploader>
+                        <ClientEvent name="onSuccess">var data=view.id(&quot;dataSetReportDefinition&quot;).getData(&quot;#&quot;);&#xD;
+data.set(&quot;reportFile&quot;,arg.id);&#xD;
+data.set(&quot;reportFileName&quot;,arg.filename);</ClientEvent>
+                        <ClientEvent name="onFail">dorado.MessageBox.alert(&quot;文件上传失败：&quot;+arg.errorMessage);</ClientEvent>
+                        <Property name="caption">上传报表文件</Property>
+                        <Property name="width">100</Property>
+                        <Property name="allowFileTypes">jasper</Property>
+                      </RichUploader>
+                    </Container>
+                  </Editor>
+                </AutoFormElement>
+                <AutoFormElement>
+                  <Property name="name">dataSourceType</Property>
+                  <Property name="property">dataSourceType</Property>
+                  <Property name="editorType">RadioGroup</Property>
+                  <Editor/>
+                </AutoFormElement>
+                <AutoFormElement>
+                  <Property name="name">dataSource</Property>
+                  <Property name="property">dataSource</Property>
+                  <Property name="tags">dataSourceEditor</Property>
+                  <Property name="trigger">triggerDataSource</Property>
+                  <Editor/>
+                </AutoFormElement>
+              </AutoForm>
+              <Dialog id="dialogDataSource">
+                <Property name="center">true</Property>
+                <Property name="modal">true</Property>
+                <Property name="width">400</Property>
+                <Property name="height">400</Property>
+                <Buttons>
+                  <Button>
+                    <ClientEvent name="onClick">var name=view.id(&quot;dataSetDataSource&quot;).getData(&quot;#.name&quot;);&#xD;
+if(name){&#xD;
+	view.id(&quot;dataSetReportDefinition&quot;).getData(&quot;#&quot;).set(&quot;dataSource&quot;,name)&#xD;
+	view.id(&quot;dialogDataSource&quot;).hide();&#xD;
+}else{&#xD;
+	dorado.MessageBox.alert(&quot;请先选择一个数据源名称！&quot;)&#xD;
+}&#xD;
+</ClientEvent>
+                    <Property name="caption">确定</Property>
+                    <Property name="icon">url(skin>common/icons.gif) -140px -20px</Property>
+                  </Button>
+                  <Button>
+                    <ClientEvent name="onClick">view.id(&quot;dialogDataSource&quot;).hide();</ClientEvent>
+                    <Property name="icon">url(skin>common/icons.gif) -40px 0px</Property>
+                    <Property name="caption">取消</Property>
+                  </Button>
+                </Buttons>
+                <Children>
+                  <DataGrid>
+                    <Property name="dataSet">dataSetDataSource</Property>
+                    <Property name="readOnly">true</Property>
+                    <DataColumn name="name">
+                      <Property name="property">name</Property>
+                    </DataColumn>
+                  </DataGrid>
+                </Children>
+                <Tools/>
+              </Dialog>
+              <Trigger id="triggerDataSource">
+                <ClientEvent name="onExecute">view.id(&quot;dialogDataSource&quot;).show();</ClientEvent>
+              </Trigger>
+              <Dialog id="dialogDataSourceProvider">
+                <Property name="center">true</Property>
+                <Property name="modal">true</Property>
+                <Property name="width">400</Property>
+                <Property name="height">400</Property>
+                <Buttons>
+                  <Button>
+                    <ClientEvent name="onClick">var name=view.id(&quot;dataSetDataSourceProvider&quot;).getData(&quot;#.name&quot;);&#xD;
+if(name){&#xD;
+	view.id(&quot;dataSetReportDefinition&quot;).getData(&quot;#&quot;).set(&quot;dataSource&quot;,name)&#xD;
+	view.id(&quot;dialogDataSourceProvider&quot;).hide();&#xD;
+}else{&#xD;
+	dorado.MessageBox.alert(&quot;请先选择一个BeanId！&quot;)&#xD;
+}&#xD;
+</ClientEvent>
+                    <Property name="caption">确定</Property>
+                    <Property name="icon">url(skin>common/icons.gif) -140px -20px</Property>
+                  </Button>
+                  <Button>
+                    <ClientEvent name="onClick">view.id(&quot;dialogDataSourceProvider&quot;).hide();</ClientEvent>
+                    <Property name="icon">url(skin>common/icons.gif) -40px 0px</Property>
+                    <Property name="caption">取消</Property>
+                  </Button>
+                </Buttons>
+                <Children>
+                  <DataGrid>
+                    <Property name="dataSet">dataSetDataSourceProvider</Property>
+                    <Property name="readOnly">true</Property>
+                    <DataColumn name="name">
+                      <Property name="property">name</Property>
+                    </DataColumn>
+                  </DataGrid>
+                </Children>
+                <Tools/>
+              </Dialog>
+              <Trigger id="triggerDataSourceProvider">
+                <ClientEvent name="onExecute">view.id(&quot;dialogDataSourceProvider&quot;).show();</ClientEvent>
+              </Trigger>
+            </Children>
+            <Tools/>
+          </Dialog>
+          <UpdateAction id="updateActionReport">
+            <Property name="dataResolver">bdf2.reportDefinition#saveDefinitions</Property>
+            <Property name="successMessage">操作成功！</Property>
+            <UpdateItem>
+              <Property name="dataSet">dataSetReportDefinition</Property>
+            </UpdateItem>
+          </UpdateAction>
+          <Dialog id="dialogExportReport">
+            <Property name="center">true</Property>
+            <Property name="modal">true</Property>
+            <Property name="width">380</Property>
+            <Property name="height">160</Property>
+            <Buttons>
+              <Button>
+                <ClientEvent name="onClick">var entity=view.id(&quot;autoFormExportReport&quot;).get(&quot;entity&quot;);&#xD;
+if(entity &amp;&amp; entity.type){&#xD;
+	var type=entity.type;&#xD;
+	var dialog=view.id(&quot;dialogExportResult&quot;);&#xD;
+	dialog.show(function(){&#xD;
+		var jasper=view.id(&quot;jasperreportsExporter&quot;);&#xD;
+		var data=view.id(&quot;dataSetReportDefinition&quot;).getData(&quot;#&quot;);&#xD;
+		jasper.set(&quot;exportFileType&quot;,type);&#xD;
+		jasper.set(&quot;dataSourceProvider&quot;,data.get(&quot;dataSource&quot;));&#xD;
+		jasper.set(&quot;dataSourceType&quot;,data.get(&quot;dataSourceType&quot;));&#xD;
+		jasper.set(&quot;reportFile&quot;,data.get(&quot;id&quot;));&#xD;
+		jasper.execute();&#xD;
+		if(type!=&quot;jrpxml&quot; &amp;&amp; type!=&quot;html&quot;){&#xD;
+			dialog.hide();&#xD;
+		}	&#xD;
+	});&#xD;
+}else{&#xD;
+	dorado.MessageBox.alert(&quot;请选择要导出的报表类型！&quot;);&#xD;
+}</ClientEvent>
+                <Property name="caption">确定</Property>
+                <Property name="icon">url(skin>common/icons.gif) -140px -20px</Property>
+              </Button>
+              <Button>
+                <ClientEvent name="onClick">view.id(&quot;dialogExportReport&quot;).hide();</ClientEvent>
+                <Property name="icon">url(skin>common/icons.gif) -40px 0px</Property>
+                <Property name="caption">取消</Property>
+              </Button>
+            </Buttons>
+            <Children>
+              <AutoForm id="autoFormExportReport">
+                <AutoFormElement>
+                  <Property name="label">选择报表类型</Property>
+                  <Property name="trigger">listDropDownReportType</Property>
+                  <Property name="width">300</Property>
+                  <Property name="name">type</Property>
+                  <Editor/>
+                </AutoFormElement>
+              </AutoForm>
+              <ListDropDown id="listDropDownReportType">
+                <Property name="items">jrpxml,xls,docx,rtf,pdf,html</Property>
+              </ListDropDown>
+              <Dialog id="dialogExportResult">
+                <Property name="maximizeable">true</Property>
+                <Property name="width">500</Property>
+                <Property name="height">500</Property>
+                <Property name="modal">true</Property>
+                <Property name="center">true</Property>
+                <Buttons/>
+                <Children>
+                  <JasperreportsExporter id="jasperreportsExporter" layoutConstraint="bottom"/>
+                </Children>
+                <Tools/>
+              </Dialog>
+            </Children>
+            <Tools/>
+          </Dialog>
+        </Container>
+      </SideControl>
+    </SplitPanel>
+  </View>
+</ViewConfig>

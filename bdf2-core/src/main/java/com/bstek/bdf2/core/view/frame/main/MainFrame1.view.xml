@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ViewConfig template="bdf2.core.view.frame.main.MainFrameTemplate">
+  <Arguments/>
+  <Context/>
+  <Model/>
+  <View>
+    <Property name="packages">tree</Property>
+    <GroupStart id="workspace"/>
+    <DataSet id="dataSetUrl">
+      <ClientEvent name="onReady">String.prototype.replaceAll = function(reallyDo, replaceWith, ignoreCase) {&#xD;
+	if (!RegExp.prototype.isPrototypeOf(reallyDo)) {&#xD;
+	    return this.replace(new RegExp(reallyDo, (ignoreCase ? &quot;gi&quot;: &quot;g&quot;)), replaceWith);&#xD;
+	} else {&#xD;
+	    return this.replace(reallyDo, replaceWith);&#xD;
+	}&#xD;
+}&#xD;
+&#xD;
+var cardBookNav=view.id(&quot;cardBookNav&quot;);&#xD;
+var toolbar=view.id(&quot;toolBarNav&quot;);&#xD;
+var listArray = [];&#xD;
+var treeJson={};&#xD;
+var data=self.getData();&#xD;
+if(!data){&#xD;
+	return;&#xD;
+}&#xD;
+var count=0;&#xD;
+data.each(function(url){&#xD;
+	var button=new dorado.widget.toolbar.Button();&#xD;
+	button.set(&quot;caption&quot;,url.get(&quot;name&quot;));&#xD;
+	if(url.get(&quot;desc&quot;)){&#xD;
+		button.set(&quot;tip&quot;,url.get(&quot;desc&quot;));&#xD;
+	}&#xD;
+	if(url.get(&quot;icon&quot;)){&#xD;
+		button.set(&quot;icon&quot;,url.get(&quot;icon&quot;));&#xD;
+	}&#xD;
+	var id=url.get(&quot;id&quot;);&#xD;
+	button.set(&quot;userData&quot;,url);&#xD;
+	button.set(&quot;toggleable&quot;,true);&#xD;
+	if(count==0){&#xD;
+		button.set(&quot;toggled&quot;,true);&#xD;
+		buildSections(url);&#xD;
+	}&#xD;
+	button.set(&quot;onClick&quot;,function(){&#xD;
+		listArray.each(function(b){&#xD;
+			b.set(&quot;toggled&quot;,false);			&#xD;
+		});&#xD;
+		button.set(&quot;toggled&quot;,true);&#xD;
+		buildSections(url);&#xD;
+	});&#xD;
+	toolbar.addItem(button);&#xD;
+	listArray.push(button);&#xD;
+	count++;&#xD;
+});&#xD;
+&#xD;
+function buildSections(url){&#xD;
+	var id=url.get(&quot;id&quot;);&#xD;
+	var newId=&quot;accordion&quot;+id.replaceAll(&quot;-&quot;,&quot;&quot;);&#xD;
+	var accordion=cardBookNav.getControl(newId);&#xD;
+	if(accordion){&#xD;
+		cardBookNav.set(&quot;currentControl&quot;,accordion);&#xD;
+		return;&#xD;
+	}&#xD;
+	var newAccordion=new dorado.widget.Accordion({id:newId});&#xD;
+	addAccordionEvent(newAccordion);&#xD;
+	var sections=[];&#xD;
+	var cdata=url.get(&quot;children&quot;);&#xD;
+	if(!cdata){&#xD;
+		return;&#xD;
+	}&#xD;
+	cdata.each(function(urlData){&#xD;
+		var section=new dorado.widget.Section();&#xD;
+		section.set(&quot;caption&quot;,urlData.get(&quot;name&quot;));&#xD;
+		if(urlData.get(&quot;desc&quot;)){&#xD;
+			section.set(&quot;tip&quot;,urlData.get(&quot;desc&quot;));	&#xD;
+		}&#xD;
+		if(urlData.get(&quot;icon&quot;)){&#xD;
+			section.set(&quot;icon&quot;,urlData.get(&quot;icon&quot;));	&#xD;
+		}&#xD;
+		section.set(&quot;userData&quot;,urlData);&#xD;
+		section.set(&quot;name&quot;,urlData.get(&quot;id&quot;));&#xD;
+		sections.push(section);&#xD;
+	});&#xD;
+	rebuildAccordion(sections);&#xD;
+	newAccordion.set(&quot;sections&quot;,sections);&#xD;
+	newAccordion.set(&quot;userData&quot;,url);&#xD;
+	cardBookNav.addControl(newAccordion);&#xD;
+	cardBookNav.set(&quot;currentControl&quot;,newAccordion);&#xD;
+}&#xD;
+function rebuildAccordion(sections){&#xD;
+	sections.each(function(section){&#xD;
+		var tree=new dorado.widget.Tree();&#xD;
+		section.set(&quot;control&quot;,tree);&#xD;
+	});&#xD;
+}&#xD;
+function addAccordionEvent(accordion){&#xD;
+	accordion.set(&quot;onCurrentSectionChange&quot;,function(accrodionObj,arg){&#xD;
+		var section=arg.newSection;&#xD;
+		var id=section.get(&quot;name&quot;);&#xD;
+		if(treeJson[id]){&#xD;
+			return;&#xD;
+		}&#xD;
+		treeJson[id]=&quot;tree&quot;;&#xD;
+		var url=section.get(&quot;userData&quot;);&#xD;
+		var cdata=url.get(&quot;children&quot;);&#xD;
+		if(!cdata){&#xD;
+			return;&#xD;
+		}&#xD;
+		var tree=section.get(&quot;control&quot;);&#xD;
+		tree.set(&quot;onDataRowClick&quot;,function(self,arg){&#xD;
+			var node=self.get(&quot;currentNode&quot;);&#xD;
+			var data=node.get(&quot;userData&quot;);&#xD;
+			if(data.get(&quot;url&quot;)){&#xD;
+				window.openUrlInFrameTab(data.get(&quot;url&quot;),data.get(&quot;name&quot;),data.get(&quot;icon&quot;));&#xD;
+			}&#xD;
+		});&#xD;
+		tree.set(&quot;onDataRowDoubleClick&quot;,function(self,arg){&#xD;
+			var node=self.get(&quot;currentNode&quot;);&#xD;
+			var data=node.get(&quot;userData&quot;);&#xD;
+			if(data.get(&quot;url&quot;)){&#xD;
+				window.openUrlInFrameTab(data.get(&quot;url&quot;),data.get(&quot;name&quot;),data.get(&quot;icon&quot;),true);&#xD;
+			}&#xD;
+		});			&#xD;
+		var rootNode=tree.get(&quot;root&quot;);&#xD;
+		cdata.each(function(d){&#xD;
+			buildTree(rootNode,d);&#xD;
+		});&#xD;
+	});&#xD;
+}&#xD;
+&#xD;
+function buildTree(topNode,url){&#xD;
+	var node=new dorado.widget.tree.Node();&#xD;
+	node.set(&quot;label&quot;,url.get(&quot;name&quot;));&#xD;
+	if(url.get(&quot;desc&quot;)){&#xD;
+		node.set(&quot;tip&quot;,url.get(&quot;desc&quot;));&#xD;
+	}&#xD;
+	if(url.get(&quot;icon&quot;)){&#xD;
+		node.set(&quot;icon&quot;,url.get(&quot;icon&quot;));&#xD;
+	}&#xD;
+	node.set(&quot;userData&quot;,url);&#xD;
+	topNode.addNode(node);&#xD;
+	var cdata=url.get(&quot;children&quot;);&#xD;
+	if(!cdata){&#xD;
+		return;&#xD;
+	}&#xD;
+	cdata.each(function(d){&#xD;
+		buildTree(node,d);&#xD;
+	});	&#xD;
+}&#xD;
+</ClientEvent>
+      <Property name="dataProvider">bdf2.mainFrame#loadMeunUrls</Property>
+      <Property name="dataType">[dataTypeUrl]</Property>
+      <Property name="loadMode">onReady</Property>
+    </DataSet>
+    <ToolBar id="toolBarNav" layoutConstraint="top"/>
+    <SplitPanel layoutConstraint="center">
+      <Property name="position">200</Property>
+      <MainControl>
+        <Panel id="panelWorkarea">
+          <Property name="border">none</Property>
+          <Property name="maximizeable">true</Property>
+          <Buttons/>
+          <Children>
+            <TabControl id="tabControlWorkarea">
+              <ClientEvent name="onTabContextMenu">view.id(&quot;menuForTab&quot;).show({&#xD;
+	position:{&#xD;
+		left:arg.event.pageX,&#xD;
+		top:arg.event.pageY&#xD;
+	}&#xD;
+});&#xD;
+</ClientEvent>
+              <Property name="showMenuButton">true</Property>
+            </TabControl>
+          </Children>
+          <Tools/>
+        </Panel>
+      </MainControl>
+      <SideControl>
+        <Container>
+          <CardBook id="cardBookNav"/>
+        </Container>
+      </SideControl>
+    </SplitPanel>
+    <GroupEnd/>
+  </View>
+</ViewConfig>

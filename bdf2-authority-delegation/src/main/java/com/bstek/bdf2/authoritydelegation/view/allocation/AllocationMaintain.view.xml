@@ -1,0 +1,649 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ViewConfig>
+  <Arguments/>
+  <Context/>
+  <Model>
+    <DataType name="dataTypeResourceOwner" parent="global:$dataTypeResourceOwner">
+      <PropertyDef name="username">
+        <Property name="dataType">String</Property>
+      </PropertyDef>
+      <Reference name="users">
+        <Property name="dataProvider">bdf2.allocationMaintain#findAllocationUsers</Property>
+        <Property name="dataType">[$dataTypeUser]</Property>
+        <Property name="parameter">$${this.username}</Property>
+        <Property name="pageSize">25</Property>
+      </Reference>
+      <Reference name="depts">
+        <Property name="dataType">[$dataTypeDept]</Property>
+        <Property name="dataProvider">bdf2.allocationMaintain#findAllocationDepts</Property>
+        <Property name="pageSize">25</Property>
+        <Property name="parameter">$${this.username}</Property>
+      </Reference>
+      <Reference name="positions">
+        <Property name="dataType">[$dataTypePosition]</Property>
+        <Property name="dataProvider">bdf2.allocationMaintain#findAllocationPositions</Property>
+        <Property name="parameter">$${this.username}</Property>
+        <Property name="pageSize">25</Property>
+      </Reference>
+      <Reference name="groups">
+        <Property name="dataType">[$dataTypeGroup]</Property>
+        <Property name="dataProvider">bdf2.allocationMaintain#findAllocationGroups</Property>
+        <Property name="parameter">$${this.username}</Property>
+        <Property name="pageSize">25</Property>
+      </Reference>
+      <Reference name="urls">
+        <Property name="dataType">[dataTypeUrl]</Property>
+        <Property name="dataProvider">bdf2.allocationMaintain#findAllUrls</Property>
+        <Property name="parameter">
+          <Entity>
+            <Property name="parentId"></Property>
+            <Property name="username">$${this.username}</Property>
+          </Entity>
+        </Property>
+      </Reference>
+    </DataType>
+    <DataType name="dataTypeUrl" parent="global:$dataTypeUrl">
+      <PropertyDef name="use">
+        <Property name="dataType">boolean</Property>
+      </PropertyDef>
+      <Reference name="children">
+        <ClientEvent name="beforeLoadData">var owner = view.get(&quot;#dataSetResourceOwner&quot;).getData(&quot;#&quot;);&#xD;
+if(owner){&#xD;
+	if(arg.entity){&#xD;
+		self.set(&quot;parameter&quot;,{&#xD;
+			username:owner.get('username'),&#xD;
+			parentId:arg.entity.get('id')&#xD;
+		});&#xD;
+	}&#xD;
+}</ClientEvent>
+        <Property name="dataProvider">bdf2.allocationMaintain#findAllUrls</Property>
+        <Property name="dataType">[SELF]</Property>
+      </Reference>
+    </DataType>
+  </Model>
+  <View>
+    <DataSet id="dataSetResourceOwner">
+      <Property name="dataType">[dataTypeResourceOwner]</Property>
+      <Property name="dataProvider">bdf2.allocationMaintain#findResourceOwners</Property>
+    </DataSet>
+    <SplitPanel>
+      <Property name="position">260</Property>
+      <MainControl>
+        <TabControl>
+          <ControlTab>
+            <Property name="caption">可管理的用户</Property>
+            <Container>
+              <ToolBar>
+                <ToolBarButton>
+                  <ClientEvent name="onClick">var owner = view.get(&quot;#dataSetResourceOwner&quot;).getData(&quot;#&quot;);&#xD;
+if(owner){&#xD;
+	var dialog=view.id(&quot;$dialogUserSelect&quot;);	&#xD;
+		dialog.$show({&#xD;
+			caption:&quot;分配用户&quot;,&#xD;
+			width:700,&#xD;
+			callback:function(users){&#xD;
+				var ids=[];&#xD;
+				for(var i=0;i&lt;users.length;i++){&#xD;
+					var user=users[i];&#xD;
+					var username=user[&quot;username&quot;];&#xD;
+					ids.push(username);&#xD;
+				}&#xD;
+				//console.log('分配用户'+ids.join(','));&#xD;
+				var action = view.get(&quot;#ajaxActionSaveResourceAllocations&quot;);&#xD;
+					action.set(&quot;parameter&quot;,{&#xD;
+						owner:owner.get(&quot;username&quot;),&#xD;
+						resType:'E',&#xD;
+						addOrDel:'Add',&#xD;
+						resList:ids&#xD;
+					});&#xD;
+					action.execute(function(error){&#xD;
+						if(error&amp;&amp;error.length>0){&#xD;
+							dorado.MessageBox.alert(&quot;当前选择的用户[&quot;+error.join(&quot;,&quot;)+&quot;]已经分配，请重新选择！&quot;);&#xD;
+						} else {&#xD;
+							owner.reset(&quot;users&quot;);&#xD;
+							dialog.hide();&#xD;
+						}&#xD;
+					});&#xD;
+			}&#xD;
+		});&#xD;
+} else {&#xD;
+	dorado.MessageBox.alert(&quot;请先添加一个下级管理员&quot;);&#xD;
+}</ClientEvent>
+                  <Property name="icon">url(>skin>common/icons.gif) -120px -0px</Property>
+                  <Property name="caption">分配用户</Property>
+                </ToolBarButton>
+                <Separator/>
+                <ToolBarButton>
+                  <ClientEvent name="onClick">var selection = view.get(&quot;#dataGridAllocationUser.selection&quot;);&#xD;
+if(selection.length){&#xD;
+	dorado.MessageBox.confirm(&quot;您确定要移除所选择的用户吗？&quot;,function(){&#xD;
+		var userIds=[];&#xD;
+		selection.each(function(user){&#xD;
+			userIds.push(user.get(&quot;username&quot;));&#xD;
+		});&#xD;
+		var action = view.get(&quot;#ajaxActionSaveResourceAllocations&quot;);&#xD;
+		owner=view.get(&quot;#dataSetResourceOwner&quot;).getData(&quot;#&quot;);&#xD;
+		action.set(&quot;parameter&quot;,{&#xD;
+				owner:owner.get(&quot;username&quot;),&#xD;
+				resType:'E',&#xD;
+				addOrDel:'Del',&#xD;
+				resList:userIds&#xD;
+		});&#xD;
+		action.execute(function(){&#xD;
+			owner.reset(&quot;users&quot;);&#xD;
+		});&#xD;
+	});&#xD;
+} else {&#xD;
+	dorado.MessageBox.alert(&quot;请选择要移除的用户&quot;);&#xD;
+}&#xD;
+</ClientEvent>
+                  <Property name="icon">url(>skin>common/icons.gif) -140px -0px</Property>
+                  <Property name="caption">移除用户</Property>
+                </ToolBarButton>
+                <DataPilot id="dataPilotAllocationUser">
+                  <Property name="dataSet">dataSetResourceOwner</Property>
+                  <Property name="itemCodes">pages</Property>
+                  <Property name="dataPath">#.users</Property>
+                </DataPilot>
+              </ToolBar>
+              <DataGrid id="dataGridAllocationUser">
+                <Property name="dataSet">dataSetResourceOwner</Property>
+                <Property name="dataPath">#.users</Property>
+                <Property name="readOnly">true</Property>
+                <Property name="selectionMode">multiRows</Property>
+                <RowNumColumn/>
+                <IndicatorColumn/>
+                <RowSelectorColumn/>
+                <DataColumn name="username">
+                  <Property name="property">username</Property>
+                  <Property name="caption">用户</Property>
+                </DataColumn>
+                <DataColumn name="cname">
+                  <Property name="property">cname</Property>
+                  <Property name="caption">中文名</Property>
+                  <Property name="visible">false</Property>
+                </DataColumn>
+                <DataColumn name="email">
+                  <Property name="property">email</Property>
+                  <Property name="caption">电子邮箱</Property>
+                  <Property name="visible">false</Property>
+                </DataColumn>
+                <DataColumn name="mobile">
+                  <Property name="property">mobile</Property>
+                  <Property name="caption">手机</Property>
+                  <Property name="visible">false</Property>
+                </DataColumn>
+              </DataGrid>
+            </Container>
+          </ControlTab>
+          <ControlTab>
+            <Property name="caption">可管理的部门</Property>
+            <Container>
+              <ToolBar>
+                <ToolBarButton>
+                  <ClientEvent name="onClick">var owner=view.id(&quot;dataSetResourceOwner&quot;).getData(&quot;#&quot;);&#xD;
+if(owner){&#xD;
+	var dialog=view.id(&quot;$dialogDeptSelect&quot;);&#xD;
+	dialog.$show({&#xD;
+		width:500,&#xD;
+		height:500,&#xD;
+		caption:'分配部门',&#xD;
+		callback:function(deptArray){&#xD;
+				var ids=[];&#xD;
+				var selectMap = new dorado.util.Map();&#xD;
+				for(var i=0;i&lt;deptArray.length;i++){&#xD;
+					deptId = deptArray[i][&quot;id&quot;];&#xD;
+					deptName=deptArray[i][&quot;name&quot;];&#xD;
+					ids.push(deptId);&#xD;
+					selectMap.put(deptId,deptName);&#xD;
+				}&#xD;
+				var action=view.id(&quot;ajaxActionSaveResourceAllocations&quot;);&#xD;
+					action.set(&quot;parameter&quot;,{&#xD;
+						owner:owner.get('username'),&#xD;
+						resType:&quot;D&quot;,&#xD;
+						addOrDel:&quot;Add&quot;,&#xD;
+						resList:ids&#xD;
+					});&#xD;
+					action.execute(function(error){&#xD;
+						if(error&amp;&amp;error.length>0){&#xD;
+							var errorNames=[];&#xD;
+							for(var j=0;j&lt;error.length;j++){&#xD;
+								var name=selectMap.get(error[j]);&#xD;
+								if(name){&#xD;
+									errorNames.push(name);&#xD;
+								}&#xD;
+							}&#xD;
+							dorado.MessageBox.alert(&quot;部门[&quot;+errorNames.join(',')+&quot;]已添加，请重新选择&quot;);&#xD;
+						}else{&#xD;
+							owner.reset(&quot;depts&quot;);&#xD;
+							dialog.hide();&#xD;
+						}						&#xD;
+					});&#xD;
+		}&#xD;
+	});	&#xD;
+} else {&#xD;
+	dorado.MessageBox.alert(&quot;请先添加一个下级管理员!&quot;);&#xD;
+}</ClientEvent>
+                  <Property name="icon">url(>skin>common/icons.gif) -120px -0px</Property>
+                  <Property name="caption">分配部门</Property>
+                </ToolBarButton>
+                <Separator/>
+                <ToolBarButton>
+                  <ClientEvent name="onClick">var selection = view.get(&quot;#dataGridAllocationDept.selection&quot;);&#xD;
+if(selection.length>0){&#xD;
+	var ids=[];&#xD;
+	selection.each(function(dept){&#xD;
+		ids.push(dept.get('id'));&#xD;
+	});&#xD;
+	dorado.MessageBox.confirm(&quot;您真的要移除所选择的部门吗？&quot;,function(){&#xD;
+		var owner=view.id(&quot;dataSetResourceOwner&quot;).getData(&quot;#&quot;);&#xD;
+		var action=view.id(&quot;ajaxActionSaveResourceAllocations&quot;);&#xD;
+			action.set(&quot;parameter&quot;,{&#xD;
+						owner:owner.get('username'),&#xD;
+						resType:&quot;D&quot;,&#xD;
+						addOrDel:&quot;Del&quot;,&#xD;
+						resList:ids&#xD;
+			});&#xD;
+			action.execute(function(){&#xD;
+				owner.reset(&quot;depts&quot;);&#xD;
+			});		&#xD;
+	});&#xD;
+} else {&#xD;
+	dorado.MessageBox.alert(&quot;请先选择要移除的部门&quot;);&#xD;
+}</ClientEvent>
+                  <Property name="icon">url(>skin>common/icons.gif) -140px -0px</Property>
+                  <Property name="caption">移除部门</Property>
+                </ToolBarButton>
+                <DataPilot id="dataPilotAllocationDept">
+                  <Property name="dataSet">dataSetResourceOwner</Property>
+                  <Property name="dataPath">#.depts</Property>
+                  <Property name="itemCodes">pages</Property>
+                </DataPilot>
+              </ToolBar>
+              <DataGrid id="dataGridAllocationDept">
+                <Property name="dataSet">dataSetResourceOwner</Property>
+                <Property name="dataPath">#.depts</Property>
+                <Property name="readOnly">true</Property>
+                <Property name="selectionMode">multiRows</Property>
+                <Property name="showFilterBar">true</Property>
+                <RowNumColumn/>
+                <IndicatorColumn/>
+                <RowSelectorColumn/>
+                <DataColumn>
+                  <Property name="name">name</Property>
+                  <Property name="property">name</Property>
+                  <Editor/>
+                </DataColumn>
+              </DataGrid>
+              <Import src="bdf2.core.view.global.DeptSelect#$dialogDeptSelect"/>
+            </Container>
+          </ControlTab>
+          <ControlTab>
+            <Property name="caption">可管理的岗位</Property>
+            <Container>
+              <ToolBar>
+                <ToolBarButton>
+                  <ClientEvent name="onClick">var owner=view.id(&quot;dataSetResourceOwner&quot;).getData(&quot;#&quot;);&#xD;
+if(owner){&#xD;
+	var dialog=view.id(&quot;$dialogPositionSelect&quot;);&#xD;
+	dialog.$show({&#xD;
+		width:700,&#xD;
+		height:500,&#xD;
+		caption:'分配岗位',&#xD;
+		callback:function(positionArray){&#xD;
+				var ids=[];&#xD;
+				var selectMap = new dorado.util.Map();&#xD;
+				for(var i=0;i&lt;positionArray.length;i++){&#xD;
+					ids.push(positionArray[i][&quot;id&quot;]);&#xD;
+					selectMap.put(positionArray[i][&quot;id&quot;],positionArray[i][&quot;name&quot;]);&#xD;
+				}&#xD;
+				var action=view.id(&quot;ajaxActionSaveResourceAllocations&quot;);&#xD;
+					action.set(&quot;parameter&quot;,{&#xD;
+						owner:owner.get('username'),&#xD;
+						resType:&quot;P&quot;,&#xD;
+						addOrDel:&quot;Add&quot;,&#xD;
+						resList:ids&#xD;
+					});&#xD;
+					action.execute(function(error){&#xD;
+						if(error&amp;&amp;error.length>0){&#xD;
+							var errorNames=[];&#xD;
+							for(var j=0;j&lt;error.length;j++){&#xD;
+								var name=selectMap.get(error[j]);&#xD;
+								if(name){&#xD;
+									errorNames.push(name);&#xD;
+								}&#xD;
+							}&#xD;
+							dorado.MessageBox.alert(&quot;岗位[&quot;+errorNames.join(',')+&quot;]已添加，请重新选择&quot;);&#xD;
+						}else{&#xD;
+							dialog.hide();&#xD;
+							owner.reset(&quot;positions&quot;);&#xD;
+						}&#xD;
+						&#xD;
+					});&#xD;
+		}&#xD;
+	});	&#xD;
+} else {&#xD;
+	dorado.MessageBox.alert(&quot;请先添加一个下级管理员!&quot;);&#xD;
+}</ClientEvent>
+                  <Property name="icon">url(>skin>common/icons.gif) -120px -0px</Property>
+                  <Property name="caption">分配岗位</Property>
+                </ToolBarButton>
+                <Separator/>
+                <ToolBarButton>
+                  <ClientEvent name="onClick">var selection = view.get(&quot;#dataGridAllocationPosition.selection&quot;);&#xD;
+if(selection.length>0){&#xD;
+	var ids=[];&#xD;
+	selection.each(function(posi){&#xD;
+		ids.push(posi.get('id'));&#xD;
+	});&#xD;
+	dorado.MessageBox.confirm(&quot;您真的要移除所选择的岗位吗？&quot;,function(){&#xD;
+		var owner=view.id(&quot;dataSetResourceOwner&quot;).getData(&quot;#&quot;);&#xD;
+		var action=view.id(&quot;ajaxActionSaveResourceAllocations&quot;);&#xD;
+			action.set(&quot;parameter&quot;,{&#xD;
+						owner:owner.get('username'),&#xD;
+						resType:&quot;P&quot;,&#xD;
+						addOrDel:&quot;Del&quot;,&#xD;
+						resList:ids&#xD;
+			});&#xD;
+			action.execute(function(){&#xD;
+				owner.reset(&quot;positions&quot;);&#xD;
+			});		&#xD;
+	});&#xD;
+} else {&#xD;
+	dorado.MessageBox.alert(&quot;请先选择要移除的岗位&quot;);&#xD;
+}</ClientEvent>
+                  <Property name="icon">url(>skin>common/icons.gif) -140px -0px</Property>
+                  <Property name="caption">移除岗位</Property>
+                </ToolBarButton>
+                <DataPilot id="dataPilotAllocationPosition">
+                  <Property name="dataSet">dataSetResourceOwner</Property>
+                  <Property name="dataPath">#.positions</Property>
+                  <Property name="itemCodes">pages</Property>
+                </DataPilot>
+              </ToolBar>
+              <DataGrid id="dataGridAllocationPosition">
+                <Property name="dataSet">dataSetResourceOwner</Property>
+                <Property name="dataPath">#.positions</Property>
+                <Property name="readOnly">true</Property>
+                <Property name="selectionMode">multiRows</Property>
+                <Property name="showFilterBar">true</Property>
+                <RowNumColumn/>
+                <IndicatorColumn/>
+                <RowSelectorColumn/>
+                <DataColumn>
+                  <Property name="name">name</Property>
+                  <Property name="property">name</Property>
+                  <Editor/>
+                </DataColumn>
+              </DataGrid>
+              <Import src="bdf2.core.view.global.PositionSelect#$dialogPositionSelect"/>
+            </Container>
+          </ControlTab>
+          <ControlTab>
+            <Property name="caption">可管理的群组</Property>
+            <Container>
+              <ToolBar>
+                <ToolBarButton>
+                  <ClientEvent name="onClick">var owner=view.id(&quot;dataSetResourceOwner&quot;).getData(&quot;#&quot;);&#xD;
+if(owner){&#xD;
+	var dialog=view.id(&quot;$dialogGroupSelect&quot;);&#xD;
+	dialog.$show({&#xD;
+		width:700,&#xD;
+		height:500,&#xD;
+		caption:'分配群组',&#xD;
+		callback:function(groupArray){&#xD;
+				var ids=[];&#xD;
+				var selectMap=new dorado.util.Map();&#xD;
+				for(var i=0;i&lt;groupArray.length;i++){&#xD;
+					ids.push(groupArray[i][&quot;id&quot;]);&#xD;
+					selectMap.put(groupArray[i][&quot;id&quot;],groupArray[i][&quot;name&quot;]);&#xD;
+				}&#xD;
+				var action=view.id(&quot;ajaxActionSaveResourceAllocations&quot;);&#xD;
+					action.set(&quot;parameter&quot;,{&#xD;
+						owner:owner.get('username'),&#xD;
+						resType:&quot;G&quot;,&#xD;
+						addOrDel:&quot;Add&quot;,&#xD;
+						resList:ids&#xD;
+					});&#xD;
+					action.execute(function(error){&#xD;
+						if(error&amp;&amp;error.length>0){&#xD;
+							var errorNames=[];&#xD;
+							for(var j=0;j&lt;error.length;j++){&#xD;
+								&#xD;
+								var name=selectMap.get(error[j]);&#xD;
+								if(name){&#xD;
+									errorNames.push(name);&#xD;
+								}&#xD;
+							}&#xD;
+							dorado.MessageBox.alert(&quot;群组[&quot;+errorNames.join(',')+&quot;]已添加，请重新选择&quot;);&#xD;
+						}else{&#xD;
+							dialog.hide();&#xD;
+							owner.reset(&quot;groups&quot;);&#xD;
+						}&#xD;
+						&#xD;
+					});&#xD;
+		}&#xD;
+	});	&#xD;
+} else {&#xD;
+	dorado.MessageBox.alert(&quot;请先添加一个下级管理员!&quot;);&#xD;
+}</ClientEvent>
+                  <Property name="icon">url(>skin>common/icons.gif) -120px -0px</Property>
+                  <Property name="caption">分配群组</Property>
+                </ToolBarButton>
+                <Separator/>
+                <ToolBarButton>
+                  <ClientEvent name="onClick">var selection = view.get(&quot;#dataGridAllocationGroup.selection&quot;);&#xD;
+if(selection.length>0){&#xD;
+	var ids=[];&#xD;
+	selection.each(function(group){&#xD;
+		ids.push(group.get('id'));&#xD;
+	});&#xD;
+	dorado.MessageBox.confirm(&quot;您真的要移除所选择的群组吗？&quot;,function(){&#xD;
+		var owner=view.id(&quot;dataSetResourceOwner&quot;).getData(&quot;#&quot;);&#xD;
+		var action=view.id(&quot;ajaxActionSaveResourceAllocations&quot;);&#xD;
+			action.set(&quot;parameter&quot;,{&#xD;
+						owner:owner.get('username'),&#xD;
+						resType:&quot;G&quot;,&#xD;
+						addOrDel:&quot;Del&quot;,&#xD;
+						resList:ids&#xD;
+			});&#xD;
+			action.execute(function(){&#xD;
+				owner.reset(&quot;groups&quot;);&#xD;
+			});		&#xD;
+	});&#xD;
+} else {&#xD;
+	dorado.MessageBox.alert(&quot;请先选择要移除的群组&quot;);&#xD;
+}</ClientEvent>
+                  <Property name="icon">url(>skin>common/icons.gif) -140px -0px</Property>
+                  <Property name="caption">移除群组</Property>
+                </ToolBarButton>
+                <DataPilot id="dataPilotAllocationGroup">
+                  <Property name="dataSet">dataSetResourceOwner</Property>
+                  <Property name="dataPath">#.groups</Property>
+                  <Property name="itemCodes">pages</Property>
+                </DataPilot>
+              </ToolBar>
+              <DataGrid id="dataGridAllocationGroup">
+                <Property name="dataSet">dataSetResourceOwner</Property>
+                <Property name="dataPath">#.groups</Property>
+                <Property name="readOnly">true</Property>
+                <Property name="selectionMode">multiRows</Property>
+                <Property name="showFilterBar">true</Property>
+                <RowNumColumn/>
+                <IndicatorColumn/>
+                <RowSelectorColumn/>
+                <DataColumn>
+                  <Property name="name">name</Property>
+                  <Property name="property">name</Property>
+                  <Property name="caption">群组名称</Property>
+                  <Editor/>
+                </DataColumn>
+              </DataGrid>
+              <Import src="bdf2.core.view.global.GroupSelect#$dialogGroupSelect"/>
+            </Container>
+          </ControlTab>
+          <ControlTab>
+            <Property name="caption">可管理的URL资源</Property>
+            <Container>
+              <ToolBar>
+                <ToolBarButton>
+                  <ClientEvent name="onClick">var owner = view.get(&quot;#dataSetResourceOwner&quot;).getData(&quot;#&quot;);&#xD;
+if(owner){&#xD;
+	var nodes=view.get(&quot;#dataTreeUrlSelect&quot;).get(&quot;nodes&quot;);&#xD;
+	var ids=[];&#xD;
+	var selectMap=new dorado.util.Map();&#xD;
+		buildTreeId(ids,nodes);&#xD;
+	var action = view.get(&quot;#ajaxActionSaveResourceAllocations&quot;);&#xD;
+		action.set(&quot;parameter&quot;,{&#xD;
+			owner:owner.get('username'),&#xD;
+			resType:'U',&#xD;
+			addOrDel:'Add',&#xD;
+			resList:ids&#xD;
+		});&#xD;
+		action.execute();&#xD;
+	function buildTreeId(ids,nodes){&#xD;
+		nodes.each(function(node){&#xD;
+			if(node.get(&quot;checked&quot;)){&#xD;
+				var data = node.get(&quot;data&quot;);&#xD;
+				var id=data.get(&quot;id&quot;);&#xD;
+				var name=data.get(&quot;name&quot;);&#xD;
+				ids.push(id);&#xD;
+				selectMap.put(id,name);&#xD;
+			}&#xD;
+			children = node.get(&quot;nodes&quot;);&#xD;
+			if(children.size>0){&#xD;
+				buildTreeId(ids,children);&#xD;
+			}&#xD;
+		});&#xD;
+	}&#xD;
+} else {&#xD;
+	dorado.MessageBox.alert(&quot;请先添加一个下级管理员&quot;);&#xD;
+}</ClientEvent>
+                  <Property name="caption">保存</Property>
+                  <Property name="icon">url(>skin>common/icons.gif) -140px -20px</Property>
+                </ToolBarButton>
+                <Separator/>
+                <CheckBox id="checkBoxAutoCheckChildren">
+                  <ClientEvent name="onValueChange">view.id(&quot;dataTreeUrlSelect&quot;).get(&quot;currentNode&quot;).get(&quot;bindingConfig&quot;).autoCheckChildren = self.get(&quot;value&quot;);</ClientEvent>
+                </CheckBox>
+                <ToolBarLabel>
+                  <Property name="text">自动勾选子节点</Property>
+                </ToolBarLabel>
+              </ToolBar>
+              <DataTree id="dataTreeUrlSelect">
+                <ClientEvent name="onRenderNode">if(arg.node.get(&quot;data&quot;).get(&quot;use&quot;)){&#xD;
+	arg.dom.innerHTML=&quot;&lt;strong>&lt;font color='green'>&quot;+arg.label+&quot;&lt;/font>&lt;/strong>&quot;;&#xD;
+}else{&#xD;
+	arg.dom.innerHTML=arg.label;&#xD;
+}</ClientEvent>
+                <ClientEvent name="onCurrentChange">var checkBox = view.get(&quot;#checkBoxAutoCheckChildren&quot;);&#xD;
+var currentNode = arg.newCurrent;&#xD;
+if(currentNode){&#xD;
+	currentNode.get(&quot;bindingConfig&quot;).autoCheckChildren = checkBox.get(&quot;value&quot;);&#xD;
+}</ClientEvent>
+                <Property name="dataSet">dataSetResourceOwner</Property>
+                <Property name="dataPath">#.urls</Property>
+                <BindingConfigs>
+                  <BindingConfig>
+                    <Property name="checkable">true</Property>
+                    <Property name="childrenProperty">children</Property>
+                    <Property name="hasChild">true</Property>
+                    <Property name="labelProperty">name</Property>
+                    <Property name="recursive">true</Property>
+                    <Property name="checkedProperty">use</Property>
+                    <Property name="iconProperty">icon</Property>
+                  </BindingConfig>
+                </BindingConfigs>
+              </DataTree>
+            </Container>
+          </ControlTab>
+        </TabControl>
+      </MainControl>
+      <SideControl>
+        <Container>
+          <ToolBar>
+            <ToolBarButton>
+              <ClientEvent name="onClick">var dialog=view.id(&quot;$dialogUserSelect&quot;);	&#xD;
+	dialog.$show({&#xD;
+		caption:&quot;选择用户&quot;,&#xD;
+		width:700,&#xD;
+		callback:function(users){&#xD;
+			var ownerList = view.get(&quot;#dataSetResourceOwner&quot;).getData();&#xD;
+			var ownerMap = new dorado.util.Map();&#xD;
+			ownerList.each(function(owner){&#xD;
+				var username=owner.get(&quot;username&quot;);&#xD;
+				ownerMap.put(username,username);&#xD;
+			});&#xD;
+			var ids=[];&#xD;
+			var exsitUsernames=[];&#xD;
+			for(var i=0;i&lt;users.length;i++){&#xD;
+				var user=users[i];&#xD;
+				var username=user[&quot;username&quot;];&#xD;
+				ids.push(username);&#xD;
+				if(ownerMap.get(username)){&#xD;
+					exsitUsernames.push(username);&#xD;
+				}&#xD;
+			}&#xD;
+			if(exsitUsernames.length>0){&#xD;
+				dorado.MessageBox.alert(&quot;当前选择的[&quot;+exsitUsernames.join(&quot;,&quot;)+&quot;]已添加为管理员，请重新选择&quot;);&#xD;
+			} else {&#xD;
+				var dataSetResourceOwner = view.get(&quot;#dataSetResourceOwner&quot;);&#xD;
+				for(var i=0;i&lt;ids.length;i++){&#xD;
+					dataSetResourceOwner.getData().insert({&#xD;
+						username:ids[i]&#xD;
+					});&#xD;
+				}&#xD;
+				view.get(&quot;#updateActionSaveResourceOwners&quot;).execute(function(){&#xD;
+					dialog.hide();&#xD;
+					dataSetResourceOwner.getData(&quot;#&quot;).reset(&quot;urls&quot;);&#xD;
+				});&#xD;
+			}&#xD;
+		}&#xD;
+	});</ClientEvent>
+              <Property name="icon">url(>skin>common/icons.gif) -120px -0px</Property>
+              <Property name="caption">添加下级管理员</Property>
+            </ToolBarButton>
+            <Separator/>
+            <ToolBarButton>
+              <ClientEvent name="onClick">var owner = view.get(&quot;#dataSetResourceOwner&quot;).getData(&quot;#&quot;);&#xD;
+if(owner){&#xD;
+	dorado.MessageBox.confirm(&quot;您确定要移除当前下级管理员并移除其管理的所有资源吗？&quot;,function(){&#xD;
+		owner.get(&quot;urls&quot;).each(function(url){&#xD;
+			url.remove();&#xD;
+		});&#xD;
+		owner.remove();&#xD;
+		view.get(&quot;#updateActionSaveResourceOwners&quot;).execute();&#xD;
+	});&#xD;
+} else {&#xD;
+	dorado.MessageBox.alert(&quot;没有要移除的下级管理员&quot;);&#xD;
+}</ClientEvent>
+              <Property name="icon">url(>skin>common/icons.gif) -140px -0px</Property>
+              <Property name="caption">移除下级管理员</Property>
+            </ToolBarButton>
+          </ToolBar>
+          <DataGrid id="dataGridResourceOwner">
+            <Property name="dataSet">dataSetResourceOwner</Property>
+            <Property name="readOnly">true</Property>
+            <Property name="showFilterBar">true</Property>
+            <RowNumColumn/>
+            <DataColumn name="username">
+              <Property name="property">username</Property>
+            </DataColumn>
+          </DataGrid>
+          <Import src="bdf2.core.view.global.UserSelect#$dialogUserSelect"/>
+          <UpdateAction id="updateActionSaveResourceOwners">
+            <Property name="dataResolver">bdf2.allocationMaintain#saveResourceOwners</Property>
+            <Property name="successMessage">操作成功</Property>
+            <UpdateItem>
+              <Property name="dataSet">dataSetResourceOwner</Property>
+            </UpdateItem>
+          </UpdateAction>
+        </Container>
+      </SideControl>
+    </SplitPanel>
+    <AjaxAction id="ajaxActionSaveResourceAllocations">
+      <Property name="service">bdf2.allocationMaintain#saveAllocationResources</Property>
+      <Property name="successMessage">操作成功</Property>
+    </AjaxAction>
+  </View>
+</ViewConfig>

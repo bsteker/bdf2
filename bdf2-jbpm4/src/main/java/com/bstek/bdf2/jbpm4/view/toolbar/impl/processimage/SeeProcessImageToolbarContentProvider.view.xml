@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ViewConfig>
+  <Arguments/>
+  <Context/>
+  <Model/>
+  <View>
+    <Dialog id="$dialogSeeProcessImage">
+      <Property name="width">600</Property>
+      <Property name="height">500</Property>
+      <Property name="maximizeable">true</Property>
+      <Property name="center">true</Property>
+      <Buttons/>
+      <Children>
+        <Jbpm4ProcessImage>
+          <Property name="taskId">${request.getParameter(&quot;taskId&quot;)}</Property>
+        </Jbpm4ProcessImage>
+      </Children>
+      <Tools/>
+    </Dialog>
+    <ToolBar>
+      <ToolBarButton>
+        <ClientEvent name="onClick">view.id(&quot;$dialogSeeProcessImage&quot;).show();</ClientEvent>
+        <Property name="caption">查看流程图</Property>
+        <Property name="icon">url(skin>common/icons.gif) -280px -40px</Property>
+      </ToolBarButton>
+    </ToolBar>
+  </View>
+</ViewConfig>

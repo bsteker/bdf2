@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ViewConfig>
+  <Arguments/>
+  <Context/>
+  <Model>
+    <DataType name="$dataTypeExcelModel">
+      <ClientEvent name="onDataChange">if(arg.property == &quot;processorType&quot;){&#xD;
+	var autoFormExcelModel=this.id(&quot;autoFormExcelModel&quot;);&#xD;
+	if(&quot;1&quot;==arg.newValue){&#xD;
+		view.tag(&quot;processor&quot;).set(&quot;readOnly&quot;,true);&#xD;
+		view.tag(&quot;read&quot;).set(&quot;readOnly&quot;,false);&#xD;
+		arg.entity.set(&quot;processor&quot;,null);&#xD;
+	}else{&#xD;
+		view.tag(&quot;processor&quot;).set(&quot;readOnly&quot;,false);&#xD;
+		view.tag(&quot;read&quot;).set(&quot;readOnly&quot;,true);&#xD;
+		arg.entity.set(&quot;datasourceName&quot;,null);&#xD;
+		arg.entity.set(&quot;tableName&quot;,null);&#xD;
+		arg.entity.set(&quot;tableLabel&quot;,null);&#xD;
+		arg.entity.set(&quot;primaryKey&quot;,null);&#xD;
+		arg.entity.set(&quot;primaryKeyType&quot;,null);&#xD;
+		&#xD;
+	}&#xD;
+}else if(arg.property==&quot;primaryKeyType&quot;){&#xD;
+	if(&quot;SEQUENCE&quot;==arg.newValue){&#xD;
+   		view.tag(&quot;sequenceName&quot;).set(&quot;readOnly&quot;,false);&#xD;
+	}else {&#xD;
+		arg.entity.set(&quot;sequenceName&quot;,null);&#xD;
+		view.tag(&quot;sequenceName&quot;).set(&quot;readOnly&quot;,true);&#xD;
+	}	&#xD;
+}&#xD;
+&#xD;
+&#xD;
+</ClientEvent>
+      <Property name="creationType">com.bstek.bdf2.importexcel.model.ExcelModel</Property>
+      <PropertyDef name="id">
+        <Property name="dataType">String</Property>
+        <Property name="label">方案编号</Property>
+        <Property name="required">true</Property>
+        <Validator type="ajax">
+          <Property name="service">bdf.ExcelMaintain#checkExcelModelId</Property>
+        </Validator>
+        <Validator type="length">
+          <Property name="minLength">4</Property>
+          <Property name="maxLength">20</Property>
+        </Validator>
+      </PropertyDef>
+      <PropertyDef name="name">
+        <Property name="dataType">String</Property>
+        <Property name="label">方案名称</Property>
+        <Property name="required">true</Property>
+        <Validator type="length">
+          <Property name="minLength">4</Property>
+          <Property name="maxLength">20</Property>
+        </Validator>
+      </PropertyDef>
+      <PropertyDef name="excelSheetName">
+        <Property name="dataType">String</Property>
+        <Property name="label">ExcelSheet页名称</Property>
+      </PropertyDef>
+      <PropertyDef name="tableName">
+        <Property name="dataType">String</Property>
+        <Property name="label">物理表名称</Property>
+      </PropertyDef>
+      <PropertyDef name="tableLabel">
+        <Property name="dataType">String</Property>
+        <Property name="label">物理表中文名称</Property>
+      </PropertyDef>
+      <PropertyDef name="primaryKey">
+        <Property name="dataType">String</Property>
+        <Property name="label">物理表主键字段</Property>
+      </PropertyDef>
+      <PropertyDef name="primaryKeyType">
+        <Property name="dataType">String</Property>
+        <Property name="label">主键类型</Property>
+      </PropertyDef>
+      <PropertyDef name="sequenceName">
+        <Property name="dataType">String</Property>
+        <Property name="label">主键序列名称</Property>
+      </PropertyDef>
+      <PropertyDef name="dbType">
+        <Property name="dataType">String</Property>
+        <Property name="label">数据库类型</Property>
+      </PropertyDef>
+      <PropertyDef name="startRow">
+        <Property name="dataType">int</Property>
+        <Property name="label">Excel开始行</Property>
+      </PropertyDef>
+      <PropertyDef name="endRow">
+        <Property name="dataType">int</Property>
+        <Property name="label">Excel结束行</Property>
+      </PropertyDef>
+      <PropertyDef name="startColumn">
+        <Property name="dataType">int</Property>
+        <Property name="label">Excel开始列</Property>
+      </PropertyDef>
+      <PropertyDef name="endColumn">
+        <Property name="dataType">int</Property>
+        <Property name="label">Excel结束列</Property>
+      </PropertyDef>
+      <PropertyDef name="processor">
+        <Property name="dataType">String</Property>
+        <Property name="label">Excel导入处理类</Property>
+      </PropertyDef>
+      <PropertyDef name="helpDoc">
+        <Property name="dataType">String</Property>
+        <Property name="label">帮助文档</Property>
+      </PropertyDef>
+      <PropertyDef name="comment">
+        <Property name="dataType">String</Property>
+        <Property name="label">备注</Property>
+      </PropertyDef>
+      <PropertyDef name="datasourceName">
+        <Property name="dataType">String</Property>
+        <Property name="label">数据源名称</Property>
+      </PropertyDef>
+      <PropertyDef name="companyId">
+        <Property name="dataType">String</Property>
+        <Property name="label">公司主键</Property>
+      </PropertyDef>
+      <PropertyDef name="createDate">
+        <Property name="dataType">Date</Property>
+        <Property name="label">创建日期</Property>
+      </PropertyDef>
+      <PropertyDef name="processorType">
+        <Property name="mapping">
+          <Property name="mapValues">
+            <Collection>
+              <Entity>
+                <Property name="key">1</Property>
+                <Property name="label">系统默认处理类</Property>
+              </Entity>
+              <Entity>
+                <Property name="key">2</Property>
+                <Property name="label">自定义处理类</Property>
+              </Entity>
+            </Collection>
+          </Property>
+          <Property name="keyProperty">key</Property>
+          <Property name="valueProperty">label</Property>
+        </Property>
+        <Property name="defaultValue">1</Property>
+        <Property name="dataType">String</Property>
+        <Property name="required">true</Property>
+      </PropertyDef>
+    </DataType>
+  </Model>
+  <View>
+    <ToolBar>
+      <DataPilot id="dataPilotExcelModel">
+        <ClientEvent name="onSubControlAction">var excelModelData=this.id(&quot;dataSetExcelModel&quot;).getData();&#xD;
+var updateActionExcelModel=this.id(&quot;updateActionExcelModel&quot;);&#xD;
+switch(arg.code){&#xD;
+	case &quot;+&quot;:&#xD;
+		excelModelData.insert({&#xD;
+			processorType:1,&#xD;
+			startRow:1,&#xD;
+			endRow:2&#xD;
+		});&#xD;
+		view.id(&quot;dialogExcelModel&quot;).show();&#xD;
+		view.tag(&quot;processor&quot;).set(&quot;readOnly&quot;,true);&#xD;
+		arg.processDefault=false;&#xD;
+		break;&#xD;
+	case &quot;-&quot;:&#xD;
+		if(excelModelData.current){&#xD;
+			dorado.MessageBox.confirm(&quot;您确定要删除吗？&quot;,function(){&#xD;
+				excelModelData.remove();&#xD;
+				updateActionExcelModel.execute();&#xD;
+			});&#xD;
+		}&#xD;
+		arg.processDefault=false;&#xD;
+		break;&#xD;
+}&#xD;
+</ClientEvent>
+        <Property name="itemCodes">pages</Property>
+        <Property name="dataSet">dataSetExcelModel</Property>
+      </DataPilot>
+      <Separator/>
+      <ToolBarButton>
+        <ClientEvent name="onClick">var importExcelAction=view.get(&quot;#importExcelActionDemo&quot;);&#xD;
+importExcelAction.set(&quot;excelModelId&quot;,view.get(&quot;#dataSetExcelModel&quot;).getData(&quot;#.id&quot;));&#xD;
+importExcelAction.execute(function(arg){&#xD;
+	dorado.MessageBox.alert(&quot;成功解析导入[&quot; + arg + &quot;]数据！&quot;);&#xD;
+});&#xD;
+</ClientEvent>
+        <Property name="caption">上传导入</Property>
+        <Property name="icon">dorado/res/com/bstek/bdf2/importexcel/view/icons/page_excel.png</Property>
+      </ToolBarButton>
+    </ToolBar>
+    <Import id="importGrid" src="bdf2.importexcel.view.ExcelMaintain#dataGridExcelModel"/>
+    <Import id="importDataSet" src="bdf2.importexcel.view.ExcelMaintain#dataSetExcelModel"/>
+    <ImportExcelAction id="importExcelActionDemo">
+      <ClientEvent name="onSuccess">&#xD;
+</ClientEvent>
+      <Property name="showImportData">true</Property>
+      <Property name="bigData">true</Property>
+    </ImportExcelAction>
+  </View>
+</ViewConfig>

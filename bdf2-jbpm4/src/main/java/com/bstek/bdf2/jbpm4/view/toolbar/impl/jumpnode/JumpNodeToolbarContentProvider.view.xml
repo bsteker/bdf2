@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ViewConfig>
+  <Arguments/>
+  <Context/>
+  <Model/>
+  <View>
+    <ToolBar>
+      <ToolBarButton>
+        <ClientEvent name="onClick">view.id(&quot;$dialogAvaliableTaskNodes&quot;).show();</ClientEvent>
+        <Property name="caption">节点跳转</Property>
+        <Property name="icon">url(skin>common/icons.gif) -140px -120px</Property>
+      </ToolBarButton>
+    </ToolBar>
+    <DataSet id="$dataSetTaskNodes">
+      <Property name="dataType">[Map]</Property>
+      <Property name="dataProvider">bdf2.jbpm4.jumpNodeToolbarContentProvider#loadJumpTaskNodes</Property>
+      <Property name="parameter">${request.getParameter(&quot;taskId&quot;)}</Property>
+    </DataSet>
+    <Dialog id="$dialogAvaliableTaskNodes">
+      <Property name="center">true</Property>
+      <Property name="modal">true</Property>
+      <Property name="width">400</Property>
+      <Property name="height">300</Property>
+      <Property name="caption">选择要跳转的目标任务节点</Property>
+      <Buttons>
+        <Button>
+          <ClientEvent name="onClick">var name=view.id(&quot;$dataSetTaskNodes&quot;).getData(&quot;#.name&quot;);&#xD;
+if(name){&#xD;
+	dorado.MessageBox.confirm(&quot;您真的要跳转到这个名为[&quot;+name+&quot;]的任务节点上吗？&quot;,function(){&#xD;
+		var action=view.id(&quot;$ajaxActionJumpToTargetTaskNode&quot;);&#xD;
+		action.set(&quot;parameter&quot;,{taskId:&quot;${request.getParameter(&quot;taskId&quot;)}&quot;,targetNode:name});&#xD;
+		action.execute(function(){&#xD;
+			var win=window.parent;&#xD;
+			if(win){&#xD;
+				var taskListUrl=&quot;${configure.getString(&quot;bdf2.jbpm4.listTodoTaskUrl&quot;)}&quot;;&#xD;
+				win.open(taskListUrl,&quot;_self&quot;);&#xD;
+			}&#xD;
+		});	&#xD;
+	});&#xD;
+}else{&#xD;
+	dorado.MessageBox.alert(&quot;请先选择要跳转的目标节点!&quot;);&#xD;
+}&#xD;
+</ClientEvent>
+          <Property name="caption">跳转</Property>
+          <Property name="icon">url(skin>common/icons.gif) -300px -220px</Property>
+        </Button>
+        <Button>
+          <ClientEvent name="onClick">view.id(&quot;$dialogAvaliableTaskNodes&quot;).hide();</ClientEvent>
+          <Property name="caption">取消</Property>
+          <Property name="icon">url(skin>common/icons.gif) -40px 0px</Property>
+        </Button>
+      </Buttons>
+      <Children>
+        <DataGrid>
+          <Property name="dataSet">$dataSetTaskNodes</Property>
+          <Property name="readOnly">true</Property>
+          <DataColumn>
+            <Property name="name">name</Property>
+            <Property name="property">name</Property>
+            <Property name="caption">要跳转的目标任务节点名称</Property>
+            <Editor/>
+          </DataColumn>
+        </DataGrid>
+      </Children>
+      <Tools/>
+    </Dialog>
+    <AjaxAction id="$ajaxActionJumpToTargetTaskNode">
+      <Property name="service">bdf2.jbpm4.jumpNodeToolbarContentProvider#jumpToTargetNode</Property>
+    </AjaxAction>
+  </View>
+</ViewConfig>

@@ -1,0 +1,717 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ViewConfig>
+  <Property name="metaData">
+    <Property name="securityTag">rapid</Property>
+  </Property>
+  <Arguments/>
+  <Context>
+    <Attribute name="entityId">
+      <Property name="value">${request.getParameter(&quot;entityId&quot;)}</Property>
+    </Attribute>
+  </Context>
+  <Model>
+    <DataType name="dataTypeTable">
+      <Property name="creationType">com.bstek.bdf2.rapido.view.wizard.def.TableDef</Property>
+      <PropertyDef name="name">
+        <Property name="dataType">String</Property>
+        <Property name="label">表名</Property>
+      </PropertyDef>
+      <PropertyDef name="master">
+        <Property name="dataType">boolean</Property>
+      </PropertyDef>
+      <PropertyDef name="primaryKeys">
+        <Property name="dataType">String</Property>
+      </PropertyDef>
+      <PropertyDef name="alias">
+        <Property name="dataType">String</Property>
+        <Property name="label">别名</Property>
+      </PropertyDef>
+      <PropertyDef name="children">
+        <Property name="dataType">[SELF]</Property>
+      </PropertyDef>
+      <PropertyDef name="columns">
+        <Property name="dataType">[dataTypeColumn]</Property>
+      </PropertyDef>
+      <PropertyDef name="parent">
+        <Property name="dataType">SELF</Property>
+      </PropertyDef>
+      <PropertyDef name="joinConditions">
+        <Property name="dataType">[dataTypeJoinCondition]</Property>
+      </PropertyDef>
+      <PropertyDef name="joinType">
+        <Property name="label">连接类型</Property>
+        <Property name="mapping">
+          <Property name="mapValues">
+            <Collection>
+              <Entity>
+                <Property name="key">left</Property>
+                <Property name="value">左连接(left)</Property>
+              </Entity>
+              <Entity>
+                <Property name="key">right</Property>
+                <Property name="value">右连接(right)</Property>
+              </Entity>
+              <Entity>
+                <Property name="key">inner</Property>
+                <Property name="value">内连接(inner)</Property>
+              </Entity>
+            </Collection>
+          </Property>
+        </Property>
+        <Property name="defaultValue">left</Property>
+      </PropertyDef>
+      <PropertyDef name="parameters">
+        <Property name="dataType">[dataTypeParameter]</Property>
+      </PropertyDef>
+      <PropertyDef name="orders">
+        <Property name="dataType">[dataTypeOrder]</Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="dataTypeColumn">
+      <Property name="creationType">com.bstek.bdf2.rapido.view.wizard.def.ColumnDef</Property>
+      <PropertyDef name="name">
+        <Property name="dataType">String</Property>
+        <Property name="label">列名</Property>
+      </PropertyDef>
+      <PropertyDef name="type">
+        <Property name="dataType">String</Property>
+        <Property name="label">数据类型</Property>
+      </PropertyDef>
+      <PropertyDef name="tableName">
+        <Property name="dataType">String</Property>
+        <Property name="label">所在表名</Property>
+      </PropertyDef>
+      <PropertyDef name="label">
+        <Property name="dataType">String</Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="dataTypeJoinCondition">
+      <Property name="creationType">com.bstek.bdf2.rapido.view.wizard.def.JoinConditionDef</Property>
+      <PropertyDef name="sourceField">
+        <Property name="dataType">String</Property>
+        <Property name="label">源字段名</Property>
+      </PropertyDef>
+      <PropertyDef name="joinField">
+        <Property name="dataType">String</Property>
+        <Property name="label">连接字段名</Property>
+      </PropertyDef>
+      <PropertyDef name="sourceTable">
+        <Property name="dataType">dataTypeTable</Property>
+      </PropertyDef>
+      <PropertyDef name="joinTable">
+        <Property name="dataType">dataTypeTable</Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="dataTypeParameter">
+      <Property name="creationType">com.bstek.bdf2.rapido.view.wizard.def.ParameterDef</Property>
+      <PropertyDef name="name">
+        <Property name="dataType">String</Property>
+        <Property name="label">字段名</Property>
+      </PropertyDef>
+      <PropertyDef name="operator">
+        <Property name="dataType">String</Property>
+        <Property name="mapping">
+          <Property name="mapValues">
+            <Collection>
+              <Entity>
+                <Property name="key">=</Property>
+                <Property name="value">等于(=)</Property>
+              </Entity>
+              <Entity>
+                <Property name="key">></Property>
+                <Property name="value">大于(>)</Property>
+              </Entity>
+              <Entity>
+                <Property name="key">&lt;</Property>
+                <Property name="value">小于(&lt;)</Property>
+              </Entity>
+              <Entity>
+                <Property name="key">like</Property>
+                <Property name="value">相似(like)</Property>
+              </Entity>
+              <Entity>
+                <Property name="key">>=</Property>
+                <Property name="value">大于等于(>=)</Property>
+              </Entity>
+              <Entity>
+                <Property name="key">&lt;=</Property>
+                <Property name="value">小于等于(&lt;=)</Property>
+              </Entity>
+              <Entity>
+                <Property name="key">&lt;></Property>
+                <Property name="value">不等于(&lt;>)</Property>
+              </Entity>
+              <Entity>
+                <Property name="key">is</Property>
+                <Property name="value">is</Property>
+              </Entity>
+            </Collection>
+          </Property>
+        </Property>
+        <Property name="label">比较操作符</Property>
+      </PropertyDef>
+      <PropertyDef name="value">
+        <Property name="dataType">String</Property>
+        <Property name="label">条件值</Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="dataTypeOrder">
+      <Property name="creationType">com.bstek.bdf2.rapido.view.wizard.def.OrderDef</Property>
+      <PropertyDef name="name">
+        <Property name="dataType">String</Property>
+        <Property name="label">字段名</Property>
+      </PropertyDef>
+      <PropertyDef name="orderType">
+        <Property name="dataType">String</Property>
+        <Property name="label">排序类型</Property>
+        <Property name="mapping">
+          <Property name="mapValues">
+            <Collection>
+              <Entity>
+                <Property name="key">desc</Property>
+                <Property name="value">倒序</Property>
+              </Entity>
+              <Entity>
+                <Property name="key">asc</Property>
+                <Property name="value">正序</Property>
+              </Entity>
+            </Collection>
+          </Property>
+        </Property>
+      </PropertyDef>
+    </DataType>
+  </Model>
+  <View>
+    <ClientEvent name="onCreate">self.flushTabData=function(){&#xD;
+	var name=this.id(&quot;tabControlMain&quot;).get(&quot;currentTab&quot;).get(&quot;name&quot;);&#xD;
+	var currentTable=this.id(&quot;dataTreeTable&quot;).get(&quot;currentEntity&quot;);&#xD;
+	var ds=this.id(&quot;dataSetAllColumn&quot;);&#xD;
+	switch(name){&#xD;
+		case &quot;tabColumn&quot;:&#xD;
+			var tableData=this.id(&quot;dataSetTable&quot;).getData(&quot;!currentTable.columns&quot;);&#xD;
+			if(tableData){&#xD;
+				ds.set(&quot;parameter&quot;,currentTable.get(&quot;name&quot;));&#xD;
+				ds.flushAsync(function(data){&#xD;
+					data.each(function(col){&#xD;
+						tableData.each(function(item){&#xD;
+								if(col.get(&quot;name&quot;)==item.get(&quot;name&quot;)){&#xD;
+									col.remove();&#xD;
+									return false;&#xD;
+								}&#xD;
+						});&#xD;
+					});&#xD;
+				});&#xD;
+			}&#xD;
+			break;&#xD;
+		case &quot;tabParameter&quot;:&#xD;
+			var tableData=this.id(&quot;dataSetTable&quot;).getData(&quot;!currentTable.parameters&quot;);&#xD;
+			if(tableData){&#xD;
+				ds.set(&quot;parameter&quot;,currentTable.get(&quot;name&quot;));&#xD;
+				ds.flushAsync(function(data){&#xD;
+					data.each(function(col){&#xD;
+						tableData.each(function(item){&#xD;
+								if(col.get(&quot;name&quot;)==item.get(&quot;name&quot;)){&#xD;
+									col.remove();&#xD;
+									return false;&#xD;
+								}&#xD;
+						});&#xD;
+					});&#xD;
+				});&#xD;
+			}&#xD;
+			break;&#xD;
+		case &quot;tabOrder&quot;:&#xD;
+			var tableData=this.id(&quot;dataSetTable&quot;).getData(&quot;!currentTable.orders&quot;);&#xD;
+			if(tableData){&#xD;
+				ds.set(&quot;parameter&quot;,currentTable.get(&quot;name&quot;));&#xD;
+				ds.flushAsync(function(data){&#xD;
+					data.each(function(col){&#xD;
+						tableData.each(function(item){&#xD;
+								if(col.get(&quot;name&quot;)==item.get(&quot;name&quot;)){&#xD;
+									col.remove();&#xD;
+									return false;&#xD;
+								}&#xD;
+						});&#xD;
+					});&#xD;
+				});&#xD;
+			}&#xD;
+			break;&#xD;
+		case &quot;tabJoin&quot;:&#xD;
+			if(currentTable &amp;&amp; currentTable.get(&quot;name&quot;) &amp;&amp; currentTable.get(&quot;parent&quot;)){&#xD;
+				var ds1=this.id(&quot;dataSetParentTableColumn&quot;);&#xD;
+				ds1.set(&quot;parameter&quot;,currentTable.get(&quot;parent&quot;).get(&quot;name&quot;));&#xD;
+				ds1.flushAsync();&#xD;
+				ds.set(&quot;parameter&quot;,currentTable.get(&quot;name&quot;));&#xD;
+				ds.flushAsync();&#xD;
+			}&#xD;
+			break;&#xD;
+	}&#xD;
+}&#xD;
+function flushColumns(){&#xD;
+&#xD;
+}</ClientEvent>
+    <ClientEvent name="onReady">window.doradoView=self;&#xD;
+window.aliasCount=0;</ClientEvent>
+    <DataSet id="dataSetTable">
+      <Property name="dataType">[dataTypeTable]</Property>
+    </DataSet>
+    <DataSet id="dataSetAllColumn">
+      <Property name="dataType">[dataTypeColumn]</Property>
+      <Property name="dataProvider">bdf.rapido.queryWizardPR#loadTableColumns</Property>
+      <Property name="loadMode">manual</Property>
+    </DataSet>
+    <SplitPanel>
+      <Property name="position">180</Property>
+      <MainControl>
+        <SplitPanel>
+          <Property name="direction">top</Property>
+          <Property name="position">90</Property>
+          <MainControl>
+            <TabControl id="tabControlMain">
+              <ClientEvent name="onTabChange">this.flushTabData();</ClientEvent>
+              <ControlTab>
+                <Property name="caption">列选择</Property>
+                <Property name="name">tabColumn</Property>
+                <Container layout="hbox">
+                  <DataGrid id="dataGridAllColumns">
+                    <ClientEvent name="onDoubleClick">self.addColumn();</ClientEvent>
+                    <ClientEvent name="onReady">var view=this;&#xD;
+self.addColumn=function(){&#xD;
+	var selection=view.id(&quot;dataSetAllColumn&quot;).getData(&quot;#&quot;);&#xD;
+	if(selection){&#xD;
+		var ds=view.id(&quot;dataSetTable&quot;).getData(&quot;!currentTable.columns&quot;);&#xD;
+		ds.insert(selection.toJSON());&#xD;
+		selection.remove();&#xD;
+	}&#xD;
+}</ClientEvent>
+                    <Property name="dataSet">dataSetAllColumn</Property>
+                    <Property name="width">35%</Property>
+                    <Property name="readOnly">true</Property>
+                    <Property name="showFilterBar">true</Property>
+                    <DataColumn name="name">
+                      <Property name="property">name</Property>
+                    </DataColumn>
+                    <DataColumn>
+                      <Property name="property">type</Property>
+                      <Property name="name">type</Property>
+                      <Editor/>
+                    </DataColumn>
+                  </DataGrid>
+                  <Container layout="vbox" layoutConstraint="align:center">
+                    <Property name="height">100</Property>
+                    <Button>
+                      <ClientEvent name="onClick">var selection=this.id(&quot;dataSetAllColumn&quot;).getData();&#xD;
+if(selection){&#xD;
+	var ds=this.id(&quot;dataSetTable&quot;).getData(&quot;!currentTable.columns&quot;);&#xD;
+	selection.each(function(item){&#xD;
+		ds.insert(item.toJSON());&#xD;
+		item.remove();&#xD;
+	});&#xD;
+}</ClientEvent>
+                      <Property name="caption">添加所有列>></Property>
+                    </Button>
+                    <Button>
+                      <ClientEvent name="onClick">var selection=this.id(&quot;dataSetTable&quot;).getData(&quot;!currentTable.columns&quot;);&#xD;
+if(selection){&#xD;
+	var ds=this.id(&quot;dataSetAllColumn&quot;).getData();&#xD;
+	selection.each(function(item){&#xD;
+		ds.insert(item.toJSON());&#xD;
+		item.remove();&#xD;
+	});&#xD;
+}</ClientEvent>
+                      <Property name="caption">删除所有列&lt;&lt;</Property>
+                    </Button>
+                  </Container>
+                  <DataGrid id="dataGridSelectedColumns">
+                    <ClientEvent name="onReady">var view=this;&#xD;
+self.removeColumn=function(){&#xD;
+	var sourceDS=view.id(&quot;dataSetAllColumn&quot;);&#xD;
+	var selection=view.id(&quot;dataSetTable&quot;).getData(&quot;!currentTable.columns&quot;).current;&#xD;
+	if(selection){&#xD;
+		sourceDS.insert(selection.toJSON());&#xD;
+		selection.remove();&#xD;
+	}&#xD;
+}</ClientEvent>
+                    <ClientEvent name="onDoubleClick">self.removeColumn();</ClientEvent>
+                    <Property name="dataSet">dataSetTable</Property>
+                    <Property name="dataPath">!currentTable.columns</Property>
+                    <Property name="dataType">dataTypeColumn</Property>
+                    <Property name="width">48%</Property>
+                    <Property name="selectionMode">multiRows</Property>
+                    <Property name="readOnly">true</Property>
+                    <DataColumn name="name">
+                      <Property name="property">name</Property>
+                    </DataColumn>
+                    <DataColumn>
+                      <Property name="property">type</Property>
+                      <Property name="name">type</Property>
+                      <Editor/>
+                    </DataColumn>
+                  </DataGrid>
+                </Container>
+              </ControlTab>
+              <ControlTab>
+                <Property name="name">tabParameter</Property>
+                <Property name="caption">查询条件</Property>
+                <Container layout="hbox">
+                  <DataGrid id="dataGridAllParameterColumn">
+                    <ClientEvent name="onReady">var view=this;&#xD;
+self.addColumn=function(){&#xD;
+	var selection=view.id(&quot;dataSetAllColumn&quot;).getData(&quot;#&quot;);&#xD;
+	if(selection){&#xD;
+		var ds=view.id(&quot;dataSetTable&quot;).getData(&quot;!currentTable.parameters&quot;);&#xD;
+		ds.insert(selection.toJSON());&#xD;
+		selection.remove();&#xD;
+	}&#xD;
+}</ClientEvent>
+                    <ClientEvent name="onDoubleClick">self.addColumn();</ClientEvent>
+                    <Property name="dataSet">dataSetAllColumn</Property>
+                    <Property name="dataType">dataTypeColumn</Property>
+                    <Property name="width">35%</Property>
+                    <Property name="readOnly">true</Property>
+                    <Property name="showFilterBar">true</Property>
+                    <DataColumn name="name">
+                      <Property name="property">name</Property>
+                      <Property name="filterable">true</Property>
+                    </DataColumn>
+                  </DataGrid>
+                  <Container layout="vbox">
+                    <Property name="height">110</Property>
+                    <Button>
+                      <ClientEvent name="onClick">var selection=this.id(&quot;dataSetAllColumn&quot;).getData();&#xD;
+if(selection){&#xD;
+	var ds=this.id(&quot;dataSetTable&quot;).getData(&quot;!currentTable.parameters&quot;);&#xD;
+	selection.each(function(item){&#xD;
+		ds.insert(item.toJSON());&#xD;
+		item.remove();&#xD;
+	});&#xD;
+}</ClientEvent>
+                      <Property name="caption">添加所有列>></Property>
+                    </Button>
+                    <Button>
+                      <ClientEvent name="onClick">var selection=this.id(&quot;dataSetTable&quot;).getData(&quot;!currentTable.parameters&quot;);&#xD;
+if(selection){&#xD;
+	var ds=this.id(&quot;dataSetAllColumn&quot;).getData();&#xD;
+	selection.each(function(item){&#xD;
+		ds.insert(item.toJSON());&#xD;
+		item.remove();&#xD;
+	});&#xD;
+}</ClientEvent>
+                      <Property name="caption">删除所有列&lt;&lt;</Property>
+                    </Button>
+                  </Container>
+                  <DataGrid id="dataGridColumn">
+                    <ClientEvent name="onReady">var view=this;&#xD;
+self.removeColumn=function(){&#xD;
+	var sourceDS=view.id(&quot;dataSetAllColumn&quot;);&#xD;
+	var selection=view.id(&quot;dataSetTable&quot;).getData(&quot;!currentTable.parameters&quot;).current;&#xD;
+	if(selection){&#xD;
+		sourceDS.insert(selection.toJSON());&#xD;
+		selection.remove();&#xD;
+	}&#xD;
+}</ClientEvent>
+                    <ClientEvent name="onDoubleClick">self.removeColumn();</ClientEvent>
+                    <Property name="dataSet">dataSetTable</Property>
+                    <Property name="dataPath">!currentTable.parameters</Property>
+                    <Property name="dataType">dataTypeParameter</Property>
+                    <Property name="width">48%</Property>
+                    <Property name="stretchColumnsMode">off</Property>
+                    <IndicatorColumn/>
+                    <DataColumn name="name">
+                      <Property name="property">name</Property>
+                      <Property name="width">90</Property>
+                    </DataColumn>
+                    <DataColumn name="operator">
+                      <Property name="property">operator</Property>
+                      <Property name="width">90</Property>
+                    </DataColumn>
+                    <DataColumn name="value">
+                      <Property name="property">value</Property>
+                      <Property name="width">120</Property>
+                    </DataColumn>
+                  </DataGrid>
+                </Container>
+              </ControlTab>
+              <ControlTab>
+                <Property name="name">tabOrder</Property>
+                <Property name="caption">排序</Property>
+                <Container layout="hbox">
+                  <DataGrid id="dataGridOrderColumn">
+                    <ClientEvent name="onReady">var view=this;&#xD;
+self.addColumn=function(){&#xD;
+	var selection=view.id(&quot;dataSetAllColumn&quot;).getData(&quot;#&quot;);&#xD;
+	if(selection){&#xD;
+		var ds=view.id(&quot;dataSetTable&quot;).getData(&quot;!currentTable.orders&quot;);&#xD;
+		ds.insert(selection.toJSON());&#xD;
+		selection.remove();&#xD;
+	}&#xD;
+}</ClientEvent>
+                    <ClientEvent name="onDoubleClick">self.addColumn();</ClientEvent>
+                    <Property name="dataSet">dataSetAllColumn</Property>
+                    <Property name="dataType">dataTypeColumn</Property>
+                    <Property name="width">35%</Property>
+                    <Property name="readOnly">true</Property>
+                    <Property name="showFilterBar">true</Property>
+                    <DataColumn name="name">
+                      <Property name="property">name</Property>
+                      <Property name="filterable">true</Property>
+                    </DataColumn>
+                  </DataGrid>
+                  <Container layout="vbox">
+                    <Property name="height">110</Property>
+                    <Button>
+                      <ClientEvent name="onClick">var selection=this.id(&quot;dataSetAllColumn&quot;).getData();&#xD;
+if(selection){&#xD;
+	var ds=this.id(&quot;dataSetTable&quot;).getData(&quot;!currentTable.orders&quot;);&#xD;
+	selection.each(function(item){&#xD;
+		ds.insert(item.toJSON());&#xD;
+		item.remove();&#xD;
+	});&#xD;
+}</ClientEvent>
+                      <Property name="caption">添加所有列>></Property>
+                    </Button>
+                    <Button>
+                      <ClientEvent name="onClick">var selection=this.id(&quot;dataSetTable&quot;).getData(&quot;!currentTable.orders&quot;);&#xD;
+if(selection){&#xD;
+	var ds=this.id(&quot;dataSetAllColumn&quot;).getData();&#xD;
+	selection.each(function(item){&#xD;
+		ds.insert(item.toJSON());&#xD;
+		item.remove();&#xD;
+	});&#xD;
+}</ClientEvent>
+                      <Property name="caption">删除所有列&lt;&lt;</Property>
+                    </Button>
+                  </Container>
+                  <DataGrid id="dataGridOrder">
+                    <ClientEvent name="onReady">var view=this;&#xD;
+self.removeColumn=function(){&#xD;
+	var sourceDS=view.id(&quot;dataSetAllColumn&quot;);&#xD;
+	var selection=view.id(&quot;dataSetTable&quot;).getData(&quot;!currentTable.orders&quot;).current;&#xD;
+	if(selection){&#xD;
+		sourceDS.insert(selection.toJSON());&#xD;
+		selection.remove();&#xD;
+	}&#xD;
+}</ClientEvent>
+                    <ClientEvent name="onDoubleClick">self.removeColumn();</ClientEvent>
+                    <Property name="dataSet">dataSetTable</Property>
+                    <Property name="dataPath">!currentTable.orders</Property>
+                    <Property name="dataType">dataTypeParameter</Property>
+                    <Property name="width">48%</Property>
+                    <IndicatorColumn/>
+                    <DataColumn name="name">
+                      <Property name="property">name</Property>
+                    </DataColumn>
+                    <DataColumn>
+                      <Property name="property">orderType</Property>
+                      <Property name="name">orderType</Property>
+                    </DataColumn>
+                  </DataGrid>
+                </Container>
+              </ControlTab>
+              <ControlTab>
+                <Property name="name">tabJoin</Property>
+                <Property name="caption">查询连接条件</Property>
+                <Property name="tags">joinTag</Property>
+                <Property name="visible">false</Property>
+                <Container>
+                  <ToolBar>
+                    <DataPilot>
+                      <ClientEvent name="onSubControlAction">var code=arg.code;&#xD;
+if(code==&quot;+&quot;){&#xD;
+	var currentTable=this.id(&quot;dataSetTable&quot;).getData(&quot;!currentTable&quot;);&#xD;
+	var data=this.id(&quot;dataSetTable&quot;).getData(&quot;!currentTable.joinConditions&quot;);&#xD;
+	data.insert({sourceTable:currentTable.get(&quot;parent&quot;).toJSON(),joinTable:currentTable.toJSON()});&#xD;
+	arg.processDefault=false;&#xD;
+}</ClientEvent>
+                      <Property name="dataSet">dataSetTable</Property>
+                      <Property name="dataPath">!currentTable.joinConditions</Property>
+                      <Property name="itemCodes">+,-</Property>
+                    </DataPilot>
+                  </ToolBar>
+                  <DataGrid>
+                    <Property name="dataSet">dataSetTable</Property>
+                    <Property name="dataPath">!currentTable.joinConditions</Property>
+                    <Property name="dataType">dataTypeJoinCondition</Property>
+                    <DataColumn name="sourceField">
+                      <Property name="property">sourceField</Property>
+                      <Property name="trigger">dataSetDropDownParentTableColumn</Property>
+                    </DataColumn>
+                    <DataColumn name="joinField">
+                      <Property name="property">joinField</Property>
+                      <Property name="trigger">dataSetDropDownJoinTableColumn</Property>
+                    </DataColumn>
+                  </DataGrid>
+                </Container>
+              </ControlTab>
+            </TabControl>
+          </MainControl>
+          <SideControl>
+            <Container>
+              <AutoForm>
+                <Property name="dataSet">dataSetTable</Property>
+                <Property name="dataType">dataTypeTable</Property>
+                <Property name="labelAlign">right</Property>
+                <Property name="labelWidth">120</Property>
+                <Property name="rowHeight">26</Property>
+                <Property name="rowPadding">8</Property>
+                <Property name="cols">*</Property>
+                <Property name="dataPath">!currentTable</Property>
+                <AutoFormElement>
+                  <Property name="name">alias</Property>
+                  <Property name="property">alias</Property>
+                  <Editor/>
+                </AutoFormElement>
+                <AutoFormElement>
+                  <Property name="name">joinType</Property>
+                  <Property name="property">joinType</Property>
+                  <Property name="tags">joinTag</Property>
+                  <Editor/>
+                </AutoFormElement>
+              </AutoForm>
+            </Container>
+          </SideControl>
+        </SplitPanel>
+      </MainControl>
+      <SideControl>
+        <Container>
+          <DataTree id="dataTreeTable">
+            <ClientEvent name="onCurrentChange">var node=arg.newCurrent;&#xD;
+if(node){&#xD;
+	if(node.get(&quot;level&quot;)==1){&#xD;
+		this.tag(&quot;joinTag&quot;).set(&quot;visible&quot;,false);&#xD;
+		this.id(&quot;tabControlMain&quot;).getTab(&quot;tabJoin&quot;).set(&quot;visible&quot;,false);&#xD;
+	}else{&#xD;
+		this.tag(&quot;joinTag&quot;).set(&quot;visible&quot;,true);&#xD;
+		this.id(&quot;tabControlMain&quot;).getTab(&quot;tabJoin&quot;).set(&quot;visible&quot;,true);&#xD;
+	}&#xD;
+}&#xD;
+this.flushTabData();</ClientEvent>
+            <ClientEvent name="onContextMenu">this.id(&quot;menuOperate&quot;).show({&#xD;
+	position: {&#xD;
+		left: arg.event.pageX,&#xD;
+		top: arg.event.pageY&#xD;
+	}&#xD;
+});</ClientEvent>
+            <Property name="dataSet">dataSetTable</Property>
+            <Property name="currentNodeDataPath">currentTable</Property>
+            <BindingConfigs>
+              <BindingConfig>
+                <Property name="recursive">true</Property>
+                <Property name="childrenProperty">children</Property>
+                <Property name="labelProperty">name</Property>
+                <Property name="expandLevel">2</Property>
+                <Property name="icon">dorado/res/icons/table.png</Property>
+              </BindingConfig>
+            </BindingConfigs>
+          </DataTree>
+          <Menu id="menuOperate">
+            <MenuItem>
+              <ClientEvent name="onClick">var topTable=this.id(&quot;dataSetTable&quot;).getData(&quot;#&quot;);&#xD;
+var newEntity=null;&#xD;
+if(!topTable){&#xD;
+	newEntity=this.id(&quot;dataSetTable&quot;).getData().insert({master:true});&#xD;
+}else{&#xD;
+	var treeTable=this.id(&quot;dataTreeTable&quot;);&#xD;
+	var currentEntity=treeTable.get(&quot;currentEntity&quot;);&#xD;
+	if(!currentEntity){&#xD;
+		dorado.MessageBox.alert(&quot;请先选中要添加的包的父节点&quot;);&#xD;
+		return;&#xD;
+	}&#xD;
+	newEntity = currentEntity.createChild(&quot;children&quot;, {parent:currentEntity.toJSON()});&#xD;
+	treeTable.get(&quot;currentNode&quot;).expand();&#xD;
+	treeTable.set(&quot;currentEntity&quot;, newEntity);&#xD;
+}&#xD;
+var dialog=this.id(&quot;dialogSelectTable&quot;);&#xD;
+dialog.callBackEntity=newEntity;&#xD;
+dialog.show();</ClientEvent>
+              <Property name="caption">添加表</Property>
+              <Property name="icon">dorado/res/icons/table_add.png</Property>
+            </MenuItem>
+            <MenuItem>
+              <ClientEvent name="onClick">var entity=this.id(&quot;dataTreeTable&quot;).get(&quot;currentEntity&quot;);&#xD;
+if(entity){&#xD;
+	dorado.MessageBox.confirm(&quot;真的要删除当前表?&quot;,function(){&#xD;
+		entity.remove();&#xD;
+	});&#xD;
+}</ClientEvent>
+              <Property name="caption">删除表</Property>
+              <Property name="icon">dorado/res/icons/table_delete.png</Property>
+            </MenuItem>
+          </Menu>
+        </Container>
+      </SideControl>
+    </SplitPanel>
+    <Dialog id="dialogSelectTable">
+      <Property name="center">true</Property>
+      <Property name="modal">true</Property>
+      <Property name="width">300</Property>
+      <Property name="height">500</Property>
+      <Property name="closeable">false</Property>
+      <Buttons>
+        <Button>
+          <ClientEvent name="onClick">var data=this.id(&quot;dataSetSelectTable&quot;).getData(&quot;#&quot;);&#xD;
+if(data){&#xD;
+	var dialog=this.id(&quot;dialogSelectTable&quot;);&#xD;
+	var callBackEntity=dialog.callBackEntity;&#xD;
+	callBackEntity.set({name:data.get(&quot;name&quot;),alias:data.get(&quot;name&quot;).toLowerCase()+window.aliasCount,primaryKeys:data.get(&quot;primaryKeys&quot;)})&#xD;
+	window.aliasCount++;&#xD;
+	this.flushTabData();&#xD;
+	dialog.hide();&#xD;
+}else{&#xD;
+	dorado.MessageBox.alert(&quot;请先选中表名&quot;);&#xD;
+}</ClientEvent>
+          <Property name="caption">确定</Property>
+          <Property name="icon">url(skin>common/icons.gif) -140px -20px</Property>
+        </Button>
+        <Button>
+          <ClientEvent name="onClick">var dialog=this.id(&quot;dialogSelectTable&quot;);&#xD;
+var callBackEntity=dialog.callBackEntity;&#xD;
+if(callBackEntity){&#xD;
+	callBackEntity.cancel();&#xD;
+}&#xD;
+dialog.hide();</ClientEvent>
+          <Property name="caption">取消</Property>
+          <Property name="icon">url(skin>common/icons.gif) -40px 0px</Property>
+        </Button>
+      </Buttons>
+      <Children>
+        <DataGrid>
+          <Property name="dataSet">dataSetSelectTable</Property>
+          <Property name="dataType">dataTypeTable</Property>
+          <Property name="readOnly">true</Property>
+          <Property name="showFilterBar">true</Property>
+          <DataColumn>
+            <Property name="property">name</Property>
+            <Property name="name">name</Property>
+          </DataColumn>
+        </DataGrid>
+        <DataSet id="dataSetSelectTable">
+          <Property name="dataType">[dataTypeTable]</Property>
+          <Property name="dataProvider">bdf.rapido.queryWizardPR#loadDbTables</Property>
+        </DataSet>
+      </Children>
+      <Tools/>
+    </Dialog>
+    <DataSet id="dataSetParentTableColumn">
+      <Property name="dataType">[dataTypeColumn]</Property>
+      <Property name="dataProvider">bdf.rapido.queryWizardPR#loadTableColumns</Property>
+      <Property name="loadMode">manual</Property>
+    </DataSet>
+    <DataSetDropDown id="dataSetDropDownParentTableColumn">
+      <Property name="dataSet">dataSetParentTableColumn</Property>
+      <Property name="property">name</Property>
+      <Property name="filterMode">clientSide</Property>
+      <Property name="filterOnTyping">true</Property>
+    </DataSetDropDown>
+    <DataSetDropDown id="dataSetDropDownJoinTableColumn">
+      <Property name="dataSet">dataSetAllColumn</Property>
+      <Property name="property">name</Property>
+    </DataSetDropDown>
+    <UpdateAction id="updateActionSaveTable">
+      <Property name="dataResolver">bdf.rapido.queryWizardPR#buildTables</Property>
+      <UpdateItem>
+        <Property name="dataSet">dataSetTable</Property>
+        <Property name="dataPath">[#all]</Property>
+      </UpdateItem>
+    </UpdateAction>
+  </View>
+</ViewConfig>

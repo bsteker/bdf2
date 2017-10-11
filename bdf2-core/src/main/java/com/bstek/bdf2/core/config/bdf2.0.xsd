@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns="http://www.bstek.com/bdf/schema" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:beans="http://www.springframework.org/schema/beans"
+	targetNamespace="http://www.bstek.com/bdf/schema" elementFormDefault="qualified" attributeFormDefault="unqualified">
+
+	<xsd:import namespace="http://www.springframework.org/schema/beans" />		
+		
+	<xsd:element name="datasource-register">
+		<xsd:complexType>
+			<xsd:attribute name="name" type="xsd:string" use="required"></xsd:attribute>
+			<xsd:attribute name="asDefault" type="xsd:boolean" use="required"></xsd:attribute>
+			<xsd:attribute name="dataSource-ref" type="xsd:string" use="required"></xsd:attribute>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="annotation-scan">
+		<xsd:complexType>
+			<xsd:attribute name="packages" type="xsd:string" use="required"></xsd:attribute>
+			<xsd:attribute name="dataSourceRegisterName" type="xsd:string" use="optional"></xsd:attribute>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="anonymous-url">
+		<xsd:complexType>
+			<xsd:attribute name="urlPattern" type="xsd:string" use="required"></xsd:attribute>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="user-service">
+		<xsd:complexType>
+			<xsd:attribute name="ref" type="xsd:string" use="required"></xsd:attribute>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="dept-service">
+		<xsd:complexType>
+			<xsd:attribute name="ref" type="xsd:string" use="required"></xsd:attribute>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="position-service">
+		<xsd:complexType>
+			<xsd:attribute name="ref" type="xsd:string" use="required"></xsd:attribute>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="framework-service">
+		<xsd:complexType>
+			<xsd:attribute name="ref" type="xsd:string" use="required"></xsd:attribute>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="session-factory">
+		<xsd:complexType>
+			<xsd:all>
+				<xsd:element name="hibernate-properties" type="hibernateProperties"></xsd:element>
+				<xsd:element name="entity-interceptor" minOccurs="0">
+					<xsd:complexType>
+						<xsd:attribute name="ref" type="xsd:string" use="required"></xsd:attribute>
+					</xsd:complexType>
+				</xsd:element>
+				<xsd:element name="scan-packages" minOccurs="0">
+					<xsd:complexType>
+						<xsd:attribute name="packageNames" type="xsd:string"  use="required"></xsd:attribute>
+					</xsd:complexType>
+				</xsd:element>
+				<xsd:element name="mapping-resources" minOccurs="0">
+					<xsd:complexType>
+						<xsd:attribute name="locations" type="xsd:string"  use="required"></xsd:attribute>
+					</xsd:complexType>
+				</xsd:element>
+				<xsd:element name="mapping-locations" minOccurs="0">
+					<xsd:complexType>
+						<xsd:attribute name="locations" type="xsd:string"  use="required"></xsd:attribute>
+					</xsd:complexType>
+				</xsd:element>
+				<xsd:element name="cacheable-mapping-locations" minOccurs="0">
+					<xsd:complexType>
+						<xsd:attribute name="locations" type="xsd:string" use="required"></xsd:attribute>
+					</xsd:complexType>
+				</xsd:element>
+				<xsd:element name="mapping-jar-locations" minOccurs="0">
+					<xsd:complexType>
+						<xsd:attribute name="locations" type="xsd:string" use="required"></xsd:attribute>
+					</xsd:complexType>
+				</xsd:element>
+				<xsd:element name="mapping-directory-locations" minOccurs="0">
+					<xsd:complexType>
+						<xsd:attribute name="locations" type="xsd:string" use="required"></xsd:attribute>
+					</xsd:complexType>
+				</xsd:element>
+			</xsd:all>
+			<xsd:attribute name="dataSourceRegisterName" type="xsd:string" use="required"></xsd:attribute>
+			<xsd:attribute name="id" type="xsd:string" use="optional"></xsd:attribute>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:complexType name="hibernateProperties">
+		<xsd:attribute name="dialect" type="xsd:string" use="required"></xsd:attribute>
+		<xsd:attribute name="showSql" type="xsd:boolean" default="true" use="optional"></xsd:attribute>
+		<xsd:attribute name="formatSql" type="xsd:boolean" default="true" use="optional"></xsd:attribute>
+		<xsd:attribute name="maxFetchDepth" type="xsd:string" use="optional"></xsd:attribute>
+		<xsd:attribute name="defaultBatchFetchSize" type="xsd:string" use="optional"></xsd:attribute>
+		<xsd:attribute name="transactionFactoryClass" type="xsd:string" use="optional"></xsd:attribute>
+		<xsd:attribute name="jtaUserTransaction" type="xsd:string" use="optional"></xsd:attribute>
+		<xsd:attribute name="transactionManagerLookupClass" type="xsd:string" use="optional"></xsd:attribute>
+		<xsd:attribute name="hbm2ddlAuto" default="update" use="optional">
+			<xsd:simpleType>
+				<xsd:restriction base="xsd:string">
+					<xsd:enumeration value="create"></xsd:enumeration>
+					<xsd:enumeration value="update"></xsd:enumeration>
+					<xsd:enumeration value="none"></xsd:enumeration>
+				</xsd:restriction>
+			</xsd:simpleType>
+		</xsd:attribute>
+	</xsd:complexType>
+</xsd:schema>

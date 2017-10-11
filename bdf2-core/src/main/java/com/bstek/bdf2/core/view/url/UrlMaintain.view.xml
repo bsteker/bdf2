@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ViewConfig>
+  <Arguments/>
+  <Context/>
+  <Model>
+    <DataType name="dataTypeUrl" parent="global:$dataTypeUrl">
+      <Reference name="children">
+        <Property name="dataType">[SELF]</Property>
+        <Property name="dataProvider">bdf2.urlMaintain#loadUrls</Property>
+        <Property name="parameter">
+          <Entity>
+            <Property name="parentId">$${this.id}</Property>
+          </Entity>
+        </Property>
+      </Reference>
+    </DataType>
+  </Model>
+  <View>
+    <ClientEvent name="onReady">self.buildOrder=function(nodes){&#xD;
+	var order=1;&#xD;
+	nodes.each(function(node){&#xD;
+		var entityOrder=node.get(&quot;data.order&quot;);&#xD;
+		order=entityOrder+1;&#xD;
+	});&#xD;
+	return order;&#xD;
+}&#xD;
+</ClientEvent>
+    <UpdateAction id="updateActionUrl">
+      <Property name="dataResolver">bdf2.urlMaintain#saveUrls</Property>
+      <Property name="successMessage">数据已保存</Property>
+      <UpdateItem>
+        <Property name="dataSet">dataSetUrl</Property>
+      </UpdateItem>
+    </UpdateAction>
+    <DataSet id="dataSetUrl">
+      <Property name="dataType">[dataTypeUrl]</Property>
+      <Property name="dataProvider">bdf2.urlMaintain#loadUrls</Property>
+    </DataSet>
+    <DataTree id="dataTreeUrl" layoutConstraint="left">
+      <ClientEvent name="beforeCurrentChange">var node=arg.oldCurrent;&#xD;
+if(node){&#xD;
+	var data=node.get(&quot;data&quot;);&#xD;
+	if(data &amp;&amp; data.state!=dorado.Entity.STATE_NONE &amp;&amp; data.state!=dorado.Entity.STATE_MOVED){&#xD;
+		view.id(&quot;updateActionUrl&quot;).execute();&#xD;
+		if(data.validate()!=&quot;ok&quot;){&#xD;
+			arg.processDefault=false;&#xD;
+		}&#xD;
+	}&#xD;
+}&#xD;
+</ClientEvent>
+      <ClientEvent name="onDraggingSourceDrop">var draggingInfo=arg.draggingInfo;&#xD;
+if(!draggingInfo){&#xD;
+	return true;&#xD;
+}&#xD;
+var parentNode=draggingInfo.get(&quot;targetObject&quot;);&#xD;
+if(!parentNode){&#xD;
+	return true;&#xD;
+}&#xD;
+var parentId=parentNode.get(&quot;data.id&quot;);&#xD;
+var order=1;&#xD;
+parentNode.get(&quot;nodes&quot;).each(function(node){&#xD;
+	var data=node.get(&quot;data&quot;);&#xD;
+	data.set(&quot;order&quot;,order++);&#xD;
+	data.set(&quot;parentId&quot;,parentId);&#xD;
+});&#xD;
+view.id(&quot;updateActionUrl&quot;).execute();&#xD;
+</ClientEvent>
+      <ClientEvent name="onContextMenu">view.id(&quot;menuOperate&quot;).show({&#xD;
+	position: {&#xD;
+		left: arg.event.pageX,&#xD;
+		top: arg.event.pageY&#xD;
+	}&#xD;
+});&#xD;
+</ClientEvent>
+      <Property name="dataSet">dataSetUrl</Property>
+      <Property name="width">260</Property>
+      <Property name="currentNodeDataPath">currentUrl</Property>
+      <Property name="draggable">true</Property>
+      <Property name="dragTags">url</Property>
+      <Property name="droppable">true</Property>
+      <Property name="droppableTags">url</Property>
+      <Property name="dropMode">onOrInsertItems</Property>
+      <BindingConfigs>
+        <BindingConfig>
+          <Property name="childrenProperty">children</Property>
+          <Property name="iconProperty">icon</Property>
+          <Property name="tipProperty">desc</Property>
+          <Property name="labelProperty">name</Property>
+          <Property name="expandLevel">2</Property>
+          <Property name="recursive">true</Property>
+        </BindingConfig>
+      </BindingConfigs>
+    </DataTree>
+    <AutoForm layoutConstraint="center">
+      <Property name="dataSet">dataSetUrl</Property>
+      <Property name="dataPath">!currentUrl</Property>
+      <Property name="cols">*</Property>
+      <AutoFormElement>
+        <Property name="name">name</Property>
+        <Property name="property">name</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement>
+        <Property name="name">forNavigation</Property>
+        <Property name="property">forNavigation</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement>
+        <Property name="name">url</Property>
+        <Property name="property">url</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement>
+        <Property name="name">icon</Property>
+        <Property name="property">icon</Property>
+        <Property name="trigger">triggerSelectionIcon</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement>
+        <Property name="name">desc</Property>
+        <Property name="property">desc</Property>
+        <Property name="editorType">TextArea</Property>
+        <Editor/>
+      </AutoFormElement>
+    </AutoForm>
+    <Container layout="anchor" layoutConstraint="center">
+      <Property name="height">30</Property>
+      <Button layoutConstraint="right:100">
+        <ClientEvent name="onClick">dorado.MessageBox.confirm(&quot;您真的要删除用于导航的URL缓存吗？&quot;,function(){&#xD;
+	view.id(&quot;ajaxActionRefreshCache&quot;).execute();&#xD;
+})</ClientEvent>
+        <Property name="caption">刷新缓存</Property>
+        <Property name="icon">url(skin>common/icons.gif) -40px -240px</Property>
+      </Button>
+      <Button layoutConstraint="right:30">
+        <Property name="icon">url(skin>common/icons.gif) -140px -20px</Property>
+        <Property name="caption">保存</Property>
+        <Property name="style">
+          <Property name="margin-right">30</Property>
+        </Property>
+        <Property name="action">updateActionUrl</Property>
+      </Button>
+    </Container>
+    <Menu id="menuOperate">
+      <MenuItem>
+        <ClientEvent name="onClick">var data=view.id(&quot;dataSetUrl&quot;).getData();&#xD;
+var newOrder=view.buildOrder(view.id(&quot;dataTreeUrl&quot;).get(&quot;root&quot;).get(&quot;nodes&quot;));&#xD;
+var newEntity=data.insert({order:newOrder,name:'新菜单'});&#xD;
+view.id(&quot;dataTreeUrl&quot;).set(&quot;currentEntity&quot;,newEntity);</ClientEvent>
+        <Property name="name">addRoot</Property>
+        <Property name="caption">添加根节点</Property>
+        <Property name="icon">url(skin>common/icons.gif) -280px -100px</Property>
+      </MenuItem>
+      <MenuItem>
+        <ClientEvent name="onClick">var tree=view.id(&quot;dataTreeUrl&quot;);&#xD;
+var currentNode=tree.get(&quot;currentNode&quot;);&#xD;
+if(!currentNode){&#xD;
+	dorado.MessageBox.alert(&quot;请先选中一个父节点!&quot;);&#xD;
+	return;&#xD;
+}&#xD;
+var newOrder=view.buildOrder(currentNode.get(&quot;nodes&quot;));&#xD;
+var currentEntity=currentNode.get(&quot;data&quot;);&#xD;
+currentNode.expand();&#xD;
+var newEntity=currentEntity.createChild(&quot;children&quot;,{&#xD;
+	parentId:currentEntity.get(&quot;id&quot;),&#xD;
+	order:newOrder,&#xD;
+	name:'新菜单'&#xD;
+});&#xD;
+tree.set(&quot;currentEntity&quot;,newEntity);&#xD;
+</ClientEvent>
+        <Property name="caption">添加子节点</Property>
+        <Property name="name">addSub</Property>
+        <Property name="icon">url(skin>common/icons.gif) -120px 0px</Property>
+      </MenuItem>
+      <MenuItem>
+        <ClientEvent name="onClick">var tree=view.id(&quot;dataTreeUrl&quot;);&#xD;
+var entity=tree.get(&quot;currentEntity&quot;);&#xD;
+if(entity){&#xD;
+	view.id(&quot;ajaxActionCheckChildren&quot;).set(&quot;parameter&quot;, entity.get(&quot;id&quot;)).execute(function(count){&#xD;
+		if (count>0){&#xD;
+			dorado.MessageBox.alert(&quot;请先删除子节点&quot;);&#xD;
+		} else {&#xD;
+			dorado.MessageBox.confirm(&quot;真的要删除当前节点？&quot;,function(){&#xD;
+				entity.remove();&#xD;
+				var firstNode=tree.get(&quot;firstNode&quot;);&#xD;
+				if(firstNode){&#xD;
+					tree.set(&quot;currentNode&quot;,firstNode);&#xD;
+				}&#xD;
+				//view.id(&quot;updateActionUrl&quot;).execute();&#xD;
+			});&#xD;
+		}&#xD;
+	});&#xD;
+}else{&#xD;
+	dorado.MessageBox.alert(&quot;当前没有节点可供删除！&quot;);&#xD;
+}&#xD;
+</ClientEvent>
+        <Property name="name">del</Property>
+        <Property name="caption">删除</Property>
+        <Property name="icon">url(skin>common/icons.gif) -140px 0px</Property>
+      </MenuItem>
+    </Menu>
+    <Import src="bdf2.core.view.IconSelect#$dialogSelectIcon"/>
+    <Trigger id="triggerSelectionIcon">
+      <ClientEvent name="onExecute">var dialog=view.id(&quot;$dialogSelectIcon&quot;);&#xD;
+dialog.callback=function(url){&#xD;
+	var entity=view.id(&quot;dataTreeUrl&quot;).get(&quot;currentEntity&quot;);&#xD;
+	entity.set(&quot;icon&quot;,url);&#xD;
+};&#xD;
+dialog.show();&#xD;
+</ClientEvent>
+    </Trigger>
+    <AjaxAction id="ajaxActionCheckChildren">
+      <Property name="service">bdf2.urlMaintain#countChildren</Property>
+    </AjaxAction>
+    <AjaxAction id="ajaxActionRefreshCache">
+      <Property name="service">bdf2.urlMaintain#refreshUrlCache</Property>
+      <Property name="successMessage">缓存刷新成功！</Property>
+    </AjaxAction>
+  </View>
+</ViewConfig>

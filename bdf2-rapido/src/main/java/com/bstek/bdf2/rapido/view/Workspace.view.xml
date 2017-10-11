@@ -1,0 +1,282 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ViewConfig>
+  <Property name="metaData">
+    <Property name="securityTag">rapid</Property>
+  </Property>
+  <Arguments/>
+  <Context/>
+  <Model>
+    <DataType name="dataTypePackage">
+      <Property name="creationType">com.bstek.bdf2.rapido.domain.PackageInfo</Property>
+      <PropertyDef name="id">
+        <Property name="dataType">String</Property>
+      </PropertyDef>
+      <PropertyDef name="name">
+        <Property name="dataType">String</Property>
+        <Property name="label">包名</Property>
+      </PropertyDef>
+      <PropertyDef name="desc">
+        <Property name="dataType">String</Property>
+        <Property name="label">描述</Property>
+      </PropertyDef>
+      <PropertyDef name="parentId">
+        <Property name="dataType">String</Property>
+      </PropertyDef>
+      <PropertyDef name="type"/>
+      <PropertyDef name="icon"/>
+      <Reference name="children">
+        <Property name="dataProvider">bdf.rapido.workspacePR#loadPackages</Property>
+        <Property name="dataType">[SELF]</Property>
+        <Property name="parameter">
+          <Entity>
+            <Property name="parentId">$${this.id}</Property>
+            <Property name="type">$${this.type}</Property>
+          </Entity>
+        </Property>
+      </Reference>
+    </DataType>
+  </Model>
+  <View>
+    <SplitPanel>
+      <Property name="position">200</Property>
+      <MainControl>
+        <Panel id="panelOperate">
+          <Property name="caption">操作区</Property>
+          <Property name="maximizeable">true</Property>
+          <Buttons/>
+          <Children>
+            <TabControl id="tabControlMain">
+              <IFrameTab>
+                <Property name="name">pageTab</Property>
+                <Property name="caption">页面</Property>
+                <Property name="icon">dorado/res/icons/page_world.png</Property>
+              </IFrameTab>
+              <IFrameTab>
+                <Property name="name">componentTab</Property>
+                <Property name="caption">组件</Property>
+                <Property name="icon">dorado/res/icons/plugin.png</Property>
+              </IFrameTab>
+              <IFrameTab>
+                <Property name="name">actionTab</Property>
+                <Property name="caption">动作</Property>
+                <Property name="icon">dorado/res/icons/lightning.png</Property>
+              </IFrameTab>
+              <IFrameTab>
+                <Property name="name">entityTab</Property>
+                <Property name="caption">实体</Property>
+                <Property name="icon">dorado/res/icons/table.png</Property>
+              </IFrameTab>
+              <IFrameTab>
+                <Property name="caption">实体映射</Property>
+                <Property name="icon">dorado/res/icons/table_relationship.png</Property>
+                <Property name="name">mappingTab</Property>
+              </IFrameTab>
+              <IFrameTab>
+                <Property name="name">metadataTab</Property>
+                <Property name="caption">元数据</Property>
+                <Property name="icon">dorado/res/icons/brick.png</Property>
+              </IFrameTab>
+            </TabControl>
+          </Children>
+          <Tools/>
+        </Panel>
+      </MainControl>
+      <SideControl>
+        <Panel>
+          <Property name="caption">包信息</Property>
+          <Buttons/>
+          <Children>
+            <DataTree id="dataTreePackage">
+              <ClientEvent name="onContextMenu">this.id(&quot;menuOperate&quot;).show({&#xD;
+	position: {&#xD;
+		left: arg.event.pageX,&#xD;
+		top: arg.event.pageY&#xD;
+	}&#xD;
+});</ClientEvent>
+              <ClientEvent name="onClick"></ClientEvent>
+              <ClientEvent name="onDoubleClick">if(self.get(&quot;currentNode.level&quot;)>1){&#xD;
+	var tabControl=this.id(&quot;tabControlMain&quot;);&#xD;
+	var tab;&#xD;
+	var entity=self.get(&quot;currentEntity&quot;);&#xD;
+	var packageId=entity.get(&quot;id&quot;);&#xD;
+	var type=entity.get(&quot;type&quot;);&#xD;
+	var url=&quot;&quot;;&#xD;
+	switch(type){&#xD;
+		case &quot;page&quot;:&#xD;
+			url=&quot;bdf2.rapido.view.page.Page.d&quot;;&#xD;
+			tab=tabControl.getTab(&quot;pageTab&quot;);&#xD;
+			break;&#xD;
+		case &quot;component&quot;:&#xD;
+			url=&quot;bdf2.rapido.view.component.Component.d&quot;;&#xD;
+			tab=tabControl.getTab(&quot;componentTab&quot;);&#xD;
+			break;&#xD;
+		case &quot;action&quot;:&#xD;
+			url=&quot;bdf2.rapido.view.action.Action.d&quot;;&#xD;
+			tab=tabControl.getTab(&quot;actionTab&quot;);&#xD;
+			break;&#xD;
+		case &quot;entity&quot;:&#xD;
+			url=&quot;bdf2.rapido.view.entity.Entity.d&quot;;&#xD;
+			tab=tabControl.getTab(&quot;entityTab&quot;);&#xD;
+			break;								&#xD;
+		case &quot;mapping&quot;:&#xD;
+			url=&quot;bdf2.rapido.view.mapping.Mapping.d&quot;;&#xD;
+			tab=tabControl.getTab(&quot;mappingTab&quot;);&#xD;
+			break;	&#xD;
+		case &quot;metadata&quot;:&#xD;
+			url=&quot;bdf2.rapido.view.metadata.Metadata.d&quot;;&#xD;
+			tab=tabControl.getTab(&quot;metadataTab&quot;);&#xD;
+			break;							&#xD;
+	}&#xD;
+	url+=&quot;?packageId=&quot;+packageId;&#xD;
+	tab.set(&quot;path&quot;,url);&#xD;
+	tabControl.set(&quot;currentTab&quot;,tab);&#xD;
+}</ClientEvent>
+              <Property name="dataSet">dataSetPackage</Property>
+              <Property name="currentNodeDataPath">currentPackage</Property>
+              <BindingConfigs>
+                <BindingConfig>
+                  <Property name="recursive">true</Property>
+                  <Property name="childrenProperty">children</Property>
+                  <Property name="labelProperty">name</Property>
+                  <Property name="tipProperty">desc</Property>
+                  <Property name="iconProperty">icon</Property>
+                </BindingConfig>
+              </BindingConfigs>
+            </DataTree>
+          </Children>
+          <Tools/>
+        </Panel>
+      </SideControl>
+    </SplitPanel>
+    <DataSet id="dataSetPackage">
+      <Property name="dataType">[dataTypePackage]</Property>
+      <Property name="dataProvider">bdf.rapido.workspacePR#loadPackages</Property>
+    </DataSet>
+    <Menu id="menuOperate">
+      <ClientEvent name="onReady">self.expandComponentNode=function(currentNode){&#xD;
+	currentNode.expandAsync(function(){&#xD;
+		var nodes=currentNode.get(&quot;nodes&quot;);&#xD;
+		if(nodes){&#xD;
+			nodes.each(function(node){&#xD;
+				self.expandComponentNode(node);&#xD;
+			});&#xD;
+		}&#xD;
+	})&#xD;
+}&#xD;
+</ClientEvent>
+      <MenuItem>
+        <ClientEvent name="onClick">var treePackage=this.id(&quot;dataTreePackage&quot;);&#xD;
+var currentEntity=treePackage.get(&quot;currentEntity&quot;);&#xD;
+if(!currentEntity){&#xD;
+	dorado.MessageBox.alert(&quot;请先选中要添加的包的父节点&quot;);&#xD;
+	return;&#xD;
+}&#xD;
+var newEntity = currentEntity.createChild(&quot;children&quot;, {&#xD;
+    parentId: currentEntity.get(&quot;id&quot;),&#xD;
+    type:currentEntity.get(&quot;type&quot;),&#xD;
+    icon:&quot;dorado/res/icons/package.png&quot;&#xD;
+});&#xD;
+treePackage.get(&quot;currentNode&quot;).expand();&#xD;
+treePackage.set(&quot;currentEntity&quot;, newEntity);&#xD;
+this.id(&quot;dialogPackage&quot;).show();</ClientEvent>
+        <Property name="name">addPackage</Property>
+        <Property name="caption">添加包</Property>
+        <Property name="icon">dorado/res/icons/package_add.png</Property>
+      </MenuItem>
+      <MenuItem>
+        <ClientEvent name="onClick">var treePackage=this.id(&quot;dataTreePackage&quot;);&#xD;
+if(treePackage.get(&quot;currentNode.level&quot;)==1){&#xD;
+	dorado.MessageBox.alert(&quot;顶级包不能删除&quot;);&#xD;
+	return;&#xD;
+}&#xD;
+var currentEntity=treePackage.get(&quot;currentEntity&quot;);&#xD;
+if(!currentEntity){&#xD;
+	dorado.MessageBox.alert(&quot;请先选中要删除的包节点!&quot;);&#xD;
+	return;&#xD;
+}&#xD;
+var action=this.id(&quot;updateActionSavePackage&quot;);&#xD;
+dorado.MessageBox.confirm(&quot;真的要删除当前选中的包？&quot;,function(){&#xD;
+	currentEntity.remove();&#xD;
+	action.execute();&#xD;
+});&#xD;
+</ClientEvent>
+        <Property name="caption">删除当前包</Property>
+        <Property name="name">deletePackage</Property>
+        <Property name="icon">dorado/res/icons/package_delete.png</Property>
+      </MenuItem>
+      <MenuItem>
+        <ClientEvent name="onClick">if(this.id(&quot;dataTreePackage&quot;).get(&quot;currentNode.level&quot;)==1){&#xD;
+	dorado.MessageBox.alert(&quot;不能修改顶级包!&quot;);&#xD;
+	return;&#xD;
+}&#xD;
+this.id(&quot;dialogPackage&quot;).show();</ClientEvent>
+        <Property name="name">modifyPackage</Property>
+        <Property name="caption">修改包信息</Property>
+        <Property name="icon">dorado/res/icons/package_link.png</Property>
+      </MenuItem>
+      <MenuItem>
+        <ClientEvent name="onClick">var currentNode=this.id(&quot;dataTreePackage&quot;).get(&quot;currentNode&quot;);&#xD;
+if(currentNode){&#xD;
+	var menu=this.id(&quot;menuOperate&quot;);&#xD;
+	menu.expandComponentNode(currentNode);&#xD;
+}else{&#xD;
+	dorado.MessageBox.alert(&quot;请先选中一个节点！&quot;);&#xD;
+}&#xD;
+</ClientEvent>
+        <Property name="name">expandAllSubNodes</Property>
+        <Property name="caption">展开子节点</Property>
+        <Property name="icon">url(skin>common/icons.gif) -260px -80px</Property>
+      </MenuItem>
+    </Menu>
+    <Dialog id="dialogPackage">
+      <Property name="center">true</Property>
+      <Property name="width">400</Property>
+      <Property name="height">200</Property>
+      <Property name="modal">true</Property>
+      <Buttons>
+        <Button>
+          <ClientEvent name="onClick">var dialog=this.id(&quot;dialogPackage&quot;);&#xD;
+this.id(&quot;updateActionSavePackage&quot;).execute(function(){&#xD;
+	dialog.hide();&#xD;
+});</ClientEvent>
+          <Property name="caption">保存</Property>
+          <Property name="icon">url(skin>common/icons.gif) -140px -20px</Property>
+        </Button>
+        <Button>
+          <ClientEvent name="onClick">this.id(&quot;dataTreePackage&quot;).get(&quot;currentEntity&quot;).cancel();&#xD;
+this.id(&quot;dialogPackage&quot;).hide();</ClientEvent>
+          <Property name="caption">取消</Property>
+          <Property name="icon">url(skin>common/icons.gif) -40px 0px</Property>
+        </Button>
+      </Buttons>
+      <Children>
+        <AutoForm>
+          <Property name="dataSet">dataSetPackage</Property>
+          <Property name="dataType">dataTypePackage</Property>
+          <Property name="cols">*</Property>
+          <Property name="labelAlign">right</Property>
+          <Property name="dataPath">!currentPackage</Property>
+          <AutoFormElement>
+            <Property name="name">name</Property>
+            <Property name="property">name</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">desc</Property>
+            <Property name="property">desc</Property>
+            <Property name="editorType">TextArea</Property>
+            <Editor/>
+          </AutoFormElement>
+        </AutoForm>
+      </Children>
+      <Tools/>
+    </Dialog>
+    <UpdateAction id="updateActionSavePackage">
+      <Property name="dataResolver">bdf.rapido.workspacePR#savePackage</Property>
+      <Property name="executingMessage">操作成功!</Property>
+      <UpdateItem>
+        <Property name="dataSet">dataSetPackage</Property>
+      </UpdateItem>
+    </UpdateAction>
+  </View>
+</ViewConfig>

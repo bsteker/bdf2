@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd
+	">
+	<context:component-scan
+		base-package="com.bstek.bdf2.core.security.component,com.bstek.bdf2.core.view.*"></context:component-scan>
+
+	<bean
+		class="com.bstek.bdf2.core.exception.interceptor.NoneLoginAjaxExceptionHandler"></bean>
+
+	<bean class="com.bstek.bdf2.core.controller.ListController"></bean>
+	<bean class="com.bstek.bdf2.core.controller.CoreMenuGenerator"></bean>
+	<bean id="bdf2.deptMaintain" class="com.bstek.bdf2.core.view.dept.DeptMaintain">
+		<property name="deptService" ref="bdf2.deptService"></property>
+		<property name="roleService" ref="bdf2.roleService"></property>
+		<property name="groupService" ref="bdf2.groupService"></property>
+	</bean>
+	<bean id="bdf2.deptSelect" class="com.bstek.bdf2.core.view.global.DeptSelect">
+		<property name="deptService" ref="bdf2.deptService"></property>
+	</bean>
+
+	<bean id="bdf2.mainFrame" class="com.bstek.bdf2.core.view.frame.main.MainFrame">
+		<property name="applicationCache" ref="bdf2.applicationCache"></property>
+	</bean>
+	<bean id="bdf2.positionSelect" class="com.bstek.bdf2.core.view.global.PositionSelect">
+		<property name="positionService" ref="bdf2.positionService"></property>
+	</bean>
+	<bean id="bdf2.userSelect" class="com.bstek.bdf2.core.view.global.UserSelect">
+		<property name="userService" ref="bdf2.userService"></property>
+	</bean>
+	<bean id="bdf2.changePassword"
+		class="com.bstek.bdf2.core.view.frame.main.register.changepassword.ChangePassword">
+		<property name="userService" ref="bdf2.userService"></property>
+	</bean>
+	<bean id="bdf2.userMaintain" class="com.bstek.bdf2.core.view.user.UserMaintain">
+		<property name="passwordEncoder" ref="bdf2.passwordEncoder"></property>
+		<property name="userService" ref="bdf2.userService"></property>
+		<property name="deptService" ref="bdf2.deptService"></property>
+		<property name="roleService" ref="bdf2.roleService"></property>
+		<property name="groupService" ref="bdf2.groupService"></property>
+	</bean>
+	<bean id="bdf2.registerWizard" class="com.bstek.bdf2.core.view.register.RegisterWizard">
+		<property name="userService" ref="bdf2.userService"></property>
+		<property name="companyService" ref="bdf2.companyService"></property>
+	</bean>
+	<bean id="bdf2.roleMemberMaintain" class="com.bstek.bdf2.core.view.role.member.RoleMemberMaintain">
+		<property name="positionService" ref="bdf2.positionService"></property>
+		<property name="userService" ref="bdf2.userService"></property>
+		<property name="deptService" ref="bdf2.deptService"></property>
+	</bean>
+	<bean id="bdf2.groupMaintain" class="com.bstek.bdf2.core.view.group.GroupMaintain">
+		<property name="positionService" ref="bdf2.positionService"></property>
+		<property name="userService" ref="bdf2.userService"></property>
+		<property name="deptService" ref="bdf2.deptService"></property>
+		<property name="roleService" ref="bdf2.roleService"></property>
+		<property name="groupService" ref="bdf2.groupService"></property>
+	</bean>
+	<bean id="bdf2.positionMaintain" class="com.bstek.bdf2.core.view.position.PositionMaintain">
+		<property name="positionService" ref="bdf2.positionService"></property>
+		<property name="roleService" ref="bdf2.roleService"></property>
+		<property name="groupService" ref="bdf2.groupService"></property>
+	</bean>
+
+	<bean class="com.bstek.bdf2.core.orm.AnnotationPackages">
+		<property name="scanPackages">
+			<list>
+				<value>com/bstek/bdf2/core/model</value>
+			</list>
+		</property>
+		<property name="dataSourceRegisterName" value="${bdf2.coreDataSourceName}"></property>
+	</bean>
+
+	<bean
+		class="org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor" />
+	<bean parent="dorado.dataConfigLoader">
+		<property name="configLocation"
+			value="classpath:com/bstek/bdf2/core/view/model.model.xml" />
+	</bean>
+
+	<bean parent="dorado.viewConfigFactoryRegister">
+		<property name="viewNamePattern" value="bdf2.**" />
+		<property name="viewConfigFactory">
+			<bean parent="dorado.xmlViewConfigDefinitionFactory">
+				<property name="pathPrefix" value="classpath:com/bstek/" />
+				<property name="pathSubfix" value=".view.xml" />
+			</bean>
+		</property>
+	</bean>
+
+	<bean class="com.bstek.bdf2.core.controller.GenerateSystemMenuController">
+		<property name="disabled" value="${bdf2.disabledGenerateSystemMenuController}"></property>
+	</bean>
+
+	<bean parent="dorado.genericObjectListenerRegister">
+		<property name="listener">
+			<bean
+				class="com.bstek.bdf2.core.security.component.GlobalComponentListener">
+				<property name="order" value="2" />
+				<property name="pattern" value="*" />
+				<property name="metadataSource" ref="bdf2.componentMetadataSource" />
+				<property name="applicationTitle" value="${bdf2.application.title}"></property>
+			</bean>
+		</property>
+	</bean>
+
+	<bean parent="dorado.expressionVarsInitializerRegister">
+		<property name="contextInitializer">
+			<bean class="com.bstek.bdf2.core.context.ContextVariablesInitializer" />
+		</property>
+	</bean>
+	<bean class="com.bstek.bdf2.core.controller.PropertiesController"></bean>
+
+	<bean class="com.bstek.bdf2.core.controller.RefreshCacheController" />
+
+	<bean parent="bdf2.refreshCacheRegister">
+		<property name="beanMethodNames">
+			<list>
+				<value>bdf2.urlMaintain#refreshUrlCache</value>
+				<value>bdf2.roleUrlMaintain#refreshUrlSecurityMetadata</value>
+				<value>bdf2.roleMaintain#refreshAllSecurityMetadata</value>
+				<value>bdf2.roleMaintain#refreshComponentSecurityMetadata</value>
+			</list>
+		</property>
+	</bean>
+
+	<bean parent="dorado.globalResourceSearchPathRegister">
+		<property name="searchPath" value="com/bstek/bdf2/core/resources/" />
+	</bean>
+
+</beans>

@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ViewConfig>
+  <Arguments/>
+  <Context/>
+  <Model>
+    <DataType name="dataTypePosition" parent="$dataTypePosition">
+      <Property name="creationType">com.bstek.bdf2.core.model.DefaultPosition</Property>
+      <PropertyDef name="desc">
+        <Property name="dataType">String</Property>
+        <Property name="label">描述</Property>
+        <Validator type="length">
+          <Property name="maxLength">120</Property>
+        </Validator>
+      </PropertyDef>
+      <PropertyDef name="id">
+        <Property name="dataType">String</Property>
+        <Property name="label">ID</Property>
+        <Property name="required">true</Property>
+        <Validator type="ajax">
+          <Property name="service">bdf2.positionMaintain#uniqueCheck</Property>
+        </Validator>
+      </PropertyDef>
+    </DataType>
+  </Model>
+  <View>
+    <DataSet id="datasetPosition">
+      <Property name="dataType">[dataTypePosition]</Property>
+      <Property name="pageSize">20</Property>
+      <Property name="dataProvider">bdf2.positionMaintain#loadPostions</Property>
+    </DataSet>
+    <ToolBar>
+      <DataPilot>
+        <ClientEvent name="onSubControlAction">var dialog=view.id(&quot;dialogPosition&quot;);
+switch(arg.code) {
+	case '+':
+		view.id(&quot;datasetPosition&quot;).getData().insert();
+		dialog.set(&quot;caption&quot;,&quot;添加职位信息&quot;);
+		dialog.show();
+		view.set(&quot;#afePositionId.readOnly&quot;,false);
+		arg.processDefault = false;
+		break;
+	case '-':
+		dorado.MessageBox.confirm(&quot;是否确定删除此职位信息？&quot;,function(){
+			view.id(&quot;datasetPosition&quot;).getData(&quot;#&quot;).remove();
+			view.id(&quot;updateActionPosition&quot;).execute();
+		});
+		arg.processDefault = false;
+		break;
+}
+
+</ClientEvent>
+        <Property name="dataSet">datasetPosition</Property>
+        <Property name="itemCodes">pages,+,-</Property>
+      </DataPilot>
+      <ToolBarButton>
+        <ClientEvent name="onClick">position=view.get(&quot;#datasetPosition&quot;).getData(&quot;#&quot;);&#xD;
+if(position){&#xD;
+	var dialog=view.id(&quot;dialogPosition&quot;);&#xD;
+	dialog.set(&quot;caption&quot;,&quot;修改职位信息&quot;);&#xD;
+	dialog.show();&#xD;
+	view.set(&quot;#afePositionId.readOnly&quot;,true);&#xD;
+}</ClientEvent>
+        <Property name="caption">修改</Property>
+        <Property name="icon"> url(>skin>common/icons.gif) -200px -0px</Property>
+      </ToolBarButton>
+    </ToolBar>
+    <DataGrid>
+      <Property name="dataSet">datasetPosition</Property>
+      <Property name="dataType">dataTypePosition</Property>
+      <Property name="readOnly">true</Property>
+      <DataColumn name="name">
+        <Property name="property">name</Property>
+      </DataColumn>
+      <DataColumn name="desc">
+        <Property name="property">desc</Property>
+      </DataColumn>
+    </DataGrid>
+    <Dialog id="dialogPosition">
+      <ClientEvent name="onClose">view.id(&quot;datasetPosition&quot;).getData(&quot;#&quot;).cancel();&#xD;
+</ClientEvent>
+      <Property name="center">true</Property>
+      <Property name="modal">true</Property>
+      <Property name="height">280</Property>
+      <Property name="width">420</Property>
+      <Buttons>
+        <Button>
+          <ClientEvent name="onClick">view.id(&quot;updateActionPosition&quot;).execute(function(){&#xD;
+	view.id(&quot;dialogPosition&quot;).hide();&#xD;
+});&#xD;
+</ClientEvent>
+          <Property name="caption">提交</Property>
+          <Property name="icon"> url(>skin>common/icons.gif) -20px -0px</Property>
+        </Button>
+        <Button>
+          <ClientEvent name="onClick">dorado.MessageBox.confirm(&quot;是否取消此操作?&quot;,function(){&#xD;
+	view.id(&quot;datasetPosition&quot;).getData(&quot;#&quot;).cancel();&#xD;
+	view.id(&quot;dialogPosition&quot;).hide();&#xD;
+});&#xD;
+</ClientEvent>
+          <Property name="icon"> url(>skin>common/icons.gif) -40px -0px</Property>
+          <Property name="caption">取消</Property>
+        </Button>
+      </Buttons>
+      <Children>
+        <AutoForm>
+          <Property name="dataSet">datasetPosition</Property>
+          <Property name="dataType">dataTypePosition</Property>
+          <AutoFormElement id="afePositionId" layoutConstraint="colSpan:2">
+            <Property name="name">id</Property>
+            <Property name="property">id</Property>
+            <Property name="readOnly">true</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement layoutConstraint="colSpan:2">
+            <Property name="name">name</Property>
+            <Property name="property">name</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement layoutConstraint="colSpan:2">
+            <Property name="name">desc</Property>
+            <Property name="property">desc</Property>
+            <Editor>
+              <TextArea>
+                <Property name="height">80</Property>
+              </TextArea>
+            </Editor>
+          </AutoFormElement>
+        </AutoForm>
+      </Children>
+      <Tools/>
+    </Dialog>
+    <UpdateAction id="updateActionPosition">
+      <Property name="dataResolver">bdf2.positionMaintain#savePostions</Property>
+      <Property name="successMessage">数据保存成功!</Property>
+      <UpdateItem>
+        <Property name="dataSet">datasetPosition</Property>
+      </UpdateItem>
+    </UpdateAction>
+  </View>
+</ViewConfig>

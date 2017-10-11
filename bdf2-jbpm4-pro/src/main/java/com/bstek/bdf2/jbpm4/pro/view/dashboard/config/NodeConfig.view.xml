@@ -1,0 +1,735 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ViewConfig>
+  <Arguments/>
+  <Context/>
+  <Model>
+    <DataType name="dataTypeTaskAssignment">
+      <Property name="creationType">com.bstek.bdf2.jbpm4.model.TaskAssignment</Property>
+      <PropertyDef name="id">
+        <Property name="dataType">String</Property>
+      </PropertyDef>
+      <PropertyDef name="assignmentDefId">
+        <Property name="dataType">String</Property>
+      </PropertyDef>
+      <PropertyDef name="processDefinitionId">
+        <Property name="dataType">String</Property>
+      </PropertyDef>
+      <PropertyDef name="taskName">
+        <Property name="dataType">String</Property>
+      </PropertyDef>
+      <PropertyDef name="assignmentDefName">
+        <Property name="dataType">String</Property>
+        <Property name="label">分配定义名称</Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="dataTypeTaskReminder">
+      <ClientEvent name="onEntityLoad">view.tag(&quot;day&quot;).set(&quot;visible&quot;,true);&#xD;
+view.tag(&quot;hour&quot;).set(&quot;visible&quot;,true);&#xD;
+view.tag(&quot;messageTemplateName&quot;).set(&quot;visible&quot;,true);&#xD;
+view.tag(&quot;calendars&quot;).set(&quot;visible&quot;,true);&#xD;
+var type=arg.entity.get(&quot;reminderType&quot;);&#xD;
+switch(type){&#xD;
+	case &quot;none&quot;:&#xD;
+		view.tag(&quot;day&quot;).set(&quot;visible&quot;,false);&#xD;
+		view.tag(&quot;hour&quot;).set(&quot;visible&quot;,false);&#xD;
+		view.tag(&quot;messageTemplateName&quot;).set(&quot;visible&quot;,false);&#xD;
+		view.tag(&quot;calendars&quot;).set(&quot;visible&quot;,false);&#xD;
+		break;&#xD;
+	case &quot;once&quot;:&#xD;
+		view.tag(&quot;day&quot;).set(&quot;visible&quot;,false);&#xD;
+		view.tag(&quot;hour&quot;).set(&quot;visible&quot;,false);&#xD;
+		view.tag(&quot;calendars&quot;).set(&quot;visible&quot;,false);&#xD;
+		break;&#xD;
+	case &quot;dayPeriodic&quot;:&#xD;
+		view.tag(&quot;hour&quot;).set(&quot;visible&quot;,false);&#xD;
+		break;&#xD;
+	case &quot;hourPeriodic&quot;:&#xD;
+		view.tag(&quot;day&quot;).set(&quot;visible&quot;,false);&#xD;
+		break;&#xD;
+}</ClientEvent>
+      <ClientEvent name="onDataChange">view.tag(&quot;day&quot;).set(&quot;visible&quot;,true);&#xD;
+view.tag(&quot;hour&quot;).set(&quot;visible&quot;,true);&#xD;
+view.tag(&quot;messageTemplateName&quot;).set(&quot;visible&quot;,true);&#xD;
+view.tag(&quot;calendars&quot;).set(&quot;visible&quot;,true);&#xD;
+var type=arg.entity.get(&quot;reminderType&quot;);&#xD;
+switch(type){&#xD;
+	case &quot;none&quot;:&#xD;
+		view.tag(&quot;day&quot;).set(&quot;visible&quot;,false);&#xD;
+		view.tag(&quot;hour&quot;).set(&quot;visible&quot;,false);&#xD;
+		view.tag(&quot;messageTemplateName&quot;).set(&quot;visible&quot;,false);&#xD;
+		view.tag(&quot;calendars&quot;).set(&quot;visible&quot;,false);&#xD;
+		break;&#xD;
+	case &quot;once&quot;:&#xD;
+		view.tag(&quot;day&quot;).set(&quot;visible&quot;,false);&#xD;
+		view.tag(&quot;hour&quot;).set(&quot;visible&quot;,false);&#xD;
+		view.tag(&quot;calendars&quot;).set(&quot;visible&quot;,false);&#xD;
+		break;&#xD;
+	case &quot;dayPeriodic&quot;:&#xD;
+		view.tag(&quot;hour&quot;).set(&quot;visible&quot;,false);&#xD;
+		break;&#xD;
+	case &quot;hourPeriodic&quot;:&#xD;
+		view.tag(&quot;day&quot;).set(&quot;visible&quot;,false);&#xD;
+		break;&#xD;
+}</ClientEvent>
+      <Property name="creationType">com.bstek.bdf2.jbpm4.model.TaskReminder</Property>
+      <PropertyDef name="id">
+        <Property name="dataType">String</Property>
+      </PropertyDef>
+      <PropertyDef name="everyDay">
+        <Property name="dataType">int</Property>
+        <Property name="label">每隔</Property>
+      </PropertyDef>
+      <PropertyDef name="everyHour">
+        <Property name="dataType">int</Property>
+        <Property name="label">每隔</Property>
+      </PropertyDef>
+      <PropertyDef name="messageTemplateId">
+        <Property name="dataType">String</Property>
+      </PropertyDef>
+      <PropertyDef name="processDefinitionId">
+        <Property name="dataType">String</Property>
+      </PropertyDef>
+      <PropertyDef name="taskName">
+        <Property name="dataType">String</Property>
+      </PropertyDef>
+      <PropertyDef name="messageTemplateName">
+        <Property name="dataType">String</Property>
+        <Property name="label">采用的消息模版名称</Property>
+      </PropertyDef>
+      <PropertyDef name="reminderType">
+        <Property name="label">提醒方式</Property>
+        <Property name="mapping">
+          <Property name="mapValues">
+            <Collection>
+              <Entity>
+                <Property name="label">不提醒</Property>
+                <Property name="key">none</Property>
+              </Entity>
+              <Entity>
+                <Property name="label">任务产生时提醒一次</Property>
+                <Property name="key">once</Property>
+              </Entity>
+              <Entity>
+                <Property name="label">每隔几天</Property>
+                <Property name="key">dayPeriodic</Property>
+              </Entity>
+              <Entity>
+                <Property name="label">每隔几小时</Property>
+                <Property name="key">hourPeriodic</Property>
+              </Entity>
+            </Collection>
+          </Property>
+          <Property name="keyProperty">key</Property>
+          <Property name="valueProperty">label</Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="messageSenders">
+        <Property name="dataType">String</Property>
+        <Property name="label">发送提醒消息方法</Property>
+      </PropertyDef>
+      <Reference name="calendars">
+        <Property name="dataType">[$dataTypeJobCalendar]</Property>
+        <Property name="dataProvider">bdf2.jbpm4.nodeConfig#loadCalendars</Property>
+        <Property name="parameter">$${this.id}</Property>
+      </Reference>
+    </DataType>
+    <DataType name="dataTypeTaskConfig">
+      <Property name="creationType">com.bstek.bdf2.jbpm4.model.TaskConfig</Property>
+      <PropertyDef name="id">
+        <Property name="dataType">String</Property>
+      </PropertyDef>
+      <PropertyDef name="processDefinitionId">
+        <Property name="dataType">String</Property>
+      </PropertyDef>
+      <PropertyDef name="taskName">
+        <Property name="dataType">String</Property>
+      </PropertyDef>
+      <PropertyDef name="url">
+        <Property name="dataType">String</Property>
+        <Property name="label">任务处理页面URL</Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="dataTypeAssignmentDef">
+      <Property name="creationType">com.bstek.bdf2.jbpm4.model.AssignmentDef</Property>
+      <PropertyDef name="id">
+        <Property name="dataType">String</Property>
+      </PropertyDef>
+      <PropertyDef name="name">
+        <Property name="dataType">String</Property>
+        <Property name="label">名称</Property>
+        <Property name="required">true</Property>
+        <Validator type="length">
+          <Property name="minLength">2</Property>
+          <Property name="maxLength">60</Property>
+          <Property name="resultMessage">长度要在2~60之间</Property>
+        </Validator>
+      </PropertyDef>
+      <PropertyDef name="desc">
+        <Property name="dataType">String</Property>
+        <Property name="label">描述</Property>
+        <Validator type="length">
+          <Property name="minLength">2</Property>
+          <Property name="maxLength">120</Property>
+          <Property name="resultMessage">长度要在2~120之间</Property>
+        </Validator>
+      </PropertyDef>
+    </DataType>
+    <DataType name="dataTypeMessaageSender">
+      <PropertyDef name="id">
+        <Property name="dataType">String</Property>
+        <Property name="label">ID</Property>
+      </PropertyDef>
+      <PropertyDef name="name">
+        <Property name="dataType">String</Property>
+        <Property name="label">名称</Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="dataTypeComponentSecurity">
+      <Property name="creationType">com.bstek.bdf2.jbpm4.pro.model.ComponentSecurity</Property>
+      <PropertyDef name="id">
+        <Property name="dataType">String</Property>
+      </PropertyDef>
+      <PropertyDef name="pdId">
+        <Property name="dataType">String</Property>
+      </PropertyDef>
+      <PropertyDef name="taskName">
+        <Property name="dataType">String</Property>
+      </PropertyDef>
+      <PropertyDef name="tag">
+        <Property name="dataType">String</Property>
+        <Property name="label">标识</Property>
+      </PropertyDef>
+      <PropertyDef name="type">
+        <Property name="dataType">int</Property>
+        <Property name="mapping">
+          <Property name="mapValues">
+            <Collection>
+              <Entity>
+                <Property name="key">2</Property>
+                <Property name="value">可写</Property>
+              </Entity>
+              <Entity>
+                <Property name="key">1</Property>
+                <Property name="value">只读</Property>
+              </Entity>
+              <Entity>
+                <Property name="key">0</Property>
+                <Property name="value">隐藏</Property>
+              </Entity>
+            </Collection>
+          </Property>
+        </Property>
+        <Property name="label">类型</Property>
+      </PropertyDef>
+      <PropertyDef name="priority">
+        <Property name="dataType">int</Property>
+        <Property name="mapping">
+          <Property name="mapValues"/>
+        </Property>
+        <Property name="label">优先级</Property>
+      </PropertyDef>
+    </DataType>
+  </Model>
+  <View>
+    <ClientEvent name="onCreate">window.configTask=function(processDefinitionId,taskName,configAble){&#xD;
+	var param = {processDefinitionId:processDefinitionId,taskName:taskName};&#xD;
+	window.param = param;&#xD;
+	if(configAble){&#xD;
+		var dsAssignment=view.id(&quot;dataSetTaskAssignment&quot;);&#xD;
+		dsAssignment.set(&quot;parameter&quot;,param);&#xD;
+		dsAssignment.flushAsync();&#xD;
+		var dsReminder=view.id(&quot;dataSetTaskReminder&quot;);&#xD;
+		dsReminder.set(&quot;parameter&quot;,param);&#xD;
+		dsReminder.flushAsync();	&#xD;
+		view.tag(&quot;configTab&quot;).set(&quot;visible&quot;,true);	&#xD;
+	}else{&#xD;
+		view.tag(&quot;configTab&quot;).set(&quot;visible&quot;,false);&#xD;
+	}&#xD;
+	var dsConfig=view.id(&quot;dataSetTaskConfig&quot;);&#xD;
+	dsConfig.set(&quot;parameter&quot;,param);&#xD;
+	dsConfig.flushAsync();&#xD;
+&#xD;
+	view.id(&quot;dataSetComponentSecurity&quot;).set(&quot;parameter&quot;, param).flushAsync();&#xD;
+&#xD;
+	view.id(&quot;dialogConfig&quot;).show();&#xD;
+	view.id(&quot;updateActionSaveConfig&quot;).set(&quot;parameter&quot;,param);&#xD;
+}</ClientEvent>
+    <HtmlContainer id="htmlContainerImage" listener="spring:bdf2.jbpm4.nodeConfig#initProcessImage"/>
+    <DataSet id="dataSetTaskAssignment">
+      <Property name="dataType">[dataTypeTaskAssignment]</Property>
+      <Property name="dataProvider">bdf2.jbpm4.nodeConfig#loadTaskAssignments</Property>
+      <Property name="loadMode">manual</Property>
+    </DataSet>
+    <DataSet id="dataSetAssignmentDef">
+      <Property name="dataType">[dataTypeAssignmentDef]</Property>
+      <Property name="dataProvider">bdf2.jbpm4.nodeConfig#loadAssignmentDefs</Property>
+      <Property name="pageSize">15</Property>
+    </DataSet>
+    <DataSet id="dataSetJobCalendar">
+      <Property name="dataType">[$dataTypeJobCalendar]</Property>
+      <Property name="dataProvider">bdf2.jbpm4.nodeConfig#loadJobCalendars</Property>
+      <Property name="pageSize">15</Property>
+    </DataSet>
+    <DataSet id="dataSetTaskConfig">
+      <Property name="dataType">dataTypeTaskConfig</Property>
+      <Property name="dataProvider">bdf2.jbpm4.nodeConfig#loadTaskConfig</Property>
+    </DataSet>
+    <DataSet id="dataSetTaskReminder">
+      <Property name="dataType">dataTypeTaskReminder</Property>
+      <Property name="dataProvider">bdf2.jbpm4.nodeConfig#loadTaskReminder</Property>
+      <Property name="loadMode">manual</Property>
+    </DataSet>
+    <DataSet id="dataSetMessageTemplate">
+      <Property name="dataType">[$dataTypeMessageTemplate]</Property>
+      <Property name="pageSize">15</Property>
+      <Property name="dataProvider">bdf2.jbpm4.nodeConfig#loadMessageTemplates</Property>
+    </DataSet>
+    <DataSet id="dataSetComponentSecurity">
+      <Property name="dataType">[dataTypeComponentSecurity]</Property>
+      <Property name="dataProvider">bdf2.jbpm4.pro.nodeConfig#loadTaskConfig</Property>
+    </DataSet>
+    <Dialog id="dialogMessageTemplate">
+      <Property name="center">true</Property>
+      <Property name="modal">true</Property>
+      <Property name="width">600</Property>
+      <Property name="height">400</Property>
+      <Buttons>
+        <Button>
+          <ClientEvent name="onClick">var data=view.id(&quot;dataSetMessageTemplate&quot;).getData(&quot;#&quot;);&#xD;
+var id=data.get(&quot;id&quot;);&#xD;
+var name=data.get(&quot;name&quot;);&#xD;
+var target=view.id(&quot;dataSetTaskReminder&quot;).getData(&quot;#&quot;);&#xD;
+target.set(&quot;messageTemplateId&quot;,id);&#xD;
+target.set(&quot;messageTemplateName&quot;,name);&#xD;
+view.id(&quot;dialogMessageTemplate&quot;).hide();</ClientEvent>
+          <Property name="caption">确定</Property>
+          <Property name="icon">url(skin>common/icons.gif) -140px -20px</Property>
+        </Button>
+        <Button>
+          <ClientEvent name="onClick">view.id(&quot;dialogMessageTemplate&quot;).hide();</ClientEvent>
+          <Property name="caption">取消</Property>
+          <Property name="icon">url(skin>common/icons.gif) -40px 0px</Property>
+        </Button>
+      </Buttons>
+      <Children>
+        <ToolBar>
+          <DataPilot>
+            <Property name="itemCodes">pages</Property>
+            <Property name="dataSet">dataSetMessageTemplate</Property>
+          </DataPilot>
+        </ToolBar>
+        <DataGrid>
+          <Property name="dataSet">dataSetMessageTemplate</Property>
+          <Property name="readOnly">true</Property>
+          <Property name="filterMode">serverSide</Property>
+          <Property name="showFilterBar">true</Property>
+          <DataColumn name="name">
+            <Property name="property">name</Property>
+          </DataColumn>
+          <DataColumn name="content">
+            <Property name="property">content</Property>
+            <Property name="filterable">false</Property>
+          </DataColumn>
+        </DataGrid>
+      </Children>
+      <Tools/>
+    </Dialog>
+    <Dialog id="dialogConfig">
+      <Property name="center">true</Property>
+      <Property name="modal">true</Property>
+      <Property name="width">650</Property>
+      <Property name="height">450</Property>
+      <Buttons>
+        <Button>
+          <ClientEvent name="onClick">view.id(&quot;updateActionSaveConfig&quot;).execute(function(){&#xD;
+	var list = view.id(&quot;dataSetComponentSecurity&quot;).getData(&quot;[#dirty]&quot;);&#xD;
+	if (list) {&#xD;
+		view.id(&quot;updateActionComponentSecurity&quot;).execute(function(){&#xD;
+			view.id(&quot;dialogConfig&quot;).hide();&#xD;
+		});&#xD;
+	} else {&#xD;
+		view.id(&quot;dialogConfig&quot;).hide();		&#xD;
+	}&#xD;
+});&#xD;
+&#xD;
+</ClientEvent>
+          <Property name="caption">确定</Property>
+          <Property name="icon">url(skin>common/icons.gif) -140px -20px</Property>
+        </Button>
+        <Button>
+          <ClientEvent name="onClick">view.id(&quot;dialogConfig&quot;).hide();</ClientEvent>
+          <Property name="caption">取消</Property>
+          <Property name="icon">url(skin>common/icons.gif) -40px 0px</Property>
+        </Button>
+      </Buttons>
+      <Children>
+        <VerticalTabControl>
+          <Property name="tabColumnWidth">80</Property>
+          <ControlTab>
+            <Property name="caption">基本信息</Property>
+            <AutoForm>
+              <Property name="dataSet">dataSetTaskConfig</Property>
+              <Property name="cols">*</Property>
+              <Property name="labelWidth">120</Property>
+              <AutoFormElement>
+                <Property name="name">url</Property>
+                <Property name="property">url</Property>
+                <Editor/>
+              </AutoFormElement>
+            </AutoForm>
+          </ControlTab>
+          <ControlTab>
+            <Property name="caption">任务分配</Property>
+            <Property name="tags">configTab</Property>
+            <Container>
+              <ToolBar>
+                <ToolBarButton>
+                  <ClientEvent name="onClick">view.id(&quot;dataSetTaskAssignment&quot;).insert();&#xD;
+view.id(&quot;dialogAssignmentDef&quot;).show();</ClientEvent>
+                  <Property name="caption">添加</Property>
+                  <Property name="icon">url(skin>common/icons.gif) -120px 0px</Property>
+                </ToolBarButton>
+                <ToolBarButton>
+                  <ClientEvent name="onClick">var data=view.id(&quot;dataSetTaskAssignment&quot;).getData(&quot;#&quot;);&#xD;
+if(data){&#xD;
+	data.remove();&#xD;
+}else{&#xD;
+	dorado.MessageBox.alert(&quot;当前没有记录可供删除！&quot;);&#xD;
+}</ClientEvent>
+                  <Property name="caption">删除</Property>
+                  <Property name="icon">url(skin>common/icons.gif) -140px 0px</Property>
+                </ToolBarButton>
+              </ToolBar>
+              <DataGrid>
+                <Property name="dataSet">dataSetTaskAssignment</Property>
+                <Property name="readOnly">true</Property>
+                <DataColumn name="assignmentDefName">
+                  <Property name="property">assignmentDefName</Property>
+                </DataColumn>
+              </DataGrid>
+            </Container>
+          </ControlTab>
+          <ControlTab>
+            <Property name="caption">任务提醒</Property>
+            <Property name="tags">configTab</Property>
+            <Container>
+              <DataSet id="dataSetMessageSender">
+                <Property name="dataType">[dataTypeMessaageSender]</Property>
+                <Property name="dataProvider">bdf2.jbpm4.nodeConfig#loadMessageSenders</Property>
+              </DataSet>
+              <AutoForm>
+                <Property name="cols">*,*</Property>
+                <Property name="dataSet">dataSetTaskReminder</Property>
+                <Property name="labelAlign">right</Property>
+                <Property name="labelWidth">140</Property>
+                <Property name="rowHeight">26</Property>
+                <AutoFormElement layoutConstraint="colSpan:2">
+                  <Property name="name">reminderType</Property>
+                  <Property name="property">reminderType</Property>
+                  <Property name="editorType">RadioGroup</Property>
+                  <Editor/>
+                </AutoFormElement>
+                <AutoFormElement layoutConstraint="colSpan:2">
+                  <Property name="name">everyDay</Property>
+                  <Property name="property">everyDay</Property>
+                  <Property name="hideMode">display</Property>
+                  <Property name="tags">day</Property>
+                  <Editor>
+                    <Container layout="hbox">
+                      <TextEditor>
+                        <Property name="dataSet">dataSetTaskReminder</Property>
+                        <Property name="width">40</Property>
+                        <Property name="property">everyDay</Property>
+                      </TextEditor>
+                      <Label>
+                        <Property name="text">天提醒一次</Property>
+                      </Label>
+                    </Container>
+                  </Editor>
+                </AutoFormElement>
+                <AutoFormElement layoutConstraint="colSpan:2">
+                  <Property name="name">everyHour</Property>
+                  <Property name="property">everyHour</Property>
+                  <Property name="hideMode">display</Property>
+                  <Property name="tags">hour</Property>
+                  <Editor>
+                    <Container layout="hbox">
+                      <TextEditor>
+                        <Property name="dataSet">dataSetTaskReminder</Property>
+                        <Property name="width">40</Property>
+                        <Property name="property">everyHour</Property>
+                      </TextEditor>
+                      <Label>
+                        <Property name="text">小时提醒一次</Property>
+                      </Label>
+                    </Container>
+                  </Editor>
+                </AutoFormElement>
+                <AutoFormElement layoutConstraint="colSpan:2">
+                  <Property name="name">messageTemplateName</Property>
+                  <Property name="property">messageTemplateName</Property>
+                  <Property name="trigger">triggerMessageTemplate</Property>
+                  <Property name="tags">messageTemplateName</Property>
+                  <Property name="hideMode">display</Property>
+                  <Editor/>
+                </AutoFormElement>
+                <AutoFormElement layoutConstraint="colSpan:2">
+                  <Property name="trigger">triggerSelectSender</Property>
+                  <Property name="label">发送提醒消息方法</Property>
+                  <Property name="hideMode">display</Property>
+                  <Property name="tags">messageTemplateName</Property>
+                  <Editor>
+                    <TagEditor>
+                      <Property name="dataSet">dataSetTaskReminder</Property>
+                      <Property name="property">messageSenders</Property>
+                    </TagEditor>
+                  </Editor>
+                </AutoFormElement>
+              </AutoForm>
+              <ToolBar>
+                <Property name="tags">calendars</Property>
+                <Property name="hideMode">display</Property>
+                <ToolBarButton>
+                  <ClientEvent name="onClick">var data=view.id(&quot;dataSetTaskReminder&quot;).getData(&quot;#.calendars&quot;);&#xD;
+data.insert();&#xD;
+view.id(&quot;dialogSelectCalendar&quot;).show();</ClientEvent>
+                  <Property name="caption">添加排除日期</Property>
+                  <Property name="icon">url(skin>common/icons.gif) -120px 0px</Property>
+                </ToolBarButton>
+                <ToolBarButton>
+                  <ClientEvent name="onClick">var data=view.id(&quot;dataSetTaskReminder&quot;).getData(&quot;#.#calendars&quot;);&#xD;
+if(data){&#xD;
+	data.remove();&#xD;
+}else{&#xD;
+	dorado.MessageBox.alert(&quot;当前没有日期可供删除!&quot;);&#xD;
+}</ClientEvent>
+                  <Property name="caption">删除排除日期</Property>
+                  <Property name="icon">url(skin>common/icons.gif) -140px 0px</Property>
+                </ToolBarButton>
+              </ToolBar>
+              <DataGrid>
+                <Property name="dataSet">dataSetTaskReminder</Property>
+                <Property name="dataPath">#.calendars</Property>
+                <Property name="readOnly">true</Property>
+                <Property name="tags">calendars</Property>
+                <Property name="hideMode">display</Property>
+                <DataColumn name="name">
+                  <Property name="property">name</Property>
+                </DataColumn>
+                <DataColumn name="desc">
+                  <Property name="property">desc</Property>
+                </DataColumn>
+              </DataGrid>
+              <Dialog id="dialogSelectCalendar">
+                <Property name="center">true</Property>
+                <Property name="modal">true</Property>
+                <Property name="width">600</Property>
+                <Property name="height">400</Property>
+                <Buttons>
+                  <Button>
+                    <ClientEvent name="onClick">var data=view.id(&quot;dataSetJobCalendar&quot;).getData(&quot;#&quot;);&#xD;
+var id=data.get(&quot;id&quot;);&#xD;
+var name=data.get(&quot;name&quot;);&#xD;
+var desc=data.get(&quot;desc&quot;);&#xD;
+var target=view.id(&quot;dataSetTaskReminder&quot;).getData(&quot;#.#calendars&quot;);&#xD;
+target.set(&quot;id&quot;,id);&#xD;
+target.set(&quot;name&quot;,name);&#xD;
+target.set(&quot;desc&quot;,desc);&#xD;
+view.id(&quot;dialogSelectCalendar&quot;).hide();</ClientEvent>
+                    <Property name="caption">确定</Property>
+                    <Property name="icon">url(skin>common/icons.gif) -140px -20px</Property>
+                  </Button>
+                  <Button>
+                    <ClientEvent name="onClick">view.id(&quot;dataSetJobCalendar&quot;).getData(&quot;#&quot;).remove();&#xD;
+view.id(&quot;dialogSelectCalendar&quot;).hide();</ClientEvent>
+                    <Property name="caption">取消</Property>
+                    <Property name="icon">url(skin>common/icons.gif) -40px 0px</Property>
+                  </Button>
+                </Buttons>
+                <Children>
+                  <ToolBar>
+                    <DataPilot>
+                      <Property name="dataSet">dataSetJobCalendar</Property>
+                      <Property name="itemCodes">pages</Property>
+                    </DataPilot>
+                  </ToolBar>
+                  <DataGrid>
+                    <Property name="dataSet">dataSetJobCalendar</Property>
+                    <Property name="filterMode">serverSide</Property>
+                    <Property name="showFilterBar">true</Property>
+                    <Property name="readOnly">true</Property>
+                    <DataColumn name="name">
+                      <Property name="property">name</Property>
+                    </DataColumn>
+                    <DataColumn name="desc">
+                      <Property name="property">desc</Property>
+                      <Property name="filterable">false</Property>
+                    </DataColumn>
+                  </DataGrid>
+                </Children>
+                <Tools/>
+              </Dialog>
+              <Trigger id="triggerSelectSender">
+                <ClientEvent name="onExecute">view.id(&quot;dialogSender&quot;).show();</ClientEvent>
+              </Trigger>
+              <Dialog id="dialogSender">
+                <Property name="center">true</Property>
+                <Property name="modal">true</Property>
+                <Property name="width">400</Property>
+                <Property name="height">350</Property>
+                <Buttons>
+                  <Button>
+                    <ClientEvent name="onClick">var selection=view.id(&quot;dataGridSender&quot;).get(&quot;selection&quot;);&#xD;
+if(selection.length==0){&#xD;
+	dorado.MessageBox.alert(&quot;请选中一个消息发送方式&quot;);&#xD;
+	return;&#xD;
+}&#xD;
+var data=view.id(&quot;dataSetTaskReminder&quot;).getData(&quot;#&quot;);&#xD;
+var senders=&quot;&quot;;&#xD;
+var i=0;&#xD;
+selection.each(function(item){&#xD;
+	if(i>0){&#xD;
+		senders+=&quot;,&quot;+item.get(&quot;id&quot;);&#xD;
+	}else{&#xD;
+		senders=item.get(&quot;id&quot;);&#xD;
+	}&#xD;
+	i++;&#xD;
+});&#xD;
+data.set(&quot;messageSenders&quot;,senders);&#xD;
+view.id(&quot;dialogSender&quot;).hide();</ClientEvent>
+                    <Property name="caption">确定</Property>
+                    <Property name="icon">url(skin>common/icons.gif) -140px -20px</Property>
+                  </Button>
+                  <Button>
+                    <ClientEvent name="onClick">view.id(&quot;dialogSender&quot;).hide();</ClientEvent>
+                    <Property name="caption">取消</Property>
+                    <Property name="icon">url(skin>common/icons.gif) -40px 0px</Property>
+                  </Button>
+                </Buttons>
+                <Children>
+                  <DataGrid id="dataGridSender">
+                    <Property name="dataSet">dataSetMessageSender</Property>
+                    <Property name="readOnly">true</Property>
+                    <Property name="selectionMode">multiRows</Property>
+                    <RowSelectorColumn/>
+                    <DataColumn name="id">
+                      <Property name="property">id</Property>
+                    </DataColumn>
+                    <DataColumn name="name">
+                      <Property name="property">name</Property>
+                    </DataColumn>
+                  </DataGrid>
+                </Children>
+                <Tools/>
+              </Dialog>
+            </Container>
+          </ControlTab>
+          <ControlTab>
+            <Property name="caption">表单权限</Property>
+            <Container>
+              <ToolBar>
+                <DataPilot>
+                  <ClientEvent name="onSubControlAction">switch(arg.code){&#xD;
+	case '+':&#xD;
+		var entity = {&#xD;
+			pdId : window.param.processDefinitionId,&#xD;
+			taskName : window.param.taskName&#xD;
+		};&#xD;
+		view.id(&quot;dataSetComponentSecurity&quot;).insert(entity);&#xD;
+		arg.processDefault = false;&#xD;
+		break;&#xD;
+}&#xD;
+</ClientEvent>
+                  <Property name="dataSet">dataSetComponentSecurity</Property>
+                  <Property name="itemCodes">pages,+,-</Property>
+                </DataPilot>
+              </ToolBar>
+              <DataGrid>
+                <Property name="dataSet">dataSetComponentSecurity</Property>
+                <DataColumn name="tag">
+                  <Property name="property">tag</Property>
+                </DataColumn>
+                <DataColumn name="type">
+                  <Property name="property">type</Property>
+                </DataColumn>
+                <DataColumn name="priority">
+                  <Property name="property">priority</Property>
+                </DataColumn>
+              </DataGrid>
+              <UpdateAction id="updateActionComponentSecurity">
+                <Property name="dataResolver">bdf2.jbpm4.pro.nodeConfig#saveComponentSecurity</Property>
+                <UpdateItem>
+                  <Property name="dataSet">dataSetComponentSecurity</Property>
+                </UpdateItem>
+              </UpdateAction>
+            </Container>
+          </ControlTab>
+        </VerticalTabControl>
+      </Children>
+      <Tools/>
+    </Dialog>
+    <Trigger id="triggerMessageTemplate">
+      <ClientEvent name="onExecute">view.id(&quot;dialogMessageTemplate&quot;).show();</ClientEvent>
+    </Trigger>
+    <UpdateAction id="updateActionSaveConfig">
+      <Property name="dataResolver">bdf2.jbpm4.nodeConfig#saveConfig</Property>
+      <Property name="successMessage">操作成功</Property>
+      <UpdateItem>
+        <Property name="dataSet">dataSetTaskConfig</Property>
+        <Property name="dataPath">[#current]</Property>
+        <Property name="alias">config</Property>
+      </UpdateItem>
+      <UpdateItem>
+        <Property name="dataSet">dataSetTaskAssignment</Property>
+        <Property name="dataPath">*</Property>
+        <Property name="alias">assignments</Property>
+      </UpdateItem>
+      <UpdateItem>
+        <Property name="dataSet">dataSetTaskReminder</Property>
+        <Property name="dataPath">[#current]</Property>
+        <Property name="alias">reminder</Property>
+      </UpdateItem>
+    </UpdateAction>
+    <Dialog id="dialogAssignmentDef">
+      <Property name="center">true</Property>
+      <Property name="modal">true</Property>
+      <Property name="width">600</Property>
+      <Property name="height">500</Property>
+      <Buttons>
+        <Button>
+          <ClientEvent name="onClick">var data=view.id(&quot;dataSetAssignmentDef&quot;).getData(&quot;#&quot;);&#xD;
+var id=data.get(&quot;id&quot;);&#xD;
+var name=data.get(&quot;name&quot;);&#xD;
+var target=view.id(&quot;dataSetTaskAssignment&quot;).getData(&quot;#&quot;);&#xD;
+target.set(&quot;assignmentDefId&quot;,id);&#xD;
+target.set(&quot;assignmentDefName&quot;,name);&#xD;
+view.id(&quot;dialogAssignmentDef&quot;).hide();</ClientEvent>
+          <Property name="caption">确定</Property>
+          <Property name="icon">url(skin>common/icons.gif) -140px -20px</Property>
+        </Button>
+        <Button>
+          <ClientEvent name="onClick">view.id(&quot;dataSetTaskAssignment&quot;).getData(&quot;#&quot;).remove();&#xD;
+view.id(&quot;dialogAssignmentDef&quot;).hide();</ClientEvent>
+          <Property name="caption">取消</Property>
+          <Property name="icon">url(skin>common/icons.gif) -40px 0px</Property>
+        </Button>
+      </Buttons>
+      <Children>
+        <DataGrid>
+          <Property name="dataSet">dataSetAssignmentDef</Property>
+          <Property name="readOnly">true</Property>
+          <Property name="filterMode">serverSide</Property>
+          <Property name="showFilterBar">true</Property>
+          <DataColumn name="name">
+            <Property name="property">name</Property>
+          </DataColumn>
+          <DataColumn name="desc">
+            <Property name="property">desc</Property>
+            <Property name="filterable">false</Property>
+          </DataColumn>
+        </DataGrid>
+      </Children>
+      <Tools/>
+    </Dialog>
+  </View>
+</ViewConfig>

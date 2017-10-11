@@ -1,0 +1,284 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ViewConfig>
+  <Arguments/>
+  <Context/>
+  <Model>
+    <DataType name="dataTypeCalendar" parent="$dataTypeJobCalendar">
+      <ClientEvent name="onCurrentChange">view.tag(&quot;d&quot;).set(&quot;visible&quot;,false);&#xD;
+view.tag(&quot;m&quot;).set(&quot;visible&quot;,false);&#xD;
+view.tag(&quot;w&quot;).set(&quot;visible&quot;,false);&#xD;
+view.tag(&quot;y&quot;).set(&quot;visible&quot;,false);&#xD;
+&#xD;
+var newCurrent = arg.newCurrent;&#xD;
+if(!newCurrent){&#xD;
+	return;&#xD;
+}&#xD;
+var type=newCurrent.get(&quot;type&quot;);&#xD;
+if(type==&quot;holiday&quot;){&#xD;
+	view.tag(&quot;d&quot;).set(&quot;visible&quot;,true);&#xD;
+}&#xD;
+if(type==&quot;monthly&quot;){&#xD;
+	view.tag(&quot;m&quot;).set(&quot;visible&quot;,true);&#xD;
+}&#xD;
+if(type==&quot;weekly&quot;){&#xD;
+	view.tag(&quot;w&quot;).set(&quot;visible&quot;,true);&#xD;
+}&#xD;
+if(type==&quot;annual&quot;){&#xD;
+	view.tag(&quot;m&quot;).set(&quot;visible&quot;,true);&#xD;
+	view.tag(&quot;y&quot;).set(&quot;visible&quot;,true);&#xD;
+}</ClientEvent>
+      <Reference name="calendarDates">
+        <Property name="dataType">[$dataTypeJobCalendarDate]</Property>
+        <Property name="dataProvider">bdf2.calendarMaintain#loadCalendarDates</Property>
+        <Property name="parameter">$${this.id}</Property>
+      </Reference>
+    </DataType>
+  </Model>
+  <View>
+    <DataSet id="dataSetCalendar">
+      <Property name="dataType">[dataTypeCalendar]</Property>
+      <Property name="dataProvider">bdf2.calendarMaintain#loadCalendars</Property>
+    </DataSet>
+    <SplitPanel>
+      <Property name="position">550</Property>
+      <MainControl>
+        <Container>
+          <ToolBar>
+            <DataPilot>
+              <ClientEvent name="onSubControlAction">var ds=view.id(&quot;dataSetCalendar&quot;);&#xD;
+switch(arg.code){&#xD;
+	case &quot;+&quot;:&#xD;
+		ds.getData(&quot;#.calendarDates&quot;).insert({calendarId:ds.getData(&quot;#.id&quot;)});&#xD;
+		view.id(&quot;dialogCalendarDate&quot;).show();&#xD;
+		break;&#xD;
+	case &quot;-&quot;:&#xD;
+		dorado.MessageBox.confirm(&quot;真的要删除当前信息吗？&quot;,function(){&#xD;
+			ds.getData(&quot;#.#calendarDates&quot;).remove();&#xD;
+			view.id(&quot;updateActionSaveCalendar&quot;).execute();&#xD;
+		});&#xD;
+		break;&#xD;
+}&#xD;
+arg.processDefault=false;</ClientEvent>
+              <Property name="itemCodes">+,-</Property>
+              <Property name="dataSet">dataSetCalendar</Property>
+              <Property name="dataPath">#.calendarDates</Property>
+            </DataPilot>
+          </ToolBar>
+          <DataGrid>
+            <Property name="dataSet">dataSetCalendar</Property>
+            <Property name="dataPath">#.calendarDates</Property>
+            <Property name="readOnly">true</Property>
+            <DataColumn name="name">
+              <Property name="property">name</Property>
+            </DataColumn>
+            <DataColumn name="calendarDate">
+              <Property name="property">calendarDate</Property>
+              <Property name="tags">d</Property>
+            </DataColumn>
+            <DataColumn name="monthOfYear">
+              <Property name="property">monthOfYear</Property>
+              <Property name="tags">y</Property>
+            </DataColumn>
+            <DataColumn name="dayOfMonth">
+              <Property name="property">dayOfMonth</Property>
+              <Property name="tags">m</Property>
+            </DataColumn>
+            <DataColumn name="dayOfWeek">
+              <Property name="property">dayOfWeek</Property>
+              <Property name="tags">w</Property>
+            </DataColumn>
+          </DataGrid>
+          <Dialog id="dialogCalendarDate">
+            <ClientEvent name="onShow">view.tag(&quot;calendarDate&quot;).set(&quot;visible&quot;,false);&#xD;
+view.tag(&quot;dayOfMonth&quot;).set(&quot;visible&quot;,false);&#xD;
+view.tag(&quot;dayOfWeek&quot;).set(&quot;visible&quot;,false);&#xD;
+view.tag(&quot;monthOfYear&quot;).set(&quot;visible&quot;,false);&#xD;
+var type=view.id(&quot;dataSetCalendar&quot;).getData(&quot;#.type&quot;);&#xD;
+if(type==&quot;holiday&quot;){&#xD;
+	view.tag(&quot;calendarDate&quot;).set(&quot;visible&quot;,true);&#xD;
+}&#xD;
+if(type==&quot;monthly&quot;){&#xD;
+	view.tag(&quot;dayOfMonth&quot;).set(&quot;visible&quot;,true);&#xD;
+}&#xD;
+if(type==&quot;weekly&quot;){&#xD;
+	view.tag(&quot;dayOfWeek&quot;).set(&quot;visible&quot;,true);&#xD;
+}&#xD;
+if(type==&quot;annual&quot;){&#xD;
+	view.tag(&quot;dayOfMonth&quot;).set(&quot;visible&quot;,true);&#xD;
+	view.tag(&quot;monthOfYear&quot;).set(&quot;visible&quot;,true);&#xD;
+}</ClientEvent>
+            <Property name="center">true</Property>
+            <Property name="modal">true</Property>
+            <Property name="width">400</Property>
+            <Property name="height">220</Property>
+            <Buttons>
+              <Button>
+                <ClientEvent name="onClick">view.id(&quot;updateActionSaveCalendar&quot;).execute(function(){&#xD;
+	view.id(&quot;dialogCalendarDate&quot;).hide();&#xD;
+});&#xD;
+</ClientEvent>
+                <Property name="caption">确认</Property>
+                <Property name="icon">url(skin>common/icons.gif) -140px -20px</Property>
+              </Button>
+              <Button>
+                <ClientEvent name="onClick">view.id(&quot;dataSetCalendar&quot;).getData(&quot;#.calendarDates&quot;).cancel();&#xD;
+view.id(&quot;dialogCalendarDate&quot;).hide();</ClientEvent>
+                <Property name="caption">取消</Property>
+                <Property name="icon">url(skin>common/icons.gif) -40px 0px</Property>
+              </Button>
+            </Buttons>
+            <Children>
+              <AutoForm>
+                <Property name="dataSet">dataSetCalendar</Property>
+                <Property name="dataPath">#.#calendarDates</Property>
+                <Property name="cols">*</Property>
+                <Property name="labelAlign">right</Property>
+                <AutoFormElement>
+                  <Property name="name">name</Property>
+                  <Property name="property">name</Property>
+                  <Editor/>
+                </AutoFormElement>
+                <AutoFormElement>
+                  <Property name="name">calendarDate</Property>
+                  <Property name="property">calendarDate</Property>
+                  <Property name="tags">calendarDate</Property>
+                  <Property name="hideMode">display</Property>
+                  <Property name="visible">false</Property>
+                  <Editor/>
+                </AutoFormElement>
+                <AutoFormElement>
+                  <Property name="name">monthOfYear</Property>
+                  <Property name="property">monthOfYear</Property>
+                  <Property name="tags">monthOfYear</Property>
+                  <Property name="hideMode">display</Property>
+                  <Property name="visible">false</Property>
+                  <Editor/>
+                </AutoFormElement>
+                <AutoFormElement>
+                  <Property name="name">dayOfMonth</Property>
+                  <Property name="property">dayOfMonth</Property>
+                  <Property name="tags">dayOfMonth</Property>
+                  <Property name="hideMode">display</Property>
+                  <Property name="visible">false</Property>
+                  <Editor/>
+                </AutoFormElement>
+                <AutoFormElement>
+                  <Property name="name">dayOfWeek</Property>
+                  <Property name="property">dayOfWeek</Property>
+                  <Property name="tags">dayOfWeek</Property>
+                  <Property name="hideMode">display</Property>
+                  <Property name="visible">false</Property>
+                  <Editor/>
+                </AutoFormElement>
+              </AutoForm>
+            </Children>
+            <Tools/>
+          </Dialog>
+        </Container>
+      </MainControl>
+      <SideControl>
+        <Container>
+          <ToolBar>
+            <DataPilot>
+              <ClientEvent name="onSubControlAction">var ds=view.id(&quot;dataSetCalendar&quot;);&#xD;
+switch(arg.code){&#xD;
+	case &quot;+&quot;:&#xD;
+		ds.insert();&#xD;
+		view.id(&quot;dialogCalendar&quot;).show();&#xD;
+		break;&#xD;
+	case &quot;-&quot;:&#xD;
+		dorado.MessageBox.confirm(&quot;真的要删除当前信息吗？&quot;,function(){&#xD;
+			ds.getData(&quot;#&quot;).remove();&#xD;
+			view.id(&quot;updateActionSaveCalendar&quot;).execute();&#xD;
+		});&#xD;
+		break;&#xD;
+}&#xD;
+arg.processDefault=false;&#xD;
+</ClientEvent>
+              <Property name="itemCodes">+,-</Property>
+              <Property name="dataSet">dataSetCalendar</Property>
+            </DataPilot>
+            <ToolBarButton>
+              <ClientEvent name="onClick">var data=view.id(&quot;dataSetCalendar&quot;).getData(&quot;#&quot;);&#xD;
+if(data){&#xD;
+	view.id(&quot;dialogCalendar&quot;).show();&#xD;
+	view.tag(&quot;type&quot;).set(&quot;readOnly&quot;,true);&#xD;
+}</ClientEvent>
+              <Property name="caption">修改</Property>
+              <Property name="icon">url(skin>common/icons.gif) -200px 0px</Property>
+            </ToolBarButton>
+          </ToolBar>
+          <DataGrid>
+            <Property name="dataSet">dataSetCalendar</Property>
+            <Property name="readOnly">true</Property>
+            <DataColumn name="name">
+              <Property name="property">name</Property>
+            </DataColumn>
+            <DataColumn name="type">
+              <Property name="property">type</Property>
+              <Property name="width">140</Property>
+            </DataColumn>
+            <DataColumn name="desc">
+              <Property name="property">desc</Property>
+            </DataColumn>
+          </DataGrid>
+          <Dialog id="dialogCalendar">
+            <ClientEvent name="beforeHide">view.tag(&quot;type&quot;).set(&quot;readOnly&quot;,false);</ClientEvent>
+            <Property name="center">true</Property>
+            <Property name="modal">true</Property>
+            <Property name="width">400</Property>
+            <Property name="height">260</Property>
+            <Buttons>
+              <Button>
+                <ClientEvent name="onClick">view.id(&quot;updateActionSaveCalendar&quot;).execute(function(){&#xD;
+	view.id(&quot;dialogCalendar&quot;).hide();&#xD;
+});&#xD;
+</ClientEvent>
+                <Property name="caption">确认</Property>
+                <Property name="icon">url(skin>common/icons.gif) -140px -20px</Property>
+              </Button>
+              <Button>
+                <ClientEvent name="onClick">view.id(&quot;dataSetCalendar&quot;).getData().cancel();&#xD;
+view.id(&quot;dialogCalendar&quot;).hide();</ClientEvent>
+                <Property name="caption">取消</Property>
+                <Property name="icon">url(skin>common/icons.gif) -40px 0px</Property>
+              </Button>
+            </Buttons>
+            <Children>
+              <AutoForm>
+                <Property name="dataSet">dataSetCalendar</Property>
+                <Property name="cols">*</Property>
+                <Property name="labelAlign">right</Property>
+                <AutoFormElement>
+                  <Property name="name">name</Property>
+                  <Property name="property">name</Property>
+                  <Editor/>
+                </AutoFormElement>
+                <AutoFormElement>
+                  <Property name="name">type</Property>
+                  <Property name="property">type</Property>
+                  <Property name="tags">type</Property>
+                  <Editor/>
+                </AutoFormElement>
+                <AutoFormElement>
+                  <Property name="name">desc</Property>
+                  <Property name="property">desc</Property>
+                  <Property name="editorType">TextArea</Property>
+                  <Editor/>
+                </AutoFormElement>
+              </AutoForm>
+            </Children>
+            <Tools/>
+          </Dialog>
+        </Container>
+      </SideControl>
+    </SplitPanel>
+    <UpdateAction id="updateActionSaveCalendar">
+      <Property name="dataResolver">bdf2.calendarMaintain#saveCalendars</Property>
+      <Property name="successMessage">操作成功</Property>
+      <UpdateItem>
+        <Property name="dataSet">dataSetCalendar</Property>
+      </UpdateItem>
+    </UpdateAction>
+  </View>
+</ViewConfig>

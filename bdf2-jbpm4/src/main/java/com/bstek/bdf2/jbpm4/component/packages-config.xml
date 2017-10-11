@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+    <Packages>
+        <Package name="Jbpm4Process" pattern="dorado-js" depends="base-widget">
+        classpath:dorado/scripts/jbpm4
+        </Package>
+    </Packages>
+</config>

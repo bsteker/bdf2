@@ -1,0 +1,525 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ViewConfig>
+  <Property name="metaData">
+    <Property name="securityTag">rapid</Property>
+  </Property>
+  <Arguments/>
+  <Context>
+    <Attribute name="packageId">
+      <Property name="value">${request.getParameter(&quot;packageId&quot;)}</Property>
+    </Attribute>
+  </Context>
+  <Model>
+    <DataType name="dataTypeMetaData">
+      <Property name="creationType">com.bstek.bdf2.rapido.domain.MetaData</Property>
+      <PropertyDef name="id">
+        <Property name="dataType">String</Property>
+        <Property name="label">ID</Property>
+      </PropertyDef>
+      <PropertyDef name="name">
+        <Property name="dataType">String</Property>
+        <Property name="label">字段名</Property>
+      </PropertyDef>
+      <PropertyDef name="label">
+        <Property name="dataType">String</Property>
+        <Property name="label">字段标题</Property>
+      </PropertyDef>
+      <PropertyDef name="desc">
+        <Property name="dataType">String</Property>
+        <Property name="label">描述</Property>
+      </PropertyDef>
+      <PropertyDef name="packageId">
+        <Property name="dataType">String</Property>
+        <Property name="label">所在包</Property>
+      </PropertyDef>
+      <PropertyDef name="defaultValue">
+        <Property name="dataType">String</Property>
+        <Property name="label">默认值</Property>
+      </PropertyDef>
+      <PropertyDef name="displayFormat">
+        <Property name="dataType">String</Property>
+        <Property name="label">显示格式</Property>
+      </PropertyDef>
+      <PropertyDef name="required">
+        <Property name="dataType">boolean</Property>
+        <Property name="label">是否必须</Property>
+      </PropertyDef>
+      <PropertyDef name="mapping">
+        <Property name="dataType">dataTypeMapping</Property>
+        <Property name="label">数据映射</Property>
+        <Property name="required">false</Property>
+      </PropertyDef>
+      <Reference name="validators">
+        <Property name="dataType">[dataTypeValidator]</Property>
+        <Property name="parameter">$${this.id}</Property>
+        <Property name="dataProvider">bdf.rapido.metadataPR#loadValidatorsByFieldId</Property>
+      </Reference>
+    </DataType>
+    <DataType name="dataTypeMapping">
+      <Property name="creationType">com.bstek.bdf2.rapido.domain.Mapping</Property>
+      <Property name="defaultDisplayProperty">name</Property>
+      <PropertyDef name="id">
+        <Property name="dataType">String</Property>
+      </PropertyDef>
+      <PropertyDef name="name">
+        <Property name="dataType">String</Property>
+        <Property name="label">名称</Property>
+      </PropertyDef>
+      <PropertyDef name="source">
+        <Property name="label">映射数据来源</Property>
+        <Property name="mapping">
+          <Property name="mapValues">
+            <Collection>
+              <Entity>
+                <Property name="key">table</Property>
+                <Property name="value">数据库表</Property>
+              </Entity>
+              <Entity>
+                <Property name="key">custom</Property>
+                <Property name="value">自定义</Property>
+              </Entity>
+            </Collection>
+          </Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="packageId">
+        <Property name="dataType">String</Property>
+      </PropertyDef>
+      <PropertyDef name="valueField">
+        <Property name="dataType">String</Property>
+        <Property name="label">显示用字段名</Property>
+      </PropertyDef>
+      <PropertyDef name="keyField">
+        <Property name="dataType">String</Property>
+        <Property name="label">实际值字段名</Property>
+      </PropertyDef>
+      <PropertyDef name="querySql">
+        <Property name="dataType">String</Property>
+        <Property name="label">查询SQL</Property>
+      </PropertyDef>
+      <PropertyDef name="customKeyValue">
+        <Property name="dataType">String</Property>
+        <Property name="label">自定义键值对</Property>
+        <Property name="tags">customKeyValueTag</Property>
+      </PropertyDef>
+      <PropertyDef name="icon">
+        <Property name="dataType">String</Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="dataTypePackageInfo">
+      <Property name="creationType">com.bstek.bdf2.rapido.domain.PackageInfo</Property>
+      <Property name="defaultDisplayProperty">name</Property>
+      <PropertyDef name="id">
+        <Property name="dataType">String</Property>
+      </PropertyDef>
+      <PropertyDef name="name">
+        <Property name="dataType">String</Property>
+      </PropertyDef>
+      <PropertyDef name="desc">
+        <Property name="dataType">String</Property>
+      </PropertyDef>
+      <PropertyDef name="icon">
+        <Property name="dataType">String</Property>
+      </PropertyDef>
+      <PropertyDef name="parentId">
+        <Property name="dataType">String</Property>
+      </PropertyDef>
+      <Reference name="children">
+        <Property name="dataProvider">bdf.rapido.metadataPR#loadMappingPackages</Property>
+        <Property name="dataType">[SELF]</Property>
+        <Property name="parameter">$${this.id}</Property>
+      </Reference>
+      <Reference name="mappings">
+        <Property name="dataType">[dataTypeMapping]</Property>
+        <Property name="dataProvider">bdf.rapido.mappingPR#loadMappingsByPackageId</Property>
+        <Property name="parameter">
+          <Entity>
+            <Property name="packageId">$${this.id}</Property>
+          </Entity>
+        </Property>
+      </Reference>
+    </DataType>
+    <DataType name="dataTypeValidator">
+      <Property name="creationType">com.bstek.bdf2.rapido.domain.Validator</Property>
+      <PropertyDef name="id">
+        <Property name="dataType">String</Property>
+      </PropertyDef>
+      <PropertyDef name="name">
+        <Property name="dataType">String</Property>
+        <Property name="label">验证器名称</Property>
+      </PropertyDef>
+      <PropertyDef name="desc">
+        <Property name="dataType">String</Property>
+        <Property name="label">描述</Property>
+      </PropertyDef>
+      <PropertyDef name="fieldId">
+        <Property name="dataType">String</Property>
+      </PropertyDef>
+      <Reference name="properties">
+        <Property name="dataType">[dataTypeValidatorProperty]</Property>
+        <Property name="dataProvider">bdf.rapido.entityPR#loadValidatorProperties</Property>
+        <Property name="parameter">$${this.id}</Property>
+      </Reference>
+    </DataType>
+    <DataType name="dataTypeValidatorDef">
+      <Property name="creationType">com.bstek.bdf2.rapido.view.entity.def.ValidatorDef</Property>
+      <PropertyDef name="name">
+        <Property name="dataType">String</Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="dataTypeValidatorProperty">
+      <Property name="creationType">com.bstek.bdf2.rapido.domain.ValidatorProperty</Property>
+      <PropertyDef name="id">
+        <Property name="dataType">String</Property>
+      </PropertyDef>
+      <PropertyDef name="name">
+        <Property name="dataType">String</Property>
+        <Property name="label">属性名</Property>
+      </PropertyDef>
+      <PropertyDef name="value">
+        <Property name="dataType">String</Property>
+        <Property name="label">属性值</Property>
+      </PropertyDef>
+      <PropertyDef name="validatorId">
+        <Property name="dataType">String</Property>
+      </PropertyDef>
+    </DataType>
+  </Model>
+  <View>
+    <DataSet id="dataSetMetaData">
+      <Property name="dataType">[dataTypeMetaData]</Property>
+      <Property name="dataProvider">bdf.rapido.metadataPR#loadMetadata</Property>
+      <Property name="pageSize">20</Property>
+    </DataSet>
+    <DataSet id="dataSetPackage">
+      <Property name="dataProvider">bdf.rapido.metadataPR#loadMappingPackages</Property>
+      <Property name="dataType">[dataTypePackageInfo]</Property>
+    </DataSet>
+    <ToolBar>
+      <DataPilot>
+        <ClientEvent name="onSubControlAction">var code = arg.code;&#xD;
+var dataSet = this.id(&quot;dataSetMetaData&quot;);&#xD;
+var updateAction = this.id(&quot;updateActionSave&quot;);&#xD;
+if(code == &quot;+&quot;){&#xD;
+	dataSet.get(&quot;data&quot;).insert();&#xD;
+	this.id(&quot;dialogMetaData&quot;).set(&quot;caption&quot;,&quot;元数据添加&quot;).show();&#xD;
+}else if(code == &quot;-&quot;){&#xD;
+	var record = dataSet.getData(&quot;#&quot;);&#xD;
+	if(record){&#xD;
+		dorado.MessageBox.confirm(&quot;您确定要删除当前记录吗？&quot;,function(){&#xD;
+			record.remove();&#xD;
+			updateAction.execute();&#xD;
+		});&#xD;
+	}&#xD;
+}&#xD;
+&#xD;
+arg.processDefault = false;&#xD;
+</ClientEvent>
+        <Property name="dataSet">dataSetMetaData</Property>
+        <Property name="itemCodes">pages,+,-</Property>
+      </DataPilot>
+      <ToolBarButton id="toolBarButtonEdit">
+        <ClientEvent name="onClick">var current = this.id(&quot;dataSetMetaData&quot;).getData(&quot;#&quot;);&#xD;
+&#xD;
+if(current){&#xD;
+	this.id(&quot;dialogMetaData&quot;).set(&quot;caption&quot;,&quot;元数据编辑&quot;).show();&#xD;
+}else{&#xD;
+	dorado.MessageBox.alert(&quot;当前没有元数据可编辑！&quot;);&#xD;
+}&#xD;
+</ClientEvent>
+        <Property name="caption">编辑</Property>
+        <Property name="icon">url(>skin>common/icons.gif) -200px 0px</Property>
+      </ToolBarButton>
+    </ToolBar>
+    <DataGrid>
+      <Property name="dataSet">dataSetMetaData</Property>
+      <Property name="readOnly">true</Property>
+      <Property name="stretchColumnsMode">off</Property>
+      <Property name="height">300</Property>
+      <DataColumn name="name">
+        <Property name="property">name</Property>
+        <Property name="width">150</Property>
+      </DataColumn>
+      <DataColumn name="label">
+        <Property name="property">label</Property>
+        <Property name="width">150</Property>
+      </DataColumn>
+      <DataColumn name="defaultValue">
+        <Property name="property">defaultValue</Property>
+        <Property name="width">150</Property>
+      </DataColumn>
+      <DataColumn name="displayFormat">
+        <Property name="property">displayFormat</Property>
+        <Property name="width">150</Property>
+      </DataColumn>
+      <DataColumn>
+        <Property name="property">mapping</Property>
+        <Property name="name">mapping</Property>
+        <Property name="width">150</Property>
+      </DataColumn>
+      <DataColumn name="desc">
+        <Property name="property">desc</Property>
+        <Property name="width">300</Property>
+      </DataColumn>
+    </DataGrid>
+    <Panel>
+      <Property name="caption">字段验证器信息</Property>
+      <Buttons/>
+      <Children>
+        <ToolBar>
+          <DataPilot>
+            <ClientEvent name="onSubControlAction">var code = arg.code;&#xD;
+var dataSet = this.id(&quot;dataSetMetaData&quot;);&#xD;
+var updateAction = this.id(&quot;updateActionSave&quot;);&#xD;
+if(code == &quot;+&quot;){&#xD;
+	arg.processDefault = true;&#xD;
+}else if(code == &quot;-&quot;){&#xD;
+	var record = dataSet.getData(&quot;#.#validators&quot;);&#xD;
+	if(record){&#xD;
+		dorado.MessageBox.confirm(&quot;您确定要删除当前验证器吗？&quot;,function(){&#xD;
+			record.remove();&#xD;
+			updateAction.execute();&#xD;
+		});&#xD;
+		arg.processDefault = false;&#xD;
+	}&#xD;
+}&#xD;
+&#xD;
+</ClientEvent>
+            <Property name="itemCodes">+,-</Property>
+            <Property name="dataSet">dataSetMetaData</Property>
+            <Property name="dataPath">#.validators</Property>
+          </DataPilot>
+          <ToolBarButton>
+            <ClientEvent name="onClick">var validator = this.id(&quot;dataSetMetaData&quot;).getData(&quot;#.#validators&quot;);&#xD;
+&#xD;
+if(validator){&#xD;
+	this.id(&quot;dialogValidator&quot;).show();&#xD;
+	var ds=this.id(&quot;dataSetValidatorDefProperty&quot;);&#xD;
+	ds.set(&quot;parameter&quot;,validator.get(&quot;name&quot;));&#xD;
+	ds.flushAsync();&#xD;
+}else{&#xD;
+	dorado.MessageBox.alert(&quot;没有可编辑的验证器！&quot;);&#xD;
+}&#xD;
+</ClientEvent>
+            <Property name="caption">验证器属性</Property>
+            <Property name="icon">url(>skin>common/icons.gif) -200px 0px</Property>
+          </ToolBarButton>
+          <ToolBarButton>
+            <ClientEvent name="onClick">this.id(&quot;updateActionSave&quot;).execute(function(){&#xD;
+	dorado.MessageBox.alert(&quot;保存成功！&quot;);&#xD;
+});&#xD;
+</ClientEvent>
+            <Property name="caption">保存</Property>
+            <Property name="icon">url(>skin>common/icons.gif) -140px -20px</Property>
+          </ToolBarButton>
+        </ToolBar>
+        <DataGrid>
+          <Property name="dataSet">dataSetMetaData</Property>
+          <Property name="dataPath">#.validators</Property>
+          <Property name="dataType">dataTypeValidator</Property>
+          <Property name="readOnly">false</Property>
+          <DataColumn name="name">
+            <Property name="property">name</Property>
+            <Property name="trigger">dataSetDropDownValidatorDef</Property>
+          </DataColumn>
+          <DataColumn name="desc">
+            <Property name="property">desc</Property>
+          </DataColumn>
+        </DataGrid>
+        <DataSet id="dataSetValidatorDef">
+          <Property name="dataType">[dataTypeValidatorDef]</Property>
+          <Property name="dataProvider">bdf.rapido.entityPR#loadValidatorDefs</Property>
+        </DataSet>
+        <DataSetDropDown id="dataSetDropDownValidatorDef">
+          <ClientEvent name="onValueSelect">var ds=this.id(&quot;dataSetValidatorDefProperty&quot;);&#xD;
+ds.set(&quot;parameter&quot;,arg.selectedValue);&#xD;
+ds.flushAsync();&#xD;
+</ClientEvent>
+          <Property name="dataSet">dataSetValidatorDef</Property>
+          <Property name="property">name</Property>
+        </DataSetDropDown>
+      </Children>
+      <Tools/>
+    </Panel>
+    <Dialog id="dialogMetaData">
+      <Property name="width">500</Property>
+      <Property name="height">230</Property>
+      <Property name="center">true</Property>
+      <Property name="modal">true</Property>
+      <Property name="closeable">false</Property>
+      <Buttons>
+        <Button id="buttonSave">
+          <ClientEvent name="onClick">var dialog = this.id(&quot;dialogMetaData&quot;);&#xD;
+var updateAction = this.id(&quot;updateActionSave&quot;);&#xD;
+&#xD;
+updateAction.execute(function(){&#xD;
+    dialog.hide();&#xD;
+});</ClientEvent>
+          <Property name="caption">保存</Property>
+          <Property name="icon">url(>skin>common/icons.gif) -140px -20px</Property>
+        </Button>
+        <Button id="buttonCancel">
+          <ClientEvent name="onClick">this.id(&quot;dataSetMetaData&quot;).get(&quot;data&quot;).cancel();&#xD;
+this.id(&quot;dialogMetaData&quot;).hide();</ClientEvent>
+          <Property name="caption">取消</Property>
+          <Property name="icon">url(>skin>common/icons.gif) -40px 0px</Property>
+        </Button>
+      </Buttons>
+      <Children>
+        <AutoForm>
+          <Property name="dataSet">dataSetMetaData</Property>
+          <Property name="dataType">dataTypeMetaData</Property>
+          <Property name="labelAlign">right</Property>
+          <AutoFormElement>
+            <Property name="name">name</Property>
+            <Property name="property">name</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">label</Property>
+            <Property name="property">label</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">defaultValue</Property>
+            <Property name="property">defaultValue</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">displayFormat</Property>
+            <Property name="property">displayFormat</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement layoutConstraint="colSpan:2">
+            <Property name="name">mapping</Property>
+            <Property name="property">mapping</Property>
+            <Property name="trigger">triggerSelectMapping</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement layoutConstraint="colSpan:2">
+            <Property name="name">desc</Property>
+            <Property name="property">desc</Property>
+            <Editor/>
+          </AutoFormElement>
+        </AutoForm>
+      </Children>
+      <Tools/>
+    </Dialog>
+    <Dialog id="dialogSelectMapping">
+      <Property name="center">true</Property>
+      <Property name="modal">true</Property>
+      <Property name="width">400</Property>
+      <Property name="height">400</Property>
+      <Property name="caption">数据映射选择</Property>
+      <Buttons>
+        <Button>
+          <ClientEvent name="onClick">var node=this.id(&quot;dataTreeSelectMapping&quot;).get(&quot;currentNode&quot;);&#xD;
+&#xD;
+if(node &amp;&amp; node.get(&quot;tags&quot;)==&quot;mapping&quot;){&#xD;
+    this.id(&quot;dataSetMetaData&quot;).getData(&quot;#&quot;).set(&quot;mapping&quot;,node.get(&quot;data&quot;).toJSON());&#xD;
+    this.id(&quot;dialogSelectMapping&quot;).hide();&#xD;
+}else {&#xD;
+    dorado.MessageBox.alert(&quot;请先选中要添加的数据映射！&quot;);&#xD;
+}</ClientEvent>
+          <Property name="caption">确定</Property>
+          <Property name="icon">url(skin>common/icons.gif) -140px -20px</Property>
+        </Button>
+        <Button>
+          <ClientEvent name="onClick">this.id(&quot;dialogSelectMapping&quot;).hide();</ClientEvent>
+          <Property name="caption">取消</Property>
+          <Property name="icon">url(skin>common/icons.gif) -40px 0px</Property>
+        </Button>
+      </Buttons>
+      <Children>
+        <DataTree id="dataTreeSelectMapping">
+          <Property name="dataSet">dataSetPackage</Property>
+          <BindingConfigs>
+            <BindingConfig>
+              <Property name="recursive">true</Property>
+              <Property name="labelProperty">name</Property>
+              <Property name="tipProperty">desc</Property>
+              <Property name="childrenProperty">children</Property>
+              <Property name="expandLevel">2</Property>
+              <Property name="iconProperty">icon</Property>
+              <BindingConfig>
+                <Property name="childrenProperty">mappings</Property>
+                <Property name="labelProperty">name</Property>
+                <Property name="tags">mapping</Property>
+                <Property name="iconProperty">icon</Property>
+              </BindingConfig>
+            </BindingConfig>
+          </BindingConfigs>
+        </DataTree>
+      </Children>
+      <Tools/>
+    </Dialog>
+    <Dialog id="dialogValidator">
+      <ClientEvent name="onHide">this.id(&quot;dataSetMetaData&quot;).getData(&quot;#.#validators.properties&quot;).cancel();&#xD;
+</ClientEvent>
+      <Property name="center">true</Property>
+      <Property name="width">600</Property>
+      <Property name="height">550</Property>
+      <Property name="modal">true</Property>
+      <Property name="caption">字段验证属性信息管理</Property>
+      <Property name="maximizeable">true</Property>
+      <Buttons>
+        <Button>
+          <ClientEvent name="onClick">var action=this.id(&quot;updateActionSave&quot;);&#xD;
+action.execute(function(){&#xD;
+	dorado.MessageBox.alert(&quot;保存成功！&quot;);&#xD;
+});&#xD;
+this.id(&quot;dialogValidator&quot;).hide();&#xD;
+</ClientEvent>
+          <Property name="caption">确定</Property>
+          <Property name="icon">url(skin>common/icons.gif) -140px -20px</Property>
+        </Button>
+        <Button>
+          <ClientEvent name="onClick">this.id(&quot;dialogValidator&quot;).hide();</ClientEvent>
+          <Property name="caption">取消</Property>
+          <Property name="icon">	url(skin>common/icons.gif) -40px 0px</Property>
+        </Button>
+      </Buttons>
+      <Children>
+        <ToolBar>
+          <DataPilot>
+            <Property name="dataSet">dataSetMetaData</Property>
+            <Property name="dataPath">#.#validators.properties</Property>
+            <Property name="itemCodes">+,-</Property>
+          </DataPilot>
+        </ToolBar>
+        <DataGrid>
+          <Property name="dataSet">dataSetMetaData</Property>
+          <Property name="dataPath">#.#validators.properties</Property>
+          <Property name="dataType">dataTypeValidatorProperty</Property>
+          <DataColumn name="name">
+            <Property name="property">name</Property>
+            <Property name="trigger">dataSetDropDownValidatorDefProperty</Property>
+          </DataColumn>
+          <DataColumn name="value">
+            <Property name="property">value</Property>
+          </DataColumn>
+        </DataGrid>
+        <DataSet id="dataSetValidatorDefProperty">
+          <Property name="dataType">[dataTypeValidatorDef]</Property>
+          <Property name="dataProvider">bdf.rapido.entityPR#loadValidatorDefProperties</Property>
+        </DataSet>
+        <DataSetDropDown id="dataSetDropDownValidatorDefProperty">
+          <Property name="dataSet">dataSetValidatorDefProperty</Property>
+          <Property name="property">name</Property>
+        </DataSetDropDown>
+      </Children>
+      <Tools/>
+    </Dialog>
+    <UpdateAction id="updateActionSave">
+      <Property name="dataResolver">bdf.rapido.metadataPR#saveMetadata</Property>
+      <Property name="successMessage">操作成功</Property>
+      <UpdateItem>
+        <Property name="dataSet">dataSetMetaData</Property>
+        <Property name="dataPath">!DIRTY_TREE</Property>
+      </UpdateItem>
+    </UpdateAction>
+    <Trigger id="triggerSelectMapping">
+      <ClientEvent name="onExecute">this.id(&quot;dialogSelectMapping&quot;).show();</ClientEvent>
+    </Trigger>
+  </View>
+</ViewConfig>

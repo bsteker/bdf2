@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+	<context:component-scan base-package="com.bstek.bdf2.job.view"></context:component-scan>
+	
+	<bean class="com.bstek.bdf2.job.controller.JobMenuGenerator"></bean>
+	<bean parent="dorado.dataConfigLoader">
+		<property name="configLocation" value="classpath:com/bstek/bdf2/job/view/job.model.xml" />
+	</bean>
+	<bean class="com.bstek.bdf2.core.orm.AnnotationPackages">
+		<property name="scanPackages">
+			<list>
+				<value>com/bstek/bdf2/job/model</value>
+			</list>
+		</property>
+		<property name="dataSourceRegisterName" value="${bdf2.jobDataSourceName}"></property>
+	</bean>
+	<bean id="bdf2.job.schedulerService" class="com.bstek.bdf2.job.service.impl.SchedulerServiceImpl">
+		<property name="runJobInCurrentInstance" value="${bdf2.runJobInCurrentInstance}"></property>
+		<property name="threadCount" value="${bdf2.jobThreadCount}"></property>
+		<property name="makeSchedulerThreadDaemon" value="${bdf2.makeSchedulerThreadDaemon}"></property>
+		<property name="configLocation">
+			<value>${bdf2.schedulerConfigPropertiesFile}</value>
+		</property>
+	</bean>
+	<bean id="bdf2.job.jobService" class="com.bstek.bdf2.job.service.impl.JobServiceImpl">
+		<property name="schedulerService" ref="bdf2.job.schedulerService"></property>
+	</bean>
+	<bean class="com.bstek.bdf2.job.provider.impl.DefaultRunJobProvider">
+		<property name="jobDefinitionService" ref="bdf2.job.jobDefinitionService"></property>
+	</bean>
+	<bean id="bdf2.job.jobDefinitionService" class="com.bstek.bdf2.job.service.impl.JobDefinitionServiceImpl">
+	</bean>
+	<bean id="bdf2.job.initializer" class="com.bstek.bdf2.job.service.Initializer">
+		<property name="schedulerService" ref="bdf2.job.schedulerService"></property>
+		<property name="jobService" ref="bdf2.job.jobService"></property>	
+	</bean>
+	<bean id="bdf2.job.historyListener"  class="com.bstek.bdf2.job.listener.JobExecutionHistoryListener" />
+	<bean class="com.bstek.bdf2.job.provider.impl.SystemScanJobProvider">
+		<property name="scanJobCronExpression" value="${bdf2.scanJobCronExpression}"></property>
+	</bean>
+	<bean id="bdf2.job.scanJobExecutorDetail" class="com.bstek.bdf2.job.executor.ScanJobExecutorDetail">
+		<property name="name" value="bdf2.job.scanJobExecutorDetail"></property>
+		<property name="jobService" ref="bdf2.job.jobService"></property>
+		<property name="jobDefinitionService" ref="bdf2.job.jobDefinitionService"></property>
+	</bean>
+</beans>

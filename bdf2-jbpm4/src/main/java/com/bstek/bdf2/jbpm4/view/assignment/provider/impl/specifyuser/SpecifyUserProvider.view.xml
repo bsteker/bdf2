@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ViewConfig>
+  <Arguments/>
+  <Context/>
+  <Model>
+    <DataType name="dataTypeUser">
+      <PropertyDef name="cname">
+        <Property name="label">中文名</Property>
+        <Property name="dataType">String</Property>
+      </PropertyDef>
+      <PropertyDef name="username">
+        <Property name="label">用户名</Property>
+        <Property name="dataType">String</Property>
+      </PropertyDef>
+    </DataType>
+  </Model>
+  <View>
+    <UpdateAction id="updateActionSaveUser">
+      <Property name="dataResolver">bdf2.jbpm4.specifyUserProvider#saveUser</Property>
+      <Property name="successMessage">操作成功</Property>
+      <UpdateItem>
+        <Property name="dataSet">dataSetUser</Property>
+        <Property name="dataPath">#</Property>
+      </UpdateItem>
+    </UpdateAction>
+    <Panel>
+      <Buttons>
+        <Button>
+          <ClientEvent name="onClick">var data=view.id(&quot;dataSetUser&quot;).getData(&quot;#&quot;);&#xD;
+if(data){&#xD;
+	var action=view.id(&quot;updateActionSaveUser&quot;);&#xD;
+	action.set(&quot;parameter&quot;,{assignmentDefId:view.get(&quot;parent&quot;).getAssignmentDefId()})&#xD;
+	action.execute(function(){&#xD;
+		view.get(&quot;parent&quot;).reset();&#xD;
+		view.get(&quot;parent&quot;).hide();&#xD;
+	});&#xD;
+}else{&#xD;
+	dorado.MessageBox.alert(&quot;当前没有选中目标用户!&quot;);&#xD;
+}</ClientEvent>
+          <Property name="caption">确认</Property>
+          <Property name="icon">url(skin>common/icons.gif) -140px -20px</Property>
+        </Button>
+        <Button>
+          <ClientEvent name="onClick">view.get(&quot;parent&quot;).hide();</ClientEvent>
+          <Property name="caption">取消</Property>
+          <Property name="icon">url(skin>common/icons.gif) -40px 0px</Property>
+        </Button>
+      </Buttons>
+      <Children>
+        <DataSet id="dataSetUser">
+          <Property name="dataType">[dataTypeUser]</Property>
+          <Property name="pageSize">15</Property>
+          <Property name="dataProvider">bdf2.jbpm4.specifyUserProvider#loadUsers</Property>
+        </DataSet>
+        <DataGrid>
+          <Property name="dataSet">dataSetUser</Property>
+          <Property name="readOnly">true</Property>
+          <Property name="filterMode">serverSide</Property>
+          <Property name="showFilterBar">true</Property>
+          <DataColumn name="cname">
+            <Property name="property">cname</Property>
+          </DataColumn>
+          <DataColumn name="username">
+            <Property name="property">username</Property>
+          </DataColumn>
+        </DataGrid>
+      </Children>
+      <Tools/>
+    </Panel>
+  </View>
+</ViewConfig>

@@ -1,0 +1,796 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ViewConfig>
+  <Property name="metaData">
+    <Property name="securityTag">rapid</Property>
+  </Property>
+  <Arguments/>
+  <Context>
+    <Attribute name="packageId">
+      <Property name="value">${request.getParameter(&quot;packageId&quot;)}</Property>
+    </Attribute>
+  </Context>
+  <Model>
+    <DataType name="dataTypePage">
+      <Property name="creationType">com.bstek.bdf2.rapido.domain.PageInfo</Property>
+      <PropertyDef name="id">
+        <Property name="dataType">String</Property>
+      </PropertyDef>
+      <PropertyDef name="name">
+        <Property name="dataType">String</Property>
+        <Property name="label">页面名称</Property>
+      </PropertyDef>
+      <PropertyDef name="packageId">
+        <Property name="dataType">String</Property>
+      </PropertyDef>
+      <PropertyDef name="desc">
+        <Property name="dataType">String</Property>
+        <Property name="label">描述</Property>
+      </PropertyDef>
+      <PropertyDef name="layout">
+        <Property name="dataType">String</Property>
+        <Property name="label">采用布局名称</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;bdf.rapido.workspacePR#loadLayouts&quot;).getResult()}</Property>
+        </Property>
+        <Property name="defaultValue">dock</Property>
+      </PropertyDef>
+      <PropertyDef name="components">
+        <Property name="dataType">[dataTypeComponent]</Property>
+      </PropertyDef>
+      <Reference name="layoutProperties">
+        <Property name="dataType">[dataTypeLayoutProperty]</Property>
+        <Property name="dataProvider">bdf.rapido.componentPR#loadComponentLayoutProperties</Property>
+        <Property name="parameter">$${this.id}</Property>
+      </Reference>
+      <Reference name="properties">
+        <Property name="parameter">$${this.id}</Property>
+        <Property name="dataProvider">bdf.rapido.pagePR#loadPageProperties</Property>
+        <Property name="dataType">[dataTypePageProperty]</Property>
+      </Reference>
+    </DataType>
+    <DataType name="dataTypePageProperty">
+      <Property name="creationType">com.bstek.bdf2.rapido.domain.ComponentProperty</Property>
+      <PropertyDef name="id">
+        <Property name="dataType">String</Property>
+      </PropertyDef>
+      <PropertyDef name="name">
+        <Property name="dataType">String</Property>
+        <Property name="label">属性名称</Property>
+        <Property name="required">true</Property>
+      </PropertyDef>
+      <PropertyDef name="value">
+        <Property name="dataType">String</Property>
+        <Property name="label">属性值</Property>
+      </PropertyDef>
+      <PropertyDef name="componentId">
+        <Property name="dataType">String</Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="dataTypeComponent">
+      <Property name="creationType">com.bstek.bdf2.rapido.domain.ComponentInfo</Property>
+      <PropertyDef name="id">
+        <Property name="dataType">String</Property>
+      </PropertyDef>
+      <PropertyDef name="name">
+        <Property name="dataType">String</Property>
+        <Property name="label">组件名</Property>
+      </PropertyDef>
+      <PropertyDef name="readOnly">
+        <Property name="dataType">boolean</Property>
+        <Property name="label">是否只读</Property>
+      </PropertyDef>
+      <PropertyDef name="desc">
+        <Property name="dataType">String</Property>
+        <Property name="label">描述</Property>
+      </PropertyDef>
+      <PropertyDef name="className">
+        <Property name="dataType">String</Property>
+        <Property name="label">组件全名</Property>
+      </PropertyDef>
+      <PropertyDef name="icon">
+        <Property name="dataType">String</Property>
+      </PropertyDef>
+      <PropertyDef name="order">
+        <Property name="dataType">int</Property>
+      </PropertyDef>
+      <Reference name="layoutConstraintProperties">
+        <Property name="dataType">[dataTypeLayoutConstraintProperty]</Property>
+        <Property name="dataProvider">bdf.rapido.componentPR#loadComponentLayoutConstraintProperties</Property>
+        <Property name="parameter">$${this.id}</Property>
+      </Reference>
+    </DataType>
+    <DataType name="dataTypePackage">
+      <Property name="creationType">com.bstek.bdf2.rapido.domain.PackageInfo</Property>
+      <PropertyDef name="id">
+        <Property name="dataType">String</Property>
+      </PropertyDef>
+      <PropertyDef name="name">
+        <Property name="dataType">String</Property>
+        <Property name="label">包名</Property>
+      </PropertyDef>
+      <PropertyDef name="desc">
+        <Property name="dataType">String</Property>
+        <Property name="label">描述</Property>
+      </PropertyDef>
+      <PropertyDef name="parentId">
+        <Property name="dataType">String</Property>
+      </PropertyDef>
+      <PropertyDef name="type"/>
+      <PropertyDef name="icon"/>
+      <Reference name="children">
+        <Property name="dataProvider">bdf.rapido.pagePR#loadComponentPackages</Property>
+        <Property name="dataType">[SELF]</Property>
+        <Property name="parameter">$${this.id}</Property>
+      </Reference>
+      <Reference name="components">
+        <Property name="dataProvider">bdf.rapido.pagePR#loadComponents</Property>
+        <Property name="dataType">[dataTypeComponent]</Property>
+        <Property name="parameter">
+          <Entity>
+            <Property name="packageId">$${this.id}</Property>
+          </Entity>
+        </Property>
+      </Reference>
+    </DataType>
+    <DataType name="dataTypeLayoutProperty">
+      <Property name="creationType">com.bstek.bdf2.rapido.domain.LayoutProperty</Property>
+      <PropertyDef name="id">
+        <Property name="dataType">String</Property>
+      </PropertyDef>
+      <PropertyDef name="name">
+        <Property name="dataType">String</Property>
+        <Property name="label">属性名称</Property>
+      </PropertyDef>
+      <PropertyDef name="value">
+        <Property name="dataType">String</Property>
+        <Property name="label">属性值</Property>
+      </PropertyDef>
+      <PropertyDef name="desc">
+        <Property name="dataType">String</Property>
+        <Property name="label">描述</Property>
+      </PropertyDef>
+      <PropertyDef name="componentId">
+        <Property name="dataType">String</Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="dataTypeLayoutConstraintProperty">
+      <Property name="creationType">com.bstek.bdf2.rapido.domain.LayoutConstraintProperty</Property>
+      <PropertyDef name="id">
+        <Property name="dataType">String</Property>
+      </PropertyDef>
+      <PropertyDef name="name">
+        <Property name="dataType">String</Property>
+        <Property name="label">属性名称</Property>
+      </PropertyDef>
+      <PropertyDef name="value">
+        <Property name="dataType">String</Property>
+        <Property name="label">属性值</Property>
+      </PropertyDef>
+      <PropertyDef name="desc">
+        <Property name="dataType">String</Property>
+        <Property name="label">描述</Property>
+      </PropertyDef>
+      <PropertyDef name="componentId">
+        <Property name="dataType">String</Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="dataTypeProperty">
+      <Property name="creationType">com.bstek.bdf2.rapido.view.component.def.PropertyDef</Property>
+      <PropertyDef name="name">
+        <Property name="dataType">String</Property>
+      </PropertyDef>
+      <PropertyDef name="type">
+        <Property name="dataType">String</Property>
+      </PropertyDef>
+      <PropertyDef name="editor">
+        <Property name="dataType">String</Property>
+      </PropertyDef>
+      <PropertyDef name="enumValues">
+        <Property name="dataType">String</Property>
+      </PropertyDef>
+    </DataType>
+  </Model>
+  <View>
+    <ClientEvent name="onReady">self._generateEditorByType=function(dataType,enumValues){&#xD;
+	var mapping=[];&#xD;
+	if(enumValues!=&quot;&quot;){&#xD;
+		var values=enumValues.split(&quot;,&quot;);&#xD;
+		for(var i=0;i&lt;values.length;i++){&#xD;
+			mapping.push({key:values[i],value:values[i]});&#xD;
+		}&#xD;
+	}&#xD;
+	var editor=new dorado.widget.TextEditor();&#xD;
+	var mappingArray=[];&#xD;
+	if(mapping){&#xD;
+		for(var i=0;i&lt;mapping.length;i++){&#xD;
+			var m=mapping[i];&#xD;
+			mappingArray.push({text:m.value,value:m.key})&#xD;
+		}		&#xD;
+	}&#xD;
+	if(dataType==&quot;Integer&quot; || dataType==&quot;int&quot; || dataType==&quot;Float&quot; || dataType==&quot;float&quot;){&#xD;
+		editor.set(&quot;dataType&quot;,dataType);&#xD;
+	}else if(dataType==&quot;Boolean&quot; || dataType==&quot;boolean&quot;){&#xD;
+		editor=new dorado.widget.RadioGroup({&#xD;
+			radioButtons:[&#xD;
+			              {&#xD;
+			            	  text:&quot;true&quot;,&#xD;
+			            	  value:&quot;true&quot;&#xD;
+			              },{&#xD;
+			            	  text:&quot;false&quot;,&#xD;
+			            	  value:&quot;false&quot;&#xD;
+			              }]&#xD;
+		});&#xD;
+	}else if(dataType==&quot;String&quot; || dataType==&quot;string&quot;){&#xD;
+		if(mappingArray.length>0){&#xD;
+			if(mapping.length&lt;3){&#xD;
+				editor=new dorado.widget.RadioGroup({&#xD;
+					radioButtons:mappingArray&#xD;
+				});&#xD;
+			}else{&#xD;
+				var trigger=new dorado.widget.ListDropDown({&#xD;
+					items:mappingArray,&#xD;
+					property:&quot;text&quot;&#xD;
+				});&#xD;
+				editor.set(&quot;trigger&quot;,trigger);&#xD;
+			}&#xD;
+		}&#xD;
+	}&#xD;
+	return editor;&#xD;
+}</ClientEvent>
+    <ToolBar>
+      <ToolBarButton>
+        <ClientEvent name="onClick">this.id(&quot;dataSetPage&quot;).get(&quot;data&quot;).insert({packageId:&quot;${request.getParameter(&quot;packageId&quot;)}&quot;});&#xD;
+this.id(&quot;dialogPage&quot;).show();</ClientEvent>
+        <Property name="caption">添加页面</Property>
+        <Property name="icon">url(skin>common/icons.gif) -120px 0px</Property>
+      </ToolBarButton>
+      <ToolBarButton>
+        <ClientEvent name="onClick">if(this.id(&quot;dataSetPage&quot;).getData(&quot;#&quot;)){&#xD;
+	this.id(&quot;dialogPage&quot;).show();&#xD;
+}else{&#xD;
+	dorado.MessageBox.alert(&quot;当前没有数据可供编辑&quot;);&#xD;
+}&#xD;
+</ClientEvent>
+        <Property name="caption">修改页面</Property>
+        <Property name="icon">url(skin>common/icons.gif) -200px 0px</Property>
+      </ToolBarButton>
+      <ToolBarButton>
+        <ClientEvent name="onClick">var data=this.id(&quot;dataSetPage&quot;).getData(&quot;#&quot;);&#xD;
+if(data){&#xD;
+	var action=this.id(&quot;updateActionSavePages&quot;);&#xD;
+	dorado.MessageBox.confirm(&quot;真的要删除当前页面吗？&quot;,function(){&#xD;
+		data.remove();&#xD;
+		action.execute();&#xD;
+	});&#xD;
+}</ClientEvent>
+        <Property name="caption">删除页面</Property>
+        <Property name="icon">url(skin>common/icons.gif) -140px 0px</Property>
+      </ToolBarButton>
+      <ToolBarButton>
+        <ClientEvent name="onClick">var data=this.id(&quot;dataSetPage&quot;).getData(&quot;#&quot;);&#xD;
+if(data){&#xD;
+	var action=this.id(&quot;ajaxActionPreview&quot;);&#xD;
+	var dialog=this.id(&quot;dialogPreview&quot;);&#xD;
+	var frame=this.id(&quot;iframePreview&quot;);&#xD;
+	var pageName=&quot;&quot;;&#xD;
+	dorado.MessageBox.prompt(&quot;请输入即将生成的View文件名：&quot;,{&#xD;
+		defaultText:data.get(&quot;name&quot;),&#xD;
+		buttons:[&quot;ok&quot;,&quot;cancel&quot;],&#xD;
+		icon:&quot;INFO&quot;,&#xD;
+		callback:function(value){&#xD;
+			pageName=value;&#xD;
+			action.set(&quot;parameter&quot;,{pageId:data.get(&quot;id&quot;),pageName:pageName});&#xD;
+			action.execute(function(page){&#xD;
+				if(page){&#xD;
+					var path=page+&quot;.d&quot;;&#xD;
+					dialog.set(&quot;caption&quot;,path);&#xD;
+					dialog.show(function(){&#xD;
+						frame.set(&quot;path&quot;,path);&#xD;
+					});&#xD;
+				}else{&#xD;
+					dorado.MessageBox.alert(&quot;页面生成期间出现异常，请与管理员联系！&quot;);&#xD;
+				}&#xD;
+			});&#xD;
+		}&#xD;
+	});&#xD;
+}else{&#xD;
+	dorado.MessageBox.alert(&quot;当前没有页面可供预览！&quot;);&#xD;
+}&#xD;
+</ClientEvent>
+        <Property name="caption">预览</Property>
+        <Property name="icon">dorado/res/icons/world_go.png</Property>
+      </ToolBarButton>
+    </ToolBar>
+    <DataGrid>
+      <Property name="dataSet">dataSetPage</Property>
+      <Property name="dataType">dataTypePage</Property>
+      <Property name="readOnly">true</Property>
+      <Property name="height">250</Property>
+      <DataColumn name="name">
+        <Property name="property">name</Property>
+        <Property name="width">200</Property>
+      </DataColumn>
+      <DataColumn name="layout">
+        <Property name="property">layout</Property>
+        <Property name="width">200</Property>
+      </DataColumn>
+      <DataColumn name="desc">
+        <Property name="property">desc</Property>
+      </DataColumn>
+    </DataGrid>
+    <DataSet id="dataSetPage">
+      <Property name="dataType">[dataTypePage]</Property>
+      <Property name="dataProvider">bdf.rapido.pagePR#loadPages</Property>
+    </DataSet>
+    <DataSet id="dataSetProperty">
+      <Property name="dataType">[dataTypeProperty]</Property>
+      <Property name="dataProvider">bdf.rapido.componentPR#loadProperties</Property>
+      <Property name="parameter">View</Property>
+    </DataSet>
+    <UpdateAction id="updateActionSavePages">
+      <Property name="dataResolver">bdf.rapido.pagePR#savePages</Property>
+      <Property name="successMessage">操作成功!</Property>
+      <Property name="hotkey">ctrl+s</Property>
+      <UpdateItem>
+        <Property name="dataSet">dataSetPage</Property>
+      </UpdateItem>
+    </UpdateAction>
+    <Dialog id="dialogPage">
+      <Property name="center">true</Property>
+      <Property name="modal">true</Property>
+      <Property name="width">400</Property>
+      <Property name="height">230</Property>
+      <Buttons>
+        <Button>
+          <ClientEvent name="onClick">var dialog=this.id(&quot;dialogPage&quot;);&#xD;
+this.id(&quot;updateActionSavePages&quot;).execute(function(){&#xD;
+	dialog.hide();&#xD;
+});</ClientEvent>
+          <Property name="caption">保存</Property>
+          <Property name="icon">url(skin>common/icons.gif) -140px -20px</Property>
+        </Button>
+        <Button>
+          <ClientEvent name="onClick">this.id(&quot;dataSetPage&quot;).get(&quot;data&quot;).cancel();&#xD;
+this.id(&quot;dialogPage&quot;).hide();</ClientEvent>
+          <Property name="caption">取消</Property>
+          <Property name="icon">url(skin>common/icons.gif) -40px 0px</Property>
+        </Button>
+      </Buttons>
+      <Children>
+        <AutoForm>
+          <Property name="dataSet">dataSetPage</Property>
+          <Property name="dataType">dataTypePage</Property>
+          <Property name="cols">*</Property>
+          <Property name="labelAlign">right</Property>
+          <Property name="labelWidth">100</Property>
+          <AutoFormElement>
+            <Property name="name">name</Property>
+            <Property name="property">name</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">layout</Property>
+            <Property name="property">layout</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">desc</Property>
+            <Property name="property">desc</Property>
+            <Property name="editorType">TextArea</Property>
+            <Editor/>
+          </AutoFormElement>
+        </AutoForm>
+      </Children>
+      <Tools/>
+    </Dialog>
+    <DataSet id="dataSetComponent">
+      <Property name="dataProvider">bdf.rapido.pagePR#loadComponentPackages</Property>
+      <Property name="dataType">[dataTypePackage]</Property>
+    </DataSet>
+    <Dialog id="dialogSelectComponent">
+      <Property name="center">true</Property>
+      <Property name="modal">true</Property>
+      <Property name="width">400</Property>
+      <Property name="height">400</Property>
+      <Property name="caption">页面组件选择</Property>
+      <Buttons>
+        <Button>
+          <ClientEvent name="onClick">var nodes=this.id(&quot;dataTreeSelectComponent&quot;).getCheckedNodes();&#xD;
+if(nodes.length==0){&#xD;
+	dorado.MessageBox.alert(&quot;请先选中要添加的组件！&quot;);&#xD;
+}else{&#xD;
+	var data=this.id(&quot;dataSetPage&quot;).getData(&quot;#.components&quot;);&#xD;
+	for(var i=0;i&lt;nodes.length;i++){&#xD;
+		var component=nodes[i].get(&quot;data&quot;);&#xD;
+		var exist=false;&#xD;
+		data.each(function(c){&#xD;
+			if(c.get(&quot;name&quot;)==component.get(&quot;name&quot;)){&#xD;
+				exist=true;&#xD;
+				return false;&#xD;
+			}&#xD;
+		});&#xD;
+		if(exist){&#xD;
+			dorado.MessageBox.alert(&quot;名为&quot;+component.get(&quot;name&quot;)+&quot;组件未添加成功，因为其已存在！&quot;);&#xD;
+		}else{&#xD;
+			data.insert(component.toJSON());&#xD;
+		}&#xD;
+	}&#xD;
+	this.id(&quot;updateActionSavePages&quot;).execute();&#xD;
+	this.id(&quot;dialogSelectComponent&quot;).hide();&#xD;
+}&#xD;
+</ClientEvent>
+          <Property name="caption">确定</Property>
+          <Property name="icon">url(skin>common/icons.gif) -140px -20px</Property>
+        </Button>
+        <Button>
+          <ClientEvent name="onClick">this.id(&quot;dialogSelectComponent&quot;).hide();</ClientEvent>
+          <Property name="caption">取消</Property>
+          <Property name="icon">url(skin>common/icons.gif) -40px 0px</Property>
+        </Button>
+      </Buttons>
+      <Children>
+        <DataTree id="dataTreeSelectComponent">
+          <Property name="dataSet">dataSetComponent</Property>
+          <BindingConfigs>
+            <BindingConfig>
+              <Property name="recursive">true</Property>
+              <Property name="labelProperty">name</Property>
+              <Property name="tipProperty">desc</Property>
+              <Property name="childrenProperty">children</Property>
+              <Property name="iconProperty">icon</Property>
+              <Property name="expandLevel">2</Property>
+              <BindingConfig>
+                <Property name="childrenProperty">components</Property>
+                <Property name="labelProperty">name</Property>
+                <Property name="tipProperty">desc</Property>
+                <Property name="checkable">true</Property>
+                <Property name="iconProperty">icon</Property>
+                <Property name="tags">componentTag</Property>
+              </BindingConfig>
+            </BindingConfig>
+          </BindingConfigs>
+        </DataTree>
+      </Children>
+      <Tools/>
+    </Dialog>
+    <AjaxAction id="ajaxActionPreview">
+      <Property name="service">bdf.rapido.pagePR#preview</Property>
+      <Property name="successMessage">操作成功</Property>
+      <Property name="executingMessage">预览页面生成中，请稍后...</Property>
+    </AjaxAction>
+    <TabControl>
+      <ControlTab>
+        <Property name="caption">页面组件</Property>
+        <Container>
+          <ToolBar>
+            <ToolBarButton>
+              <ClientEvent name="onClick">var data=this.id(&quot;dataSetPage&quot;).getData(&quot;#&quot;);&#xD;
+if(data){&#xD;
+	this.id(&quot;dialogSelectComponent&quot;).show();&#xD;
+}else{&#xD;
+	dorado.MessageBox.alert(&quot;请先选择组件所属的页面！&quot;);&#xD;
+}</ClientEvent>
+              <Property name="caption">添加页面组件</Property>
+              <Property name="icon">dorado/res/icons/plugin_add.png</Property>
+            </ToolBarButton>
+            <ToolBarButton>
+              <ClientEvent name="onClick">var data=this.id(&quot;dataSetPage&quot;).getData(&quot;#.#components&quot;);&#xD;
+if(data){&#xD;
+	var action=this.id(&quot;updateActionSavePages&quot;);&#xD;
+	dorado.MessageBox.confirm(&quot;真的要删除当中组件吗？&quot;,function(){&#xD;
+		data.remove();&#xD;
+		action.execute();&#xD;
+	});&#xD;
+}&#xD;
+</ClientEvent>
+              <Property name="caption">删除当前组件</Property>
+              <Property name="icon">dorado/res/icons/plugin_delete.png</Property>
+            </ToolBarButton>
+            <ToolBarButton>
+              <ClientEvent name="onClick">var component=this.id(&quot;dataSetPage&quot;).getData(&quot;#.#components&quot;);&#xD;
+if(component){&#xD;
+	this.id(&quot;dialogLayoutConstraint&quot;).show();&#xD;
+}else{&#xD;
+	dorado.MessageBox.alert(&quot;请先选中一个组件！&quot;);&#xD;
+}&#xD;
+</ClientEvent>
+              <Property name="caption">设置组件布局约束</Property>
+              <Property name="icon">url(skin>common/icons.gif) 0px -140px</Property>
+            </ToolBarButton>
+            <ToolBarButton>
+              <ClientEvent name="onClick">this.id(&quot;updateActionSavePages&quot;).execute();&#xD;
+</ClientEvent>
+              <Property name="caption">保存</Property>
+              <Property name="icon">url(skin>common/icons.gif) -140px -20px</Property>
+            </ToolBarButton>
+          </ToolBar>
+          <DataGrid>
+            <ClientEvent name="onDraggingSourceDrop">var components=this.id(&quot;dataSetPage&quot;).getData(&quot;#.components&quot;);&#xD;
+var order=1;&#xD;
+components.each(function(data){&#xD;
+	data.set(&quot;order&quot;,order);&#xD;
+	order++;		&#xD;
+});&#xD;
+</ClientEvent>
+            <Property name="dataSet">dataSetPage</Property>
+            <Property name="dataPath">#.components</Property>
+            <Property name="dataType">dataTypeComponent</Property>
+            <Property name="dragTags">component</Property>
+            <Property name="droppableTags">component</Property>
+            <Property name="droppable">true</Property>
+            <Property name="draggable">true</Property>
+            <Property name="rowHeight">20</Property>
+            <IndicatorColumn/>
+            <RowNumColumn/>
+            <DataColumn name="name">
+              <ClientEvent name="onRenderCell">var data=arg.data;&#xD;
+arg.dom.innerHTML=&quot;&lt;img src='&quot;+data.get(&quot;icon&quot;)+&quot;' style='padding-right:5px'>&quot;+data.get(&quot;name&quot;);&#xD;
+</ClientEvent>
+              <Property name="property">name</Property>
+              <Property name="width">200</Property>
+              <Property name="readOnly">true</Property>
+            </DataColumn>
+            <DataColumn name="className">
+              <Property name="property">className</Property>
+              <Property name="width">360</Property>
+              <Property name="readOnly">true</Property>
+            </DataColumn>
+            <DataColumn>
+              <Property name="property">readOnly</Property>
+              <Property name="name">readOnly</Property>
+              <Property name="width">90</Property>
+              <Editor/>
+            </DataColumn>
+            <DataColumn name="desc">
+              <Property name="property">desc</Property>
+              <Property name="readOnly">true</Property>
+            </DataColumn>
+          </DataGrid>
+          <Dialog id="dialogLayoutConstraint">
+            <Property name="center">true</Property>
+            <Property name="modal">true</Property>
+            <Property name="width">600</Property>
+            <Property name="height">300</Property>
+            <Buttons>
+              <Button>
+                <ClientEvent name="onClick">this.id(&quot;updateActionSavePages&quot;).execute();&#xD;
+this.id(&quot;dialogLayoutConstraint&quot;).hide();&#xD;
+</ClientEvent>
+                <Property name="caption">保存</Property>
+                <Property name="icon">url(skin>common/icons.gif) -140px -20px</Property>
+              </Button>
+              <Button>
+                <ClientEvent name="onClick">this.id(&quot;dataSetLayoutConstraintProperty&quot;).getData().cancel();&#xD;
+this.id(&quot;dialogLayoutConstraint&quot;).hide();</ClientEvent>
+                <Property name="caption">取消</Property>
+                <Property name="icon">url(skin>common/icons.gif) -40px 0px</Property>
+              </Button>
+            </Buttons>
+            <Children>
+              <ToolBar>
+                <DataPilot>
+                  <ClientEvent name="onSubControlAction">switch(arg.code){&#xD;
+	case &quot;+&quot;:&#xD;
+		var data=this.id(&quot;dataSetPage&quot;).getData(&quot;#.#components.layoutConstraintProperties&quot;);&#xD;
+		var componentId=this.id(&quot;dataSetPage&quot;).getData(&quot;#.#components&quot;).get(&quot;id&quot;);&#xD;
+		data.insert({componentId:componentId});&#xD;
+		arg.processDefault=false;&#xD;
+		break;	&#xD;
+}&#xD;
+</ClientEvent>
+                  <Property name="dataSet">dataSetPage</Property>
+                  <Property name="dataPath">#.#components.layoutConstraintProperties</Property>
+                  <Property name="itemCodes">+,-</Property>
+                </DataPilot>
+              </ToolBar>
+              <DataGrid>
+                <Property name="dataSet">dataSetPage</Property>
+                <Property name="dataPath">#.#components.layoutConstraintProperties</Property>
+                <Property name="dataType">dataTypeLayoutConstraintProperty</Property>
+                <DataColumn name="name">
+                  <Property name="property">name</Property>
+                  <Property name="width">200</Property>
+                  <Property name="trigger">dataSetDropDownLayoutConstraintProperty</Property>
+                </DataColumn>
+                <DataColumn name="value">
+                  <ClientEvent name="onGetCellEditor">var type=&quot;String&quot;;&#xD;
+var enumValues=&quot;&quot;;&#xD;
+var propertyNameData=this.id(&quot;dataSetPage&quot;).getData(&quot;#.#components.#layoutConstraintProperties&quot;);&#xD;
+if(propertyNameData){&#xD;
+	var propertyName=propertyNameData.get(&quot;name&quot;)&#xD;
+	var propertyData=this.id(&quot;dataSetLayoutConstraintProperty&quot;).getData();&#xD;
+	propertyData.each(function(property){&#xD;
+		if(property.get(&quot;name&quot;)==propertyName){&#xD;
+			type=property.get(&quot;type&quot;);&#xD;
+			enumValues=property.get(&quot;enumValues&quot;);&#xD;
+			return false;&#xD;
+		}&#xD;
+	});&#xD;
+}&#xD;
+if(!type)type=&quot;String&quot;;&#xD;
+arg.cellEditor.setEditorControl(this._generateEditorByType(type,enumValues));&#xD;
+&#xD;
+</ClientEvent>
+                  <Property name="property">value</Property>
+                  <Property name="width">200</Property>
+                </DataColumn>
+                <DataColumn name="desc">
+                  <Property name="property">desc</Property>
+                  <Property name="width">200</Property>
+                </DataColumn>
+              </DataGrid>
+              <DataSet id="dataSetLayoutConstraintProperty">
+                <Property name="dataType">[dataTypeProperty]</Property>
+                <Property name="dataProvider">bdf.rapido.componentPR#loadLayoutConstraintProperties</Property>
+                <Property name="loadMode">manual</Property>
+              </DataSet>
+              <DataSetDropDown id="dataSetDropDownLayoutConstraintProperty">
+                <ClientEvent name="onExecute">var ds=this.id(&quot;dataSetLayoutConstraintProperty&quot;);&#xD;
+var data=this.id(&quot;dataSetPage&quot;).getData(&quot;#&quot;);&#xD;
+if(data){&#xD;
+	var layout=data.get(&quot;layout&quot;);&#xD;
+	ds.set(&quot;parameter&quot;,layout);&#xD;
+	ds.flush();&#xD;
+}&#xD;
+</ClientEvent>
+                <Property name="dataSet">dataSetLayoutConstraintProperty</Property>
+                <Property name="property">name</Property>
+              </DataSetDropDown>
+            </Children>
+            <Tools/>
+          </Dialog>
+        </Container>
+      </ControlTab>
+      <ControlTab>
+        <Property name="caption">页面布局属性</Property>
+        <Container>
+          <ToolBar>
+            <DataPilot>
+              <Property name="dataSet">dataSetPage</Property>
+              <Property name="dataPath">#.layoutProperties</Property>
+              <Property name="itemCodes">+,-</Property>
+            </DataPilot>
+            <ToolBarButton>
+              <ClientEvent name="onClick">this.id(&quot;updateActionSavePages&quot;).execute();&#xD;
+</ClientEvent>
+              <Property name="caption">保存</Property>
+              <Property name="icon">url(skin>common/icons.gif) -140px -20px</Property>
+            </ToolBarButton>
+          </ToolBar>
+          <DataGrid>
+            <Property name="dataSet">dataSetPage</Property>
+            <Property name="dataPath">#.layoutProperties</Property>
+            <Property name="dataType">dataTypeLayoutProperty</Property>
+            <DataColumn name="name">
+              <Property name="property">name</Property>
+              <Property name="width">200</Property>
+              <Property name="trigger">dataSetDropDownLayoutProperty</Property>
+            </DataColumn>
+            <DataColumn name="value">
+              <ClientEvent name="onGetCellEditor">var type=&quot;String&quot;;&#xD;
+var enumValues=&quot;&quot;;&#xD;
+var propertyNameData=this.id(&quot;dataSetPage&quot;).getData(&quot;#.#layoutProperties&quot;);&#xD;
+if(propertyNameData){&#xD;
+	var propertyName=propertyNameData.get(&quot;name&quot;)&#xD;
+	var propertyData=this.id(&quot;dataSetLayoutProperty&quot;).getData();&#xD;
+	propertyData.each(function(property){&#xD;
+		if(property.get(&quot;name&quot;)==propertyName){&#xD;
+			type=property.get(&quot;type&quot;);&#xD;
+			enumValues=property.get(&quot;enumValues&quot;);&#xD;
+			return false;&#xD;
+		}&#xD;
+	});&#xD;
+}&#xD;
+if(!type)type=&quot;String&quot;;&#xD;
+arg.cellEditor.setEditorControl(this._generateEditorByType(type,enumValues));&#xD;
+&#xD;
+</ClientEvent>
+              <Property name="property">value</Property>
+              <Property name="width">200</Property>
+            </DataColumn>
+            <DataColumn name="desc">
+              <Property name="property">desc</Property>
+              <Property name="width">300</Property>
+            </DataColumn>
+          </DataGrid>
+          <DataSet id="dataSetLayoutProperty">
+            <Property name="dataType">[dataTypeProperty]</Property>
+            <Property name="dataProvider">bdf.rapido.componentPR#loadLayoutProperties</Property>
+            <Property name="loadMode">manual</Property>
+          </DataSet>
+          <DataSetDropDown id="dataSetDropDownLayoutProperty">
+            <ClientEvent name="beforeExecute">var ds=this.id(&quot;dataSetLayoutProperty&quot;);&#xD;
+var data=this.id(&quot;dataSetPage&quot;).getData(&quot;#&quot;);&#xD;
+if(data){&#xD;
+	var layout=data.get(&quot;layout&quot;);&#xD;
+	ds.set(&quot;parameter&quot;,layout);&#xD;
+	ds.flush();&#xD;
+}&#xD;
+</ClientEvent>
+            <Property name="dataSet">dataSetLayoutProperty</Property>
+            <Property name="property">name</Property>
+          </DataSetDropDown>
+        </Container>
+      </ControlTab>
+      <ControlTab>
+        <Property name="caption">页面扩展属性</Property>
+        <Container>
+          <ToolBar>
+            <DataPilot>
+              <Property name="dataSet">dataSetPage</Property>
+              <Property name="dataPath">#.properties</Property>
+              <Property name="itemCodes">+,-</Property>
+            </DataPilot>
+            <ToolBarButton>
+              <ClientEvent name="onClick">this.id(&quot;updateActionSavePages&quot;).execute();&#xD;
+</ClientEvent>
+              <Property name="caption">保存</Property>
+              <Property name="icon">url(skin>common/icons.gif) -140px -20px</Property>
+            </ToolBarButton>
+          </ToolBar>
+          <DataGrid>
+            <Property name="dataSet">dataSetPage</Property>
+            <Property name="dataPath">#.properties</Property>
+            <Property name="dataType">dataTypePageProperty</Property>
+            <DataColumn name="name">
+              <Property name="property">name</Property>
+              <Property name="trigger">dataSetDropDownProperty</Property>
+            </DataColumn>
+            <DataColumn name="value">
+              <ClientEvent name="onGetCellEditor">var type=&quot;String&quot;;&#xD;
+var enumValues=&quot;&quot;;&#xD;
+var propertyNameData=this.id(&quot;dataSetPage&quot;).getData(&quot;#.#properties&quot;);&#xD;
+if(propertyNameData){&#xD;
+	var propertyName=propertyNameData.get(&quot;name&quot;)&#xD;
+	var propertyData=this.id(&quot;dataSetProperty&quot;).getData();&#xD;
+	propertyData.each(function(property){&#xD;
+		if(property.get(&quot;name&quot;)==propertyName){&#xD;
+			type=property.get(&quot;type&quot;);&#xD;
+			enumValues=property.get(&quot;enumValues&quot;);&#xD;
+			return false;&#xD;
+		}&#xD;
+	});&#xD;
+}&#xD;
+if(!type)type=&quot;String&quot;;&#xD;
+arg.cellEditor.setEditorControl(this._generateEditorByType(type,enumValues));</ClientEvent>
+              <Property name="property">value</Property>
+            </DataColumn>
+          </DataGrid>
+          <DataSetDropDown id="dataSetDropDownProperty">
+            <Property name="dataSet">dataSetProperty</Property>
+            <Property name="property">name</Property>
+            <Property name="dynaFilter">true</Property>
+            <Property name="filterOnTyping">true</Property>
+            <Property name="filterMode">clientSide</Property>
+          </DataSetDropDown>
+        </Container>
+      </ControlTab>
+    </TabControl>
+    <Dialog id="dialogPreview">
+      <Property name="center">true</Property>
+      <Property name="maximizeable">true</Property>
+      <Property name="width">700</Property>
+      <Property name="height">600</Property>
+      <Property name="caption">页面效果预览</Property>
+      <Property name="modal">true</Property>
+      <Buttons>
+        <Button>
+          <ClientEvent name="onClick">var path=this.id(&quot;iframePreview&quot;).get(&quot;path&quot;);&#xD;
+open(path,&quot;_blank&quot;);&#xD;
+</ClientEvent>
+          <Property name="caption">在新窗口中查看</Property>
+          <Property name="icon">url(skin>common/icons.gif) -60px -100px</Property>
+        </Button>
+      </Buttons>
+      <Children>
+        <IFrame id="iframePreview"/>
+      </Children>
+      <Tools/>
+    </Dialog>
+    <AjaxAction id="ajaxActionRefreshData">
+      <Property name="service">bdf.rapido.pagePR#refreshPageCacheData</Property>
+      <Property name="executingMessage">页面数据缓存刷新中，请稍后...</Property>
+      <Property name="successMessage">缓存刷新成功！</Property>
+    </AjaxAction>
+  </View>
+</ViewConfig>

@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ViewConfig>
+  <Arguments/>
+  <Context/>
+  <Model>
+    <DataType name="dataTypeRole" parent="$dataTypeRole">
+      <Reference name="roleUrls">
+        <Property name="dataType">[dataTypeUrl]</Property>
+        <Property name="dataProvider">bdf2.roleUrlMaintainAd#loadUrls</Property>
+        <Property name="parameter">
+          <Entity>
+            <Property name="parentId"></Property>
+            <Property name="roleId">$${this.id}</Property>
+          </Entity>
+        </Property>
+      </Reference>
+    </DataType>
+    <DataType name="dataTypeUrl" parent="$dataTypeUrl">
+      <PropertyDef name="use">
+        <Property name="dataType">boolean</Property>
+      </PropertyDef>
+      <Reference name="children">
+        <ClientEvent name="beforeLoadData">var id=view.id(&quot;dataSetRole&quot;).getData(&quot;#.id&quot;);&#xD;
+self.set(&quot;parameter&quot;,{parentId:arg.entity.get(&quot;id&quot;),roleId:id});</ClientEvent>
+        <Property name="dataProvider">bdf2.roleUrlMaintainAd#loadUrls</Property>
+        <Property name="dataType">[SELF]</Property>
+      </Reference>
+    </DataType>
+  </Model>
+  <View>
+    <DataSet id="dataSetRole">
+      <Property name="dataProvider">bdf2.roleUrlMaintainAd#loadRoles</Property>
+      <Property name="pageSize">20</Property>
+      <Property name="dataType">[dataTypeRole]</Property>
+    </DataSet>
+    <Container layoutConstraint="left">
+      <Property name="width">300</Property>
+      <ToolBar>
+        <DataPilot>
+          <Property name="dataSet">dataSetRole</Property>
+          <Property name="itemCodes">pages</Property>
+        </DataPilot>
+      </ToolBar>
+      <DataGrid>
+        <Property name="dataSet">dataSetRole</Property>
+        <Property name="readOnly">true</Property>
+        <Property name="showFilterBar">true</Property>
+        <Property name="filterMode">serverSide</Property>
+        <DataColumn name="name">
+          <Property name="property">name</Property>
+        </DataColumn>
+        <DataColumn name="desc">
+          <Property name="property">desc</Property>
+          <Property name="filterable">false</Property>
+        </DataColumn>
+      </DataGrid>
+    </Container>
+    <Container layoutConstraint="center">
+      <ToolBar>
+        <ToolBarButton>
+          <ClientEvent name="onClick">var data=view.id(&quot;dataSetRole&quot;).getData(&quot;#&quot;);&#xD;
+if(!data){&#xD;
+	dorado.MessageBox.alert(&quot;请先选中一个角色后再进行此操作&quot;);&#xD;
+	return;&#xD;
+}&#xD;
+var action=view.id(&quot;ajaxActionSaveRoleUrls&quot;);&#xD;
+var tree=view.id(&quot;dataTreeUrl&quot;);&#xD;
+var rootNode=tree.get(&quot;root&quot;);&#xD;
+var ids=[];&#xD;
+buildSelectedNodeId(rootNode,ids);&#xD;
+action.set(&quot;parameter&quot;,{roleId:data.get(&quot;id&quot;),ids:ids});&#xD;
+action.execute();&#xD;
+function buildSelectedNodeId(parentNode,ids){&#xD;
+	var nodes=parentNode.get(&quot;nodes&quot;);&#xD;
+	if(!nodes){&#xD;
+		return;&#xD;
+	}&#xD;
+	nodes.each(function(node){&#xD;
+		var id=node.get(&quot;data&quot;).get(&quot;id&quot;);&#xD;
+		if(node.get(&quot;checked&quot;)){&#xD;
+			ids.push(id);&#xD;
+		}&#xD;
+		buildSelectedNodeId(node,ids);&#xD;
+	});&#xD;
+}</ClientEvent>
+          <Property name="caption">保存</Property>
+          <Property name="icon">url(skin>common/icons.gif) -140px -20px</Property>
+        </ToolBarButton>
+        <ToolBarButton>
+          <Property name="icon">url(skin>common/icons.gif) -40px -240px</Property>
+          <Property name="caption">刷新缓存</Property>
+          <Property name="action">ajaxActionRefreshCache</Property>
+        </ToolBarButton>
+        <CheckBox id="checkBoxAutoCheckChildren">
+          <ClientEvent name="onValueChange">view.id(&quot;dataTreeUrl&quot;).get(&quot;currentNode&quot;).get(&quot;bindingConfig&quot;).autoCheckChildren = self.get(&quot;value&quot;);&#xD;
+</ClientEvent>
+        </CheckBox>
+        <ToolBarLabel>
+          <Property name="text">自动勾选子节点</Property>
+        </ToolBarLabel>
+      </ToolBar>
+      <DataTree id="dataTreeUrl">
+        <ClientEvent name="onRenderNode">if(arg.node.get(&quot;data&quot;).get(&quot;use&quot;)){&#xD;
+	arg.dom.innerHTML=&quot;&lt;strong>&lt;font color='green'>&quot;+arg.label+&quot;&lt;/font>&lt;/strong>&quot;;&#xD;
+}else{&#xD;
+	arg.dom.innerHTML=arg.label;&#xD;
+}</ClientEvent>
+        <ClientEvent name="onCurrentChange">var checkBox = view.id(&quot;checkBoxAutoCheckChildren&quot;);&#xD;
+var node = arg.newCurrent;&#xD;
+if(node){&#xD;
+	node.get(&quot;bindingConfig&quot;).autoCheckChildren = checkBox.get(&quot;value&quot;);&#xD;
+}&#xD;
+	&#xD;
+</ClientEvent>
+        <Property name="dataSet">dataSetRole</Property>
+        <Property name="dataPath">#.roleUrls</Property>
+        <Property name="currentNodeDataPath">CURRNODE</Property>
+        <BindingConfigs>
+          <BindingConfig>
+            <Property name="childrenProperty">children</Property>
+            <Property name="expandLevel">2</Property>
+            <Property name="labelProperty">name</Property>
+            <Property name="recursive">true</Property>
+            <Property name="tipProperty">desc</Property>
+            <Property name="iconProperty">icon</Property>
+            <Property name="checkedProperty">use</Property>
+            <Property name="checkable">true</Property>
+            <Property name="autoCheckChildren">false</Property>
+          </BindingConfig>
+        </BindingConfigs>
+      </DataTree>
+      <AjaxAction id="ajaxActionSaveRoleUrls">
+        <Property name="service">bdf2.roleUrlMaintainAd#saveRoleUrls</Property>
+        <Property name="successMessage">操作成功</Property>
+      </AjaxAction>
+      <AjaxAction id="ajaxActionRefreshCache">
+        <Property name="confirmMessage">真的要刷新权限缓存信息吗？</Property>
+        <Property name="successMessage">操作成功</Property>
+        <Property name="service">bdf2.roleUrlMaintainAd#refreshUrlSecurityMetadata</Property>
+      </AjaxAction>
+    </Container>
+  </View>
+</ViewConfig>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+    <Packages>
+        <Package name="RichUploader" pattern="dorado-js" depends="base-widget">
+        	classpath:dorado/scripts/jquery.ocupload-1.1.2,
+        	classpath:dorado/scripts/richuploader
+		</Package>
+    </Packages>
+</config>

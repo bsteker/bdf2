@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Model>
+  <DataType name="$dataTypeOutgoing" meta="x:971;y:240">
+    <PropertyDef name="name">
+      <Property name="dataType">String</Property>
+    </PropertyDef>
+  </DataType>
+  <DataType name="$dataTypeActivity" meta="x:975;y:56" matchType="org.jbpm.pvm.internal.model.ActivityImpl">
+    <PropertyDef name="dbid">
+      <Property name="dataType">long</Property>
+    </PropertyDef>
+    <PropertyDef name="type">
+      <Property name="dataType">String</Property>
+    </PropertyDef>
+    <PropertyDef name="name">
+      <Property name="dataType">String</Property>
+      <Property name="label">节点名称</Property>
+    </PropertyDef>
+    <PropertyDef name="description">
+      <Property name="dataType">String</Property>
+    </PropertyDef>
+  </DataType>
+  <DataType name="$dataTypeVariable">
+    <PropertyDef name="name">
+      <Property name="label">名称</Property>
+      <Property name="dataType">String</Property>
+    </PropertyDef>
+    <PropertyDef name="dataType">
+      <Property name="label">类型</Property>
+      <Property name="dataType">String</Property>
+    </PropertyDef>
+    <PropertyDef name="value">
+      <Property name="label">值</Property>
+      <Property name="dataType">String</Property>
+    </PropertyDef>
+  </DataType>
+</Model>

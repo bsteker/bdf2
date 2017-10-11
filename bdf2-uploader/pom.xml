@@ -1,0 +1,50 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>com.bstek.bdf2</groupId>
+		<artifactId>bdf2-parent</artifactId>
+		<version>2.0.5-SNAPSHOT</version>
+	</parent>
+	<artifactId>bdf2-uploader</artifactId>
+	<version>2.0.4</version>
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<addon.name>bdf2-uploader</addon.name>
+		<addon.depends>bdf2-orm</addon.depends>
+		<addon.contextConfigLocations>classpath:bdf2-uploader-configs.xml</addon.contextConfigLocations>
+		<addon.componentConfigLocations>classpath:bdf2-uploader-component-configs.xml</addon.componentConfigLocations>
+		<addon.propertiesConfigLocations>classpath:bdf2.uploader.properties</addon.propertiesConfigLocations>
+		<addon.servletContextConfigLocations>classpath:bdf2-uploader-servlet-context.xml</addon.servletContextConfigLocations>
+	</properties>
+	<dependencies>
+		<dependency>
+			<groupId>com.bstek.bdf2</groupId>
+			<artifactId>bdf2-orm-hibernate3</artifactId>
+			<version>LATEST</version>
+		</dependency>
+		<dependency>
+			<groupId>commons-io</groupId>
+			<artifactId>commons-io</artifactId>
+			<version>LATEST</version>
+		</dependency>
+		<dependency>
+		    <groupId>commons-fileupload</groupId>
+		    <artifactId>commons-fileupload</artifactId>
+		    <version>LATEST</version>
+		</dependency>		
+	</dependencies>
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-framework-bom</artifactId>
+				<version>4.3.0.RELEASE</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+
+	<description>Upload file component</description>
+</project>

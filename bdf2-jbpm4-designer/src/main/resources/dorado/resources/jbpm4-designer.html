@@ -1,0 +1,248 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<script type="text/javascript">
+	var canvasBgIcon="$baseIconsDir/icons/jbpm4/grid.png";
+	var serverUrl="$serverUrl";
+</script>
+$cssandscript
+</head>
+<body style="font-size:12px;margin:0px;">
+	<div id="toolbarContainer" style="width:2015px;height:35px;background:url($baseIconsDir/icons/jbpm4/toolbar-bg.png);background-repeat: repeat-x;">
+		<span style="cursor: pointer;"><img id="saveImg" title="部署流程模版" style="margin-left:10px;margin-top: 5px" align="middle" src="$baseIconsDir/icons/jbpm4/save.png"></span>
+		<span style="cursor: pointer;"><img id="openImg" title="打开流程模版" style="margin-left:5px;margin-top: 5px" align="middle" src="$baseIconsDir/icons/jbpm4/open.png"></span>
+	</div>
+	<div id="palletContainer" style="background:#fff;background-repeat: repeat-x;width:95px;height:1080px;position:absolute;left:0px;top:36px;">
+			<div>
+				<div style="height:40px;text-align:left;margin-left:2px">
+					<img src="$baseIconsDir/icons/jbpm4/start_event_empty.png" align="bottom" style="cursor: pointer;margin-left: 5px;margin-top:10px;margin-right:3px" class="icon_shape"
+						_shape_type="GEOM" _shape_id="jbpm4.Start" _width="45" _height="45" />Start
+				</div>
+				<div style="height:30px;text-align: left;margin-left:5px">
+					<img src="$baseIconsDir/icons/jbpm4/task_empty.png" title="Task" style="cursor: pointer;margin-left: 3px;margin-top:2px;margin-right:3px" class="icon_shape" _shape_type="GEOM"
+						_shape_id="jbpm4.Task" _width="90" _height="30" />Task
+				</div>
+				<div style="height:30px;text-align: left;margin-left:5px">
+					<img src="$baseIconsDir/icons/jbpm4/task_empty.png" title="Task" style="cursor: pointer;margin-left: 3px;margin-top:2px;margin-right:3px" class="icon_shape" _shape_type="GEOM"
+						_shape_id="jbpm4.Custom" _width="90" _height="30" />Custom
+				</div>
+				<div style="height:30px;text-align: left;margin-left:5px">
+					<img src="$baseIconsDir/icons/jbpm4/task_empty.png" title="Subprocess" style="cursor: pointer;margin-left: 3px;margin-top:2px;margin-right:3px" class="icon_shape" _shape_type="GEOM"
+						_shape_id="jbpm4.Subprocess" _width="90" _height="30" />Subprocess
+				</div>
+				<div style="height:30px;text-align: left;margin-left:5px">
+					<img src="$baseIconsDir/icons/jbpm4/flow_sequence.png" class="icon_shape" style="cursor: pointer;margin-left: 3px;margin-top:2px;margin-right:3px"
+						 _shape_type="EDGE" _shape_id="jbpm4.Transition" _width="200" _height="150"/>Transition
+				</div>
+				<div style="height:30px;text-align: left;margin-left:5px">
+					<img src="$baseIconsDir/icons/jbpm4/gateway_exclusive.png" class="icon_shape" style="cursor: pointer;margin-left: 3px;margin-top:2px;margin-right:3px"
+						 _shape_type="EDGE" _shape_id="jbpm4.Decision" _width="45" _height="45"/>Decision
+				</div>
+				<div style="height:30px;text-align: left;margin-left:5px">
+					<img src="$baseIconsDir/icons/jbpm4/gateway_exclusive.png" class="icon_shape" style="cursor: pointer;margin-left: 3px;margin-top:2px;margin-right:3px"
+						 _shape_type="EDGE" _shape_id="jbpm4.Fork" _width="45" _height="45"/>Fork
+				</div>
+				<div style="height:30px;text-align: left;margin-left:5px">
+					<img src="$baseIconsDir/icons/jbpm4/gateway_parallel.png" class="icon_shape" style="cursor: pointer;margin-left: 3px;margin-top:2px;margin-right:3px"
+						 _shape_type="EDGE" _shape_id="jbpm4.Join" _width="45" _height="45"/>Join
+				</div>
+				<div style="height:30px;text-align: left;margin-left:5px">
+					<img src="$baseIconsDir/icons/jbpm4/gateway_parallel_foreach.png" class="icon_shape" style="cursor: pointer;margin-left: 3px;margin-top:2px;margin-right:3px"
+						 _shape_type="EDGE" _shape_id="jbpm4.Foreach" _width="45" _height="45"/>Foreach
+				</div>
+				<div style="height:30px;text-align: left;margin-left:5px">
+					<img src="$baseIconsDir/icons/jbpm4/end_event_error.png" title="jbpm4 error end" style="cursor: pointer;margin-left: 5px;margin-top:2px;margin-right:3px" class="icon_shape"
+						_shape_type="GEOM" _shape_id="jbpm4.ErrorEnd" _width="45" _height="45" />End Error
+				</div>
+				<div style="height:30px;text-align: left;margin-left:5px">
+					<img src="$baseIconsDir/icons/jbpm4/end_event_cancel.png"  title="jbpm4 calcel end" style="cursor: pointer;margin-left: 5px;margin-top:2px;margin-right:3px" class="icon_shape"
+						_shape_type="GEOM" _shape_id="jbpm4.CancelEnd" _width="45" _height="45" />End Cancel
+				</div>
+				<div style="height:30px;text-align: left;margin-left:5px">
+				<img src="$baseIconsDir/icons/jbpm4/end_event_terminate.png" alt="jbpm4 end" title="jbpm4 end" style="cursor: pointer;margin-left: 5px;margin-top:2px;margin-right:3px" class="icon_shape"
+					_shape_type="GEOM" _shape_id="jbpm4.End" _width="45" _height="45" />End
+				</div>
+			</div>
+	</div>
+	<div id="processInfo" style="position:absolute;left:95px;width:1900px;height:15px;top:36px;font-size:14px;color:#575555;background:#f3f1f1;padding:10px;border:solid 1px #575555">
+		
+	</div>
+	<div class="ui-layout-center" id="canvasContainer" style="position:absolute;left:95px;top:76px;width:1920px;height:1080px" ></div>
+	<div id="configNodePropertyContainer" title="节点属性编辑" style="overflow: hidden;">
+		<div id="tabs" style="height:99%;">
+			<ul>
+				<li class="tabProcess"><a href="#tabProcessContainer">流程模版属性</a></li>
+				<li class="tabBasic"><a href="#tabBasicContainer">基本属性</a></li>
+				<li class="tabTask"><a href="#tabTaskAssignContainer">任务分配</a></li>
+				<li class="tabJoin"><a href="#tabJoinContainer">Join模式配置</a></li>
+				<li class="tabForeach" ><a href="#tabForeachContainer">Foreach变量设置</a></li>
+				<li class="tabSubproces"><a href="#tabSubprocessContainer">子流程定义</a></li>
+				<li class="tabSubprocessVariable"><a href="#tabSubprocessVariableContainer">子流程变量定义</a></li>
+				<li class="tabDecision"><a href="#tabDecisionContainer">决策配置</a></li>
+				<li class="tabEnd"><a href="#tabEndContainer">End类型</a></li>
+				<li class="tabCustom"><a href="#tabCustomContainer">自定义节点配置</a></li>
+			</ul>
+			<div id="tabProcessContainer" class="tabBasic">
+				<table>
+					<tr>
+						<td align="right">模版名称：</td>
+						<td><input type="text" name="processName" id="processName" style="width:360px"></td>
+					</tr>
+					<tr>
+						<td align="right">模版Key：</td>
+						<td><input type="text" name="processKey" id="processKey" style="width:360px"></td>
+					</tr>
+				</table>
+			</div>
+			<div id="tabBasicContainer" class="tabBasic">
+				<table>
+					<tr>
+						<td align="right">描述：</td>
+						<td><textarea rows="4" cols="60" name="desc" id="desc" style="width:360px"></textarea></td>
+					</tr>
+				</table>
+			</div>
+			<div id="tabTaskAssignContainer" class="tabTaskAssign">
+				<table>
+					<tr>
+						<td align="right">分配方式：</td>
+						<td>
+							<input type="radio" name="assignmentType" value="assignment-handler" checked="checked">assignment-handler
+							<input type="radio" name="assignmentType" value="assignee">assignee
+						</td>
+					</tr>
+					<tr>
+						<td align="right">具体值：</td>
+						<td><input type="text" id="assignmentValue" name="assignmentValue" style="width: 400px"></td>
+					</tr>
+				</table>
+			</div>
+			<div id="tabCustomContainer" class="tabCustom">
+				<table>
+					<tr>
+						<td align="right">实现类：</td>
+						<td><input type="text" id="customClass" title="ExternalActivityBehaviour接口实现类" name="assignmentValue" style="width: 400px"></td>
+					</tr>
+				</table>
+			</div>
+			<div id="tabDecisionContainer" class="tabDecision">
+				<table>
+					<tr>
+						<td align="right">决策方式：</td>
+						<td>
+							<input type="radio" name="decisionType" value="expr" checked="checked">表达式
+							<input type="radio" name="decisionType" value="handlerClass">DecisionHandler实现类
+						</td>
+					</tr>
+					<tr>
+						<td align="right">具体值：</td>
+						<td><input type="text" id="decisionValue" name="decisionValue" style="width: 400px"></td>
+					</tr>
+				</table>
+			</div>
+			<div id="tabJoinContainer" class="tabJoin">
+				<table>
+					<tr>
+						<td align="right">锁定模式(LockMode)：</td>
+						<td>
+							<select name="lockMode">
+								<option value="none">none</option>
+								<option value="read">read</option>
+								<option value="upgrade" selected="selected">upgrade</option>
+								<option value="upgrade-nowait">upgrade-nowait</option>
+								<option value="write">write</option>
+							</select>
+						</td>
+					</tr>
+					<tr>
+						<td align="right">到达Execution数量(Multiplicity)：</td>
+						<td><input type="text" id="multiplicity" name="multiplicity" style="width: 300px"></td>
+					</tr>
+				</table>
+			</div>
+			<div id="tabForeachContainer" class="tabForeach">
+				<table>
+					<tr>
+						<td align="right">要分拆的集合对象变量名：</td>
+						<td>
+							<input type="text" id="collectionVariableName" name="collectionVariableName" style="width:300px">
+						</td>
+					</tr>
+					<tr>
+						<td align="right">集合中单个元素的变量名：</td>
+						<td><input type="text" id="variableName" name="variableName" style="width: 300px"></td>
+					</tr>
+				</table>
+			</div>
+			<div id="tabSubprocessContainer" class="tabSubprocess">
+				<table>
+					<tr>
+						<td align="right">流向下一节点的Transition名称：</td>
+						<td>
+							<input type="text" id="transitionName" name="transitionName" style="width:300px">
+						</td>
+					</tr>
+					<tr>
+						<td align="right">子流程定义方式：</td>
+						<td>
+							<input type="radio" name="subprocessType" value="sub-process-id" checked="checked">通过ID指定子流程
+							<input type="radio" name="subprocessType" value="sub-process-key">通过Key指定子流程
+						</td>
+					</tr>
+					<tr>
+						<td align="right">子流程</td>
+						<td>
+							<input type="text" id="subprocess" name="subprocess" style="width:300px">
+						</td>
+					</tr>
+				</table>
+			</div>
+			<div id="tabSubprocessVariableContainer" class="tabSubprocessVariable">
+				<table>
+					<tr>
+						<td align="right">父流程到子流程变量设置：</td>
+						<td>
+							<input type="text" id="parentToChildProcessVariables" title="格式：parentVarName1>subVarName1;parentVarName2>subVarName2" name="parentToChildProcessVariables" style="width:330px">
+						</td>
+					</tr>
+					<tr>
+						<td align="right">子流程到父流程变量设置：</td>
+						<td>
+							<input type="text" id="childToParentProcessVariables" title="格式：subVarName1>parentVarName1;subVarName2>parentVarName2"  name="childToParentProcessVariables" style="width:330px">
+						</td>
+					</tr>
+				</table>
+			</div>
+			<div id="tabEndContainer" class="tabEnd">
+				<table>
+					<tr>
+						<td align="right">结束类型：</td>
+						<td>
+							<select name="endType">
+								<option value="execution">execution</option>
+								<option value="process-instance" selected="selected">process-instance</option>
+							</select>
+						</td>
+					</tr>
+				</table>
+			</div>
+		</div>
+	</div>
+	<div id="loadingContainer" style="position:absolute;font-size:14px;x:0;y:0;background:#DDDDDD;display:none;">
+		<div id="loadingInfo">
+			操作进行中，请稍后...
+		</div>
+	</div>
+	<div id="processListContainer" title="已部署的流程模版" style="display:none">
+		<table id="processGrid" style="width:100%" border="1px" cellpadding="0" cellspacing="0">
+			<tr style="background: #DDDDDD">
+				<td>流程模版名称</td>
+				<td>版本号</td>
+				<td>部署日期</td>
+				<td>操作</td>
+			</tr>
+		</table>
+	</div>
+</body>
+</html>

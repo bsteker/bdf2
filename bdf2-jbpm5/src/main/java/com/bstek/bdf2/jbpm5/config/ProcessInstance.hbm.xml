@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping package="org.jbpm.persistence.processinstance">
+
+    <!-- access="field" for fields that have no setter methods -->
+    <class name="ProcessInstanceInfo" table="JBPM5_PROCESS_INSTANCE">
+
+        <id name="processInstanceId" type="long" column="ID_">
+            <generator class="native" />
+        </id>
+        
+        <version name="version" type="integer" unsaved-value="null" access="field">
+          <column name="OPT_LOCK_" not-null="false" />
+        </version>
+        
+        <property name="processId" column="PROCESS_ID_" access="field" />
+        <property name="startDate" column="START_DATE_" type="timestamp" access="field" />
+        <property name="lastReadDate" column="LAST_READ_DATE_" type="timestamp"  access="field" />
+        <property name="lastModificationDate" column="LAST_MODIFICATION_DATE_" type="timestamp" access="field" />
+        <property name="state" column="STATE_" type="integer" not-null="true" access="field" />
+        
+        <property name="processInstanceByteArray" type="org.hibernate.type.PrimitiveByteArrayBlobType" column="PROCESS_INSTANCE_BYTE_ARRAY_" access="field" length="2147483647" />
+
+        <set name="eventTypes" table="JBPM5_EVENT_TYPES" access="field" >
+            <key column="INSTANCE_ID_"/>
+            <element column="ELEMENT_" type="string"/>
+        </set>
+    
+        <!-- NOT mapping [processInstance] field because field is transient -->    
+        <!-- NOT mapping [env] field because field is transient -->    
+        
+    </class>
+
+</hibernate-mapping>

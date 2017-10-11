@@ -1,0 +1,47 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<artifactId>bdf2-dbconsole</artifactId>
+	<version>2.0.3</version>
+	<parent>
+		<groupId>com.bstek.bdf2</groupId>
+		<artifactId>bdf2-parent</artifactId>
+		<version>2.0.5-SNAPSHOT</version>
+	</parent>	
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<addon.name>bdf2-dbconsole</addon.name>
+		<addon.depends>bdf2-orm</addon.depends>
+		<addon.contextConfigLocations>classpath:com/bstek/bdf2/dbconsole/bdf2-dbconsole-config.xml</addon.contextConfigLocations>
+	</properties>
+	
+	<dependencies>
+		<dependency>
+			<groupId>commons-io</groupId>
+			<artifactId>commons-io</artifactId>
+			<version>2.1</version>
+		</dependency>
+		<dependency>
+			<groupId>com.bstek.bdf2</groupId>
+			<artifactId>bdf2-orm-hibernate3</artifactId>
+			<version>LATEST</version>
+		</dependency>
+		<dependency>
+			<groupId>com.bstek.bdf2</groupId>
+			<artifactId>bdf2-export</artifactId>
+			<version>LATEST</version>
+		</dependency>
+	</dependencies>
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-framework-bom</artifactId>
+				<version>4.3.0.RELEASE</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+	<description>Maintenance of the database in browser</description>
+</project>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<persistence version="1.0"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/persistence
+                                 http://java.sun.com/xml/ns/persistence/persistence_1_0.xsd
+                                 http://java.sun.com/xml/ns/persistence/orm 
+                                 http://java.sun.com/xml/ns/persistence/orm_1_0.xsd"
+	xmlns:orm="http://java.sun.com/xml/ns/persistence/orm" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="http://java.sun.com/xml/ns/persistence">
+
+	<persistence-unit name="org.jbpm.persistence.nonjpa"
+		transaction-type="RESOURCE_LOCAL">
+		<mapping-file>META-INF/JBPMorm.xml</mapping-file>
+		<mapping-file>com/bstek/bdf2/jbpm5/config/ProcessInstance.hbm.xml</mapping-file>
+		<mapping-file>com/bstek/bdf2/jbpm5/config/NodeInstanceLog.hbm.xml</mapping-file>
+		<mapping-file>com/bstek/bdf2/jbpm5/config/ProcessInstanceLog.hbm.xml</mapping-file>
+		<mapping-file>com/bstek/bdf2/jbpm5/config/Session.hbm.xml</mapping-file>
+		<mapping-file>com/bstek/bdf2/jbpm5/config/VariableInstanceLog.hbm.xml</mapping-file>
+		<mapping-file>com/bstek/bdf2/jbpm5/config/WorkItem.hbm.xml</mapping-file>
+		
+		<class>com.bstek.bdf2.jbpm5.model.ReminderCalendar</class>
+		<class>com.bstek.bdf2.jbpm5.model.ReminderJob</class>
+		<class>com.bstek.bdf2.jbpm5.model.Task</class>
+		<class>com.bstek.bdf2.jbpm5.model.TaskConfig</class>
+		<class>com.bstek.bdf2.jbpm5.model.TaskDelegate</class>
+		<class>com.bstek.bdf2.jbpm5.model.TaskGroupCandidate</class>
+		<class>com.bstek.bdf2.jbpm5.model.TaskLog</class>
+		<class>com.bstek.bdf2.jbpm5.model.TaskReminder</class>
+		<properties>
+			<property name="hibernate.archive.autodetection" value=""/>
+		</properties>
+	</persistence-unit>
+
+</persistence>

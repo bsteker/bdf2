@@ -1,0 +1,322 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ViewConfig>
+  <Arguments/>
+  <Context>
+    <Attribute name="type">
+      <Property name="value">${request.getParameter(&quot;t&quot;)}</Property>
+    </Attribute>
+  </Context>
+  <Model>
+    <DataType name="dataTypeWizard">
+      <ClientEvent name="onDataChange">if(arg.property ==&quot;versionType&quot;){&#xD;
+	var value=arg.newValue,&#xD;
+	dataSetAddonInfo=view.id(&quot;dataSetAddonInfo&quot;);&#xD;
+	dataSetAddonInfo.set(&quot;parameter&quot;,value).flushAsync();&#xD;
+}&#xD;
+</ClientEvent>
+      <Property name="creationType">com.bstek.bdf2.wizard.model.Wizard</Property>
+      <PropertyDef name="projectName">
+        <Property name="dataType">String</Property>
+        <Property name="label">项目名称</Property>
+        <Property name="defaultValue">bdf2-project</Property>
+      </PropertyDef>
+      <PropertyDef name="groupId">
+        <Property name="dataType">String</Property>
+      </PropertyDef>
+      <PropertyDef name="artifactId">
+        <Property name="dataType">String</Property>
+      </PropertyDef>
+      <PropertyDef name="version">
+        <Property name="dataType">String</Property>
+      </PropertyDef>
+      <PropertyDef name="wizardType">
+        <Property name="dataType">String</Property>
+        <Property name="mapping">
+          <Property name="keyProperty">key</Property>
+          <Property name="valueProperty">value</Property>
+          <Property name="mapValues">
+            <Collection>
+              <Entity>
+                <Property name="key">1</Property>
+                <Property name="value">Maven Project</Property>
+              </Entity>
+              <Entity>
+                <Property name="key">2</Property>
+                <Property name="value">Dynamic Web Project</Property>
+              </Entity>
+            </Collection>
+          </Property>
+        </Property>
+        <Property name="defaultValue">1</Property>
+        <Property name="label">项目类型</Property>
+      </PropertyDef>
+      <PropertyDef name="ormType">
+        <Property name="dataType">String</Property>
+        <Property name="label">持久层类型</Property>
+        <Property name="mapping">
+          <Property name="keyProperty">key</Property>
+          <Property name="valueProperty">value</Property>
+          <Property name="mapValues">
+            <Collection>
+              <Entity>
+                <Property name="key">1</Property>
+                <Property name="value">bdf2-orm-hibernate3</Property>
+              </Entity>
+              <Entity>
+                <Property name="key">2</Property>
+                <Property name="value">bdf2-orm-hibernate4</Property>
+              </Entity>
+            </Collection>
+          </Property>
+        </Property>
+        <Property name="defaultValue">1</Property>
+      </PropertyDef>
+      <PropertyDef name="versionType">
+        <Property name="dataType">String</Property>
+        <Property name="label">版本类型</Property>
+        <Property name="mapping">
+          <Property name="keyProperty">key</Property>
+          <Property name="valueProperty">value</Property>
+          <Property name="mapValues">
+            <Collection>
+              <Entity>
+                <Property name="key">1</Property>
+                <Property name="value">Release</Property>
+              </Entity>
+              <Entity>
+                <Property name="key">2</Property>
+                <Property name="value">Snapshot</Property>
+              </Entity>
+            </Collection>
+          </Property>
+        </Property>
+        <Property name="defaultValue">1</Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="dataTypeAddonInfo">
+      <Property name="creationType">com.bstek.bdf2.wizard.model.AddonInfo</Property>
+      <PropertyDef name="name">
+        <Property name="dataType">String</Property>
+      </PropertyDef>
+      <PropertyDef name="date">
+        <Property name="dataType">Date</Property>
+      </PropertyDef>
+      <PropertyDef name="groupId">
+        <Property name="dataType">String</Property>
+      </PropertyDef>
+      <PropertyDef name="artifactId">
+        <Property name="dataType">String</Property>
+      </PropertyDef>
+      <PropertyDef name="lastVersion">
+        <Property name="dataType">String</Property>
+      </PropertyDef>
+      <PropertyDef name="lastUpdated">
+        <Property name="dataType">String</Property>
+      </PropertyDef>
+      <PropertyDef name="desc">
+        <Property name="dataType">String</Property>
+      </PropertyDef>
+      <PropertyDef name="versions">
+        <Property name="dataType">[dataTypeVersionInfo]</Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="dataTypeVersionInfo">
+      <Property name="creationType">com.bstek.bdf2.wizard.model.VersionInfo</Property>
+      <PropertyDef name="name">
+        <Property name="dataType">String</Property>
+      </PropertyDef>
+      <PropertyDef name="type">
+        <Property name="dataType">String</Property>
+      </PropertyDef>
+      <PropertyDef name="lastVersion">
+        <Property name="dataType">boolean</Property>
+      </PropertyDef>
+    </DataType>
+  </Model>
+  <View>
+    <ClientEvent name="onReady">view.get(&quot;#dialog&quot;).show();&#xD;
+</ClientEvent>
+    <Property name="title">BDF2项目创建向导</Property>
+    <Property name="packages">font-awesome</Property>
+    <DataSet id="dataSetWizard">
+      <ClientEvent name="onReady">self.insert({&#xD;
+	&#xD;
+});&#xD;
+</ClientEvent>
+      <Property name="dataType">[dataTypeWizard]</Property>
+    </DataSet>
+    <DataSet id="dataSetAddonInfo">
+      <Property name="dataType">[dataTypeAddonInfo]</Property>
+      <Property name="dataProvider">bdf2.wizard.WizardMaintain#findAddonInfos</Property>
+      <Property name="loadMode">lazy</Property>
+      <Property name="parameter">1</Property>
+    </DataSet>
+    <AjaxAction id="ajaxActionGenerateTemplate">
+      <Property name="service">bdf2.wizard.WizardMaintain#generateTemplate</Property>
+      <Property name="executingMessage">正在生成项目，请耐心等待...</Property>
+    </AjaxAction>
+    <Dialog id="dialog" listener="spring:bdf2.wizard.WizardMaintain#onInit">
+      <Property name="center">true</Property>
+      <Property name="caption">创建BDF2项目</Property>
+      <Property name="width">600</Property>
+      <Property name="height">600</Property>
+      <Property name="closeable">false</Property>
+      <Property name="maximizeable">true</Property>
+      <Property name="buttonAlign">center</Property>
+      <Buttons>
+        <Button>
+          <ClientEvent name="onClick">var url=&quot;${configure.getString(&quot;bdf2.wizard.helpDoc.url&quot;)}&quot;;&#xD;
+window.open(url,'_blank');&#xD;
+</ClientEvent>
+          <Property name="caption">生成项目后怎么办？</Property>
+          <Property name="iconClass">fa fa-question</Property>
+        </Button>
+        <Button id="buttonOk">
+          <ClientEvent name="onClick">var action = view.get(&quot;#ajaxActionGenerateTemplate&quot;);&#xD;
+var nodes = view.get(&quot;#dataTreeAddonInfo&quot;).getCheckedNodes();&#xD;
+var datas = [];&#xD;
+nodes.each(function(node){&#xD;
+    datas.push({&#xD;
+        name: node.get(&quot;parent.data.name&quot;),&#xD;
+        version: node.get(&quot;data.name&quot;),&#xD;
+		groupId:node.get(&quot;parent.data.groupId&quot;)&#xD;
+    });&#xD;
+});&#xD;
+var data=view.get(&quot;#dataSetWizard&quot;).getData(&quot;#&quot;);&#xD;
+action.set(&quot;parameter&quot;,{&#xD;
+	 name:data.get(&quot;projectName&quot;),&#xD;
+	 ormType:data.get(&quot;ormType&quot;),&#xD;
+	 wizardType:data.get(&quot;wizardType&quot;),&#xD;
+	 versionType:data.get(&quot;versionType&quot;),&#xD;
+     datas: datas&#xD;
+}).execute(function(result){&#xD;
+    var id = result.id;&#xD;
+    var name = result.name;&#xD;
+    if (id &amp;&amp; name) {&#xD;
+		var count=result.count;&#xD;
+		view.get(&quot;#dialog&quot;).set(&quot;caption&quot;,&quot;创建BDF2项目( 已创建下载&quot; + count + &quot;次 )&quot;)&#xD;
+        var url = &quot;dorado/bdf2/wizard/doDownloadFile?id=&quot; + id + &quot;&amp;name=&quot; + name;&#xD;
+        window.location.href = url;&#xD;
+    }});&#xD;
+&#xD;
+&#xD;
+&#xD;
+&#xD;
+</ClientEvent>
+          <Property name="caption">计算并下载项目模板</Property>
+          <Property name="style">
+            <Property name="margin-left">40px</Property>
+          </Property>
+          <Property name="iconClass">fa fa-cloud-download</Property>
+        </Button>
+      </Buttons>
+      <Children>
+        <Panel>
+          <Property name="caption">基本信息配置</Property>
+          <Buttons/>
+          <Children>
+            <AutoForm>
+              <Property name="dataSet">dataSetWizard</Property>
+              <Property name="cols">*</Property>
+              <Property name="labelAlign">right</Property>
+              <Property name="labelWidth">100</Property>
+              <Property name="showHint">false</Property>
+              <AutoFormElement>
+                <Property name="name">wizardType</Property>
+                <Property name="property">wizardType</Property>
+                <Property name="editorType">RadioGroup</Property>
+                <Editor/>
+              </AutoFormElement>
+              <AutoFormElement>
+                <Property name="name">projectName</Property>
+                <Property name="property">projectName</Property>
+                <Editor/>
+              </AutoFormElement>
+              <AutoFormElement>
+                <Property name="name">versionType</Property>
+                <Property name="property">versionType</Property>
+                <Property name="editorType">RadioGroup</Property>
+                <Editor/>
+              </AutoFormElement>
+            </AutoForm>
+          </Children>
+          <Tools/>
+        </Panel>
+        <Panel>
+          <Property name="caption">项目模块选择</Property>
+          <Buttons/>
+          <Children>
+            <DataTree id="dataTreeAddonInfo">
+              <ClientEvent name="onRenderNode">var node = arg.node,data = node.get(&quot;data&quot;),xCreateConfig;&#xD;
+if (node.get(&quot;level&quot;) == 2 &amp;&amp; data.get(&quot;lastVersion&quot;) == true) {&#xD;
+    xCreateConfig = {&#xD;
+        tagName: &quot;IMG&quot;,&#xD;
+        src: $url(&quot;>images/new.gif&quot;),&#xD;
+        style: &quot;position: relative; left: 4px; top: 4px&quot;&#xD;
+    };&#xD;
+}else &#xD;
+    if (node.get(&quot;level&quot;) == 1 &amp;&amp; data.get(&quot;desc&quot;)) {&#xD;
+        xCreateConfig = {&#xD;
+            tagName: &quot;SPAN&quot;,&#xD;
+            contentText: &quot;(&quot;+data.get(&quot;desc&quot;)+&quot;)&quot;,&#xD;
+            style: &quot;position: relative; left: 5px;&quot;&#xD;
+     }    &#xD;
+}&#xD;
+if (xCreateConfig) {&#xD;
+    $(arg.dom).empty().xCreate([{&#xD;
+        tagName: &quot;SPAN&quot;,&#xD;
+        contentText: node.get(&quot;label&quot;)&#xD;
+    },xCreateConfig]);&#xD;
+}else{&#xD;
+	arg.processDefault = true;&#xD;
+}&#xD;
+</ClientEvent>
+              <ClientEvent name="onDataNodeCreate">var node=arg.node;&#xD;
+var data=arg.data;&#xD;
+if (node.get(&quot;level&quot;) == 2 &amp;&amp; data.get(&quot;lastVersion&quot;) == true&amp;&amp;node.get(&quot;parent.data.artifactId&quot;)==&quot;bdf2-core&quot;) {&#xD;
+	node.set(&quot;checked&quot;,true);&#xD;
+}</ClientEvent>
+              <ClientEvent name="onNodeCheckedChange">var node=arg.node;&#xD;
+if(node.get(&quot;checked&quot;)){&#xD;
+	node.get(&quot;parent.nodes&quot;).each(function(i){&#xD;
+		if(i.get(&quot;label&quot;)!=node.get(&quot;label&quot;)){&#xD;
+			i.set(&quot;checked&quot;,false);&#xD;
+		}&#xD;
+		if(i.get(&quot;data.lastVersion&quot;) == true&amp;&amp;node.get(&quot;parent.data.artifactId&quot;)==&quot;bdf2-core&quot;){&#xD;
+			i.set(&quot;checked&quot;,true);&#xD;
+		}&#xD;
+	});&#xD;
+}else{&#xD;
+	if(node.get(&quot;data.lastVersion&quot;) == true&amp;&amp;node.get(&quot;parent.data.artifactId&quot;)==&quot;bdf2-core&quot;){&#xD;
+		node.set(&quot;checked&quot;,true);&#xD;
+	}&#xD;
+}&#xD;
+&#xD;
+</ClientEvent>
+              <Property name="dataSet">dataSetAddonInfo</Property>
+              <BindingConfigs>
+                <BindingConfig>
+                  <Property name="name">name</Property>
+                  <Property name="labelProperty">name</Property>
+                  <Property name="tipProperty">name</Property>
+                  <Property name="expandLevel">2</Property>
+                  <Property name="iconClass">fa fa-folder-o</Property>
+                  <BindingConfig>
+                    <Property name="labelProperty">name</Property>
+                    <Property name="childrenProperty">versions</Property>
+                    <Property name="expandLevel">2</Property>
+                    <Property name="name">name</Property>
+                    <Property name="tipProperty">name</Property>
+                    <Property name="checkable">true</Property>
+                  </BindingConfig>
+                </BindingConfig>
+              </BindingConfigs>
+            </DataTree>
+          </Children>
+          <Tools/>
+        </Panel>
+      </Children>
+      <Tools/>
+    </Dialog>
+  </View>
+</ViewConfig>

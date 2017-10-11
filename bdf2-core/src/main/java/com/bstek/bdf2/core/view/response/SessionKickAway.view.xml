@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ViewConfig>
+  <Arguments/>
+  <Context/>
+  <Model/>
+  <View>
+    <HtmlContainer layout="padding:10">
+      <Property name="content">您的账号已在另一地点登录，您被迫下线，&#xD;
+点击&lt;a href=&quot;${request.getContextPath()}${configure.getString(&quot;bdf2.formLoginUrl&quot;)}&quot;  target=&quot;_top&quot;>此处&lt;/a>重新登录。&lt;br>&#xD;
+&lt;div style=&quot;color:gray;font-size:12px&quot;>另一地点登录人如非您本人，那么可能您的密码已泄露，建议您修改密码&lt;/div></Property>
+      <Property name="style">
+        <Property name="font-size">12pt</Property>
+        <Property name="margin">10px</Property>
+      </Property>
+    </HtmlContainer>
+  </View>
+</ViewConfig>

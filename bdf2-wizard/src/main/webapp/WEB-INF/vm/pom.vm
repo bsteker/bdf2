@@ -1,0 +1,49 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>${groupId}</groupId>
+	<version>${version}</version>
+	<artifactId>${artifactId}</artifactId>
+	<packaging>war</packaging>
+	<dependencies>
+	#foreach($dependence in $dependencies)
+	<dependency>
+			<groupId>$dependence.groupId</groupId>
+			<artifactId>$dependence.artifactId</artifactId>
+			<version>$dependence.version</version>
+			#if($dependence.exclusions.size()>0)
+    <exclusions>
+    		#foreach($exclusion in $dependence.exclusions)
+		<exclusion>
+						<groupId>$exclusion.groupId</groupId>
+						<artifactId>$exclusion.artifactId</artifactId>
+			 		</exclusion>
+   		 	#end
+    </exclusions>
+  		#end
+</dependency>
+    #end	
+    <dependency>
+			<groupId>org.hsqldb</groupId>
+			<artifactId>hsqldb</artifactId>
+			<version>2.0.0</version>
+		</dependency>
+	</dependencies>
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-framework-bom</artifactId>
+				<version>4.0.0.RELEASE</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+	<repositories>
+		<repository>
+			<id>bsdn-maven-repository</id>
+			<url>http://nexus.bsdn.org/content/groups/public/</url>
+		</repository>
+	</repositories>
+</project>

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:d="http://www.bstek.com/dorado/schema"
+	xsi:schemaLocation="
+http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+http://www.bstek.com/dorado/schema http://www.bstek.com/dorado/schema/spring-dorado-7.0.xsd">
+	<bean parent="dorado.resolverRegister">
+		<property name="url" value="dorado/bdf2/uploader/process.upload" />
+		<property name="resolver">
+			<bean class="com.bstek.bdf2.uploader.controller.ProcessUploadController">
+				<property name="defaultUploadProcessor" value="${bdf2.uploader.defaultProcessor}"></property>
+				<property name="allowFileTypes" value="${bdf2.uploader.allowFileTypes}"></property>
+				<property name="allowMaxFileSize" value="${bdf2.uploader.allowMaxFileSize}"></property>
+				<property name="hibernateDao" ref="bdf2.uploader.hibernateDao"/>
+			</bean>
+		</property>
+	</bean>
+	<bean parent="dorado.resolverRegister">
+		<property name="url" value="dorado/bdf2/uploader/process.download" />
+		<property name="resolver">
+			<bean class="com.bstek.bdf2.uploader.controller.ProcessDownloadController">
+				<property name="fileService" ref="bdf2.uploader.fileService"/>
+			</bean>
+		</property>
+	</bean>
+	<bean parent="dorado.resolverRegister">
+		<property name="url" value="dorado/bdf2/uploader/process.display" />
+		<property name="resolver">
+			<bean class="com.bstek.bdf2.uploader.controller.ProcessDisplayController">
+				<property name="fileService" ref="bdf2.uploader.fileService"/>
+			</bean>
+		</property>
+	</bean>
+	<bean id="bdf2.uploader.hibernateDao" class="com.bstek.bdf2.uploader.UploaderHibernateDao"></bean>
+</beans>

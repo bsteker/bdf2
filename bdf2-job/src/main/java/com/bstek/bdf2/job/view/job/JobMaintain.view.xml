@@ -1,0 +1,2335 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ViewConfig>
+  <Arguments/>
+  <Context/>
+  <Model>
+    <DataType name="dataTypeJob" parent="$dataTypeJobDefinition">
+      <Reference name="calendars">
+        <Property name="dataType">[dataTypeCalendar]</Property>
+        <Property name="parameter">$${this.id}</Property>
+        <Property name="dataProvider">bdf2.jobMaintain#loadCalendars</Property>
+      </Reference>
+      <Reference name="histories">
+        <Property name="dataProvider">bdf2.jobMaintain#loadJobHistories</Property>
+        <Property name="dataType">[$dataTypeJobHistory]</Property>
+        <Property name="parameter">$${this.id}</Property>
+        <Property name="pageSize">20</Property>
+      </Reference>
+      <Reference name="parameters">
+        <Property name="dataProvider">bdf2.jobMaintain#loadJobParameters</Property>
+        <Property name="parameter">$${this.id}</Property>
+        <Property name="dataType">[$dataTypeJobParameter]</Property>
+      </Reference>
+    </DataType>
+    <DataType name="dataTypeCalendar" parent="$dataTypeJobCalendar"/>
+    <DataType name="dataTypeSecond">
+      <PropertyDef name="type">
+        <Property name="dataType">String</Property>
+      </PropertyDef>
+      <PropertyDef name="fromPerSecond">
+        <Property name="dataType">int</Property>
+      </PropertyDef>
+      <PropertyDef name="perSecond">
+        <Property name="dataType">int</Property>
+      </PropertyDef>
+      <PropertyDef name="fromSecond">
+        <Property name="dataType">int</Property>
+      </PropertyDef>
+      <PropertyDef name="toSecond">
+        <Property name="dataType">int</Property>
+      </PropertyDef>
+      <PropertyDef name="specificSecond">
+        <Property name="dataType">String</Property>
+        <Property name="defaultValue">0</Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="dataTypeMinute">
+      <PropertyDef name="type">
+        <Property name="dataType">String</Property>
+      </PropertyDef>
+      <PropertyDef name="fromPerMinute">
+        <Property name="dataType">int</Property>
+      </PropertyDef>
+      <PropertyDef name="perMinute">
+        <Property name="dataType">int</Property>
+      </PropertyDef>
+      <PropertyDef name="fromMinute">
+        <Property name="dataType">int</Property>
+      </PropertyDef>
+      <PropertyDef name="toMinute">
+        <Property name="dataType">int</Property>
+      </PropertyDef>
+      <PropertyDef name="specificMinute">
+        <Property name="dataType">String</Property>
+        <Property name="defaultValue">0</Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="dataTypeHour">
+      <PropertyDef name="type">
+        <Property name="dataType">String</Property>
+      </PropertyDef>
+      <PropertyDef name="fromPerHour">
+        <Property name="dataType">int</Property>
+      </PropertyDef>
+      <PropertyDef name="perHour">
+        <Property name="dataType">int</Property>
+      </PropertyDef>
+      <PropertyDef name="fromHour">
+        <Property name="dataType">int</Property>
+      </PropertyDef>
+      <PropertyDef name="toHour">
+        <Property name="dataType">int</Property>
+      </PropertyDef>
+      <PropertyDef name="specificHour">
+        <Property name="dataType">String</Property>
+        <Property name="defaultValue">0</Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="dataTypeDay">
+      <PropertyDef name="type">
+        <Property name="dataType">String</Property>
+      </PropertyDef>
+      <PropertyDef name="fromPerDay">
+        <Property name="dataType">int</Property>
+        <Property name="defaultValue">1</Property>
+      </PropertyDef>
+      <PropertyDef name="perDay">
+        <Property name="dataType">int</Property>
+        <Property name="defaultValue">1</Property>
+      </PropertyDef>
+      <PropertyDef name="fromDay">
+        <Property name="dataType">int</Property>
+        <Property name="defaultValue">1</Property>
+      </PropertyDef>
+      <PropertyDef name="toDay">
+        <Property name="dataType">int</Property>
+        <Property name="defaultValue">1</Property>
+      </PropertyDef>
+      <PropertyDef name="specificDay">
+        <Property name="dataType">String</Property>
+        <Property name="defaultValue">1</Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="dataTypeMonth">
+      <PropertyDef name="type">
+        <Property name="dataType">String</Property>
+      </PropertyDef>
+      <PropertyDef name="fromPerMonth">
+        <Property name="dataType">int</Property>
+        <Property name="defaultValue">1</Property>
+      </PropertyDef>
+      <PropertyDef name="perMonth">
+        <Property name="dataType">int</Property>
+        <Property name="defaultValue">1</Property>
+      </PropertyDef>
+      <PropertyDef name="fromMonth">
+        <Property name="dataType">int</Property>
+        <Property name="defaultValue">1</Property>
+      </PropertyDef>
+      <PropertyDef name="toMonth">
+        <Property name="dataType">int</Property>
+        <Property name="defaultValue">1</Property>
+      </PropertyDef>
+      <PropertyDef name="specificMonth">
+        <Property name="dataType">String</Property>
+        <Property name="defaultValue">1</Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="dataTypeWeek">
+      <PropertyDef name="type">
+        <Property name="dataType">String</Property>
+      </PropertyDef>
+      <PropertyDef name="fromPerWeek">
+        <Property name="dataType">String</Property>
+        <Property name="defaultValue">SUN</Property>
+      </PropertyDef>
+      <PropertyDef name="perWeek">
+        <Property name="dataType">String</Property>
+        <Property name="defaultValue">SUN</Property>
+      </PropertyDef>
+      <PropertyDef name="fromWeek">
+        <Property name="dataType">String</Property>
+        <Property name="defaultValue">SUN</Property>
+      </PropertyDef>
+      <PropertyDef name="toWeek">
+        <Property name="dataType">String</Property>
+        <Property name="defaultValue">SUN</Property>
+      </PropertyDef>
+      <PropertyDef name="specificWeek">
+        <Property name="dataType">String</Property>
+        <Property name="defaultValue">SUN</Property>
+      </PropertyDef>
+      <PropertyDef name="last">
+        <Property name="dataType">String</Property>
+        <Property name="defaultValue">SUN</Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="dataTypeCronDate">
+      <Property name="creationType">com.bstek.bdf2.job.view.job.CronDate</Property>
+      <PropertyDef name="date">
+        <Property name="dataType">DateTime</Property>
+        <Property name="label">执行日期</Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="dataTypeJobInfo">
+      <Property name="creationType">com.bstek.bdf2.job.view.job.JobInfo</Property>
+      <PropertyDef name="beanId">
+        <Property name="dataType">String</Property>
+        <Property name="label">可用的Job的BeanId</Property>
+      </PropertyDef>
+    </DataType>
+  </Model>
+  <View>
+    <DataSet id="dataSetSecond">
+      <ClientEvent name="onReady">self.insert({type:&quot;all&quot;});</ClientEvent>
+      <Property name="dataType">dataTypeSecond</Property>
+    </DataSet>
+    <DataSet id="dataSetCalendar">
+      <Property name="dataType">[$dataTypeJobCalendar]</Property>
+      <Property name="dataProvider">bdf2.jobMaintain#loadAllCalendars</Property>
+    </DataSet>
+    <DataSet id="dataSetMinute">
+      <ClientEvent name="onReady">self.insert({type:&quot;all&quot;});</ClientEvent>
+      <Property name="dataType">dataTypeMinute</Property>
+    </DataSet>
+    <DataSet id="dataSetHour">
+      <ClientEvent name="onReady">self.insert({type:&quot;all&quot;});</ClientEvent>
+      <Property name="dataType">dataTypeHour</Property>
+    </DataSet>
+    <DataSet id="dataSetDay">
+      <ClientEvent name="onReady">self.insert({type:&quot;all&quot;});</ClientEvent>
+      <Property name="dataType">dataTypeDay</Property>
+    </DataSet>
+    <DataSet id="dataSetMonth">
+      <ClientEvent name="onReady">self.insert({type:&quot;all&quot;});</ClientEvent>
+      <Property name="dataType">dataTypeMonth</Property>
+    </DataSet>
+    <DataSet id="dataSetWeek">
+      <ClientEvent name="onReady">self.insert({type:&quot;all&quot;});</ClientEvent>
+      <Property name="dataType">dataTypeWeek</Property>
+    </DataSet>
+    <DataSet id="dataSetJob">
+      <Property name="dataType">[dataTypeJob]</Property>
+      <Property name="pageSize">20</Property>
+      <Property name="dataProvider">bdf2.jobMaintain#loadJobs</Property>
+    </DataSet>
+    <DataSet id="dataSetJobInfo">
+      <Property name="dataType">[dataTypeJobInfo]</Property>
+      <Property name="dataProvider">bdf2.jobMaintain#loadJobInfos</Property>
+    </DataSet>
+    <SplitPanel>
+      <Property name="position">900</Property>
+      <MainControl>
+        <TabControl>
+          <ControlTab>
+            <Property name="caption">Job执行时需要排除的日期</Property>
+            <Container>
+              <ToolBar>
+                <DataPilot>
+                  <ClientEvent name="onSubControlAction">var ds=view.id(&quot;dataSetJob&quot;);&#xD;
+var jobData=ds.getData(&quot;#&quot;);&#xD;
+switch(arg.code){&#xD;
+	case &quot;+&quot;:&#xD;
+		if(!jobData){&#xD;
+			dorado.MessageBox.alert(&quot;请先选中一Job&quot;);&#xD;
+		}else{&#xD;
+			var state=jobData.get(&quot;state&quot;);&#xD;
+			if(state!=&quot;stop&quot; &amp;&amp; state!=&quot;ready&quot;){&#xD;
+				dorado.MessageBox.alert(&quot;Job必须处于停止或待命时才能进行此操作&quot;);&#xD;
+			}else{&#xD;
+				view.id(&quot;dialogCalendarSelect&quot;).show();&#xD;
+			}&#xD;
+		}&#xD;
+		break;&#xD;
+	case &quot;-&quot;:&#xD;
+		var state=jobData.get(&quot;state&quot;);&#xD;
+		if(state!=&quot;stop&quot; &amp;&amp; state!=&quot;ready&quot;){&#xD;
+			dorado.MessageBox.alert(&quot;Job必须处于停止或待命时才能进行此操作&quot;);&#xD;
+		}else{&#xD;
+			dorado.MessageBox.confirm(&quot;真的要删除当前日期&quot;,function(){&#xD;
+				var calendarId=ds.getData(&quot;#.#calendars.id&quot;);&#xD;
+				var action=view.id(&quot;ajaxActionSaveCalendar&quot;);&#xD;
+				action.set(&quot;parameter&quot;,{calendarId:calendarId,jobId:jobData.get(&quot;id&quot;),operation:&quot;del&quot;});&#xD;
+				action.execute(function(){&#xD;
+					jobData.reset(&quot;calendars&quot;);&#xD;
+				});		&#xD;
+			});&#xD;
+		}&#xD;
+		break;&#xD;
+}&#xD;
+arg.processDefault=false;</ClientEvent>
+                  <Property name="dataSet">dataSetJob</Property>
+                  <Property name="dataPath">#.calendars</Property>
+                  <Property name="itemCodes">+,-</Property>
+                </DataPilot>
+              </ToolBar>
+              <DataGrid>
+                <Property name="dataSet">dataSetJob</Property>
+                <Property name="dataPath">#.calendars</Property>
+                <Property name="readOnly">true</Property>
+                <DataColumn name="name">
+                  <Property name="property">name</Property>
+                </DataColumn>
+                <DataColumn name="desc">
+                  <Property name="property">desc</Property>
+                </DataColumn>
+              </DataGrid>
+              <Dialog id="dialogCalendarSelect">
+                <Property name="width">500</Property>
+                <Property name="height">500</Property>
+                <Property name="center">true</Property>
+                <Property name="modal">true</Property>
+                <Buttons>
+                  <Button>
+                    <ClientEvent name="onClick">var data=view.id(&quot;dataSetCalendar&quot;).getData(&quot;#&quot;);&#xD;
+if(data){&#xD;
+	var calendarId=data.get(&quot;id&quot;);&#xD;
+	var jobData=view.id(&quot;dataSetJob&quot;);&#xD;
+	var calendars=jobData.getData(&quot;#.calendars&quot;);&#xD;
+	var error=false;&#xD;
+	if(calendars){&#xD;
+		calendars.each(function(c){&#xD;
+			if(calendarId==c.get(&quot;id&quot;)){&#xD;
+				error=true;&#xD;
+				return false;&#xD;
+			}&#xD;
+		});&#xD;
+	}&#xD;
+	if(error){&#xD;
+		dorado.MessageBox.alert(&quot;日期已存在&quot;);&#xD;
+		return;&#xD;
+	}&#xD;
+	var jobId=jobData.getData(&quot;#.id&quot;);&#xD;
+	var action=view.id(&quot;ajaxActionSaveCalendar&quot;);&#xD;
+	action.set(&quot;parameter&quot;,{calendarId:calendarId,jobId:jobId,operation:&quot;add&quot;});&#xD;
+	action.execute(function(){&#xD;
+		jobData.getData(&quot;#&quot;).reset(&quot;calendars&quot;);&#xD;
+		view.id(&quot;dialogCalendarSelect&quot;).hide();&#xD;
+	});&#xD;
+}else{&#xD;
+	dorado.MessageBox.alert(&quot;请先选中一个日期&quot;);&#xD;
+}</ClientEvent>
+                    <Property name="caption">确认</Property>
+                    <Property name="icon">url(skin>common/icons.gif) -140px -20px</Property>
+                  </Button>
+                  <Button>
+                    <ClientEvent name="onClick">view.id(&quot;dialogCalendarSelect&quot;).hide();</ClientEvent>
+                    <Property name="caption">取消</Property>
+                    <Property name="icon">url(skin>common/icons.gif) -40px 0px</Property>
+                  </Button>
+                </Buttons>
+                <Children>
+                  <DataGrid>
+                    <Property name="dataSet">dataSetCalendar</Property>
+                    <Property name="readOnly">true</Property>
+                    <DataColumn name="name">
+                      <Property name="property">name</Property>
+                    </DataColumn>
+                    <DataColumn name="desc">
+                      <Property name="property">desc</Property>
+                    </DataColumn>
+                  </DataGrid>
+                  <AjaxAction id="ajaxActionSaveCalendar">
+                    <Property name="service">bdf2.jobMaintain#saveJobCalendars</Property>
+                    <Property name="successMessage">操作成功</Property>
+                  </AjaxAction>
+                </Children>
+                <Tools/>
+              </Dialog>
+            </Container>
+          </ControlTab>
+          <ControlTab>
+            <Property name="caption">Job运行历史</Property>
+            <Container>
+              <ToolBar>
+                <DataPilot>
+                  <Property name="dataSet">dataSetJob</Property>
+                  <Property name="dataPath">#.histories</Property>
+                  <Property name="itemCodes">pages</Property>
+                </DataPilot>
+                <ToolBarButton>
+                  <ClientEvent name="onClick">var data=view.id(&quot;dataSetJob&quot;).getData(&quot;#&quot;);&#xD;
+var selection=view.id(&quot;dataGridHistory&quot;).get(&quot;selection&quot;);&#xD;
+if(selection.length&lt;1){&#xD;
+	dorado.MessageBox.alert(&quot;请先选中要删除的历史&quot;);&#xD;
+	return;&#xD;
+}&#xD;
+var jobHistoryIds=[];&#xD;
+selection.each(function(entity){&#xD;
+	var id=entity.get(&quot;id&quot;);&#xD;
+	jobHistoryIds.push(id);&#xD;
+});&#xD;
+dorado.MessageBox.confirm(&quot;真的要删除这些选中的历史&quot;,function(){&#xD;
+	var action=view.id(&quot;ajaxActionDeleteHistory&quot;);&#xD;
+	action.set(&quot;parameter&quot;,{jobHistoryIds:jobHistoryIds});&#xD;
+	action.execute(function(){&#xD;
+		data.reset(&quot;histories&quot;);&#xD;
+	});&#xD;
+});</ClientEvent>
+                  <Property name="caption">删除所选历史</Property>
+                  <Property name="icon">url(skin>common/icons.gif) -40px 0px</Property>
+                </ToolBarButton>
+              </ToolBar>
+              <DataGrid id="dataGridHistory">
+                <ClientEvent name="onDoubleClick">if(view.id(&quot;dataSetJob&quot;).getData(&quot;#.#histories&quot;)){&#xD;
+	view.id(&quot;dialogExceptionInfo&quot;).show();&#xD;
+}else{&#xD;
+	dorado.MessageBox.alert(&quot;当前没有选中记录，没有异常消息可供查看&quot;);&#xD;
+}</ClientEvent>
+                <Property name="dataPath">#.histories</Property>
+                <Property name="dataSet">dataSetJob</Property>
+                <Property name="readOnly">true</Property>
+                <Property name="selectionMode">multiRows</Property>
+                <Property name="tip">双击以查看异常消息</Property>
+                <RowSelectorColumn/>
+                <DataColumn name="startDate">
+                  <Property name="property">startDate</Property>
+                  <Property name="width">140</Property>
+                </DataColumn>
+                <DataColumn name="endDate">
+                  <Property name="property">endDate</Property>
+                  <Property name="width">140</Property>
+                </DataColumn>
+                <DataColumn name="successful">
+                  <ClientEvent name="onRenderCell">var successful=arg.data.get(&quot;successful&quot;);&#xD;
+if(successful){&#xD;
+	arg.dom.innerHTML=&quot;&lt;font color='green'>成功&lt;/font>&quot;;&#xD;
+}else{&#xD;
+	arg.dom.innerHTML=&quot;&lt;font color='red'>失败&lt;/font>&quot;;&#xD;
+}</ClientEvent>
+                  <Property name="property">successful</Property>
+                  <Property name="width">90</Property>
+                </DataColumn>
+              </DataGrid>
+              <Dialog id="dialogExceptionInfo">
+                <Property name="width">500</Property>
+                <Property name="height">400</Property>
+                <Property name="center">true</Property>
+                <Property name="caption">Job执行异常消息</Property>
+                <Property name="maximizeable">true</Property>
+                <Buttons/>
+                <Children>
+                  <TextArea>
+                    <Property name="dataPath">#.#histories</Property>
+                    <Property name="dataSet">dataSetJob</Property>
+                    <Property name="property">exceptionMessage</Property>
+                  </TextArea>
+                </Children>
+                <Tools/>
+              </Dialog>
+              <AjaxAction id="ajaxActionDeleteHistory">
+                <Property name="service">bdf2.jobMaintain#deleteJobHistory</Property>
+                <Property name="successMessage">操作成功</Property>
+              </AjaxAction>
+            </Container>
+          </ControlTab>
+          <ControlTab>
+            <Property name="caption">Job运行参数</Property>
+            <Container>
+              <ToolBar>
+                <DataPilot>
+                  <ClientEvent name="onSubControlAction">var ds=view.id(&quot;dataSetJob&quot;);&#xD;
+var state=ds.getData(&quot;#.state&quot;);&#xD;
+switch(arg.code){&#xD;
+	case &quot;+&quot;:&#xD;
+		if(state!=&quot;stop&quot; &amp;&amp; state!=&quot;ready&quot;){&#xD;
+			dorado.MessageBox.alert(&quot;Job必须处于停止或待命时才能进行此操作&quot;);&#xD;
+		}else{&#xD;
+			var jobId=ds.getData(&quot;#.id&quot;);&#xD;
+			var data=ds.getData(&quot;#.parameters&quot;);&#xD;
+			data.insert({jobId:jobId});&#xD;
+		}&#xD;
+		break;&#xD;
+	case &quot;-&quot;:&#xD;
+		if(state!=&quot;stop&quot; &amp;&amp; state!=&quot;ready&quot;){&#xD;
+			dorado.MessageBox.alert(&quot;Job必须处于停止或待命时才能进行此操作&quot;);&#xD;
+		}else{&#xD;
+			var data=ds.getData(&quot;#.#parameters&quot;);&#xD;
+			data.remove();&#xD;
+		}&#xD;
+		break;&#xD;
+}&#xD;
+arg.processDefault=false;</ClientEvent>
+                  <Property name="itemCodes">+,-</Property>
+                  <Property name="dataSet">dataSetJob</Property>
+                  <Property name="dataPath">#.parameters</Property>
+                </DataPilot>
+                <ToolBarButton>
+                  <Property name="caption">保存</Property>
+                  <Property name="action">updateActionSaveParameters</Property>
+                  <Property name="icon">url(skin>common/icons.gif) -140px -20px</Property>
+                </ToolBarButton>
+              </ToolBar>
+              <DataGrid>
+                <Property name="dataPath">#.parameters</Property>
+                <Property name="dataSet">dataSetJob</Property>
+                <DataColumn>
+                  <Property name="property">name</Property>
+                  <Property name="name">name</Property>
+                  <Editor/>
+                </DataColumn>
+                <DataColumn>
+                  <Property name="property">value</Property>
+                  <Property name="name">value</Property>
+                  <Editor/>
+                </DataColumn>
+              </DataGrid>
+              <UpdateAction id="updateActionSaveParameters">
+                <Property name="dataResolver">bdf2.jobMaintain#saveJobParameters</Property>
+                <Property name="successMessage">操作成功</Property>
+                <UpdateItem>
+                  <Property name="dataSet">dataSetJob</Property>
+                  <Property name="dataPath">#.parameters[#dirty]</Property>
+                </UpdateItem>
+              </UpdateAction>
+            </Container>
+          </ControlTab>
+        </TabControl>
+      </MainControl>
+      <SideControl>
+        <Container>
+          <ToolBar>
+            <DataPilot>
+              <ClientEvent name="onSubControlAction">switch(arg.code){&#xD;
+	case &quot;+&quot;:&#xD;
+		view.id(&quot;dataSetJob&quot;).insert();&#xD;
+		view.id(&quot;dialogJob&quot;).show();&#xD;
+		break;&#xD;
+	case &quot;-&quot;:&#xD;
+		var data=view.id(&quot;dataSetJob&quot;).getData(&quot;#&quot;);&#xD;
+		if(data.get(&quot;state&quot;)!==&quot;stop&quot; &amp;&amp; data.get(&quot;state&quot;)!==&quot;ready&quot;){&#xD;
+			dorado.MessageBox.alert(&quot;要删除的Job必须为停止或待命状态，否则不能删除&quot;);&#xD;
+		}else{&#xD;
+			dorado.MessageBox.confirm(&quot;真的要删除当前Job&quot;,function(){&#xD;
+				data.remove();&#xD;
+				view.id(&quot;updateActionSaveJob&quot;).execute();&#xD;
+			});&#xD;
+		}&#xD;
+		break;&#xD;
+}&#xD;
+arg.processDefault=false;</ClientEvent>
+              <Property name="dataSet">dataSetJob</Property>
+              <Property name="itemCodes">pages,+,-</Property>
+            </DataPilot>
+            <ToolBarButton>
+              <ClientEvent name="onClick">var data=view.id(&quot;dataSetJob&quot;).getData(&quot;#&quot;);&#xD;
+if(data){&#xD;
+	var state=data.get(&quot;state&quot;);&#xD;
+	if(state==&quot;running&quot; || state==&quot;run&quot;){&#xD;
+		dorado.MessageBox.alert(&quot;只有当Job状态为待命及停止时才可进行编辑操作&quot;);&#xD;
+		return;&#xD;
+	}&#xD;
+	view.id(&quot;dialogJob&quot;).show();&#xD;
+}else{&#xD;
+	dorado.MessageBox.alert(&quot;当前没有数据可供修改&quot;);&#xD;
+}</ClientEvent>
+              <Property name="caption">修改</Property>
+              <Property name="icon">url(skin>common/icons.gif) -200px 0px</Property>
+            </ToolBarButton>
+            <ToolBarButton>
+              <ClientEvent name="onClick">var data=view.id(&quot;dataSetJob&quot;).getData(&quot;#&quot;);&#xD;
+if(data){&#xD;
+	var state=data.get(&quot;state&quot;);&#xD;
+	if(state==&quot;running&quot;){&#xD;
+		dorado.MessageBox.alert(&quot;当前Job正处于启动中状态，不能再次执行启动动作&quot;);&#xD;
+		return;&#xD;
+	}&#xD;
+	if(state==&quot;run&quot;){&#xD;
+		dorado.MessageBox.alert(&quot;当前Job正处于启动状态，不能再次执行启动动作&quot;);&#xD;
+		return;&#xD;
+	}&#xD;
+	dorado.MessageBox.confirm(&quot;真的要启动当前任务？&quot;,function(){&#xD;
+		var action=view.id(&quot;ajaxActionRunJob&quot;);&#xD;
+		action.set(&quot;parameter&quot;,{jobDefinitionId:data.get(&quot;id&quot;)});&#xD;
+		action.execute(function(){&#xD;
+			data.set(&quot;state&quot;,&quot;running&quot;);&#xD;
+			data.setState(dorado.Entity.STATE_NONE);&#xD;
+		});	&#xD;
+	});&#xD;
+}else{&#xD;
+	dorado.MessageBox.alert(&quot;当前没有数据可供操作&quot;);&#xD;
+}&#xD;
+&#xD;
+</ClientEvent>
+              <Property name="caption">启动任务</Property>
+              <Property name="icon">url(skin>common/icons.gif) -180px -220px</Property>
+            </ToolBarButton>
+            <ToolBarButton>
+              <ClientEvent name="onClick">var data=view.id(&quot;dataSetJob&quot;).getData(&quot;#&quot;);&#xD;
+if(data){&#xD;
+	var state=data.get(&quot;state&quot;);&#xD;
+	if(state==&quot;stopping&quot;){&#xD;
+		dorado.MessageBox.alert(&quot;当前Job正处于停止中状态，不能再次执行停止动作&quot;);&#xD;
+		return;&#xD;
+	}&#xD;
+	if(state==&quot;stop&quot;){&#xD;
+		dorado.MessageBox.alert(&quot;当前Job正处于停止状态，不能再次执行停止动作&quot;);&#xD;
+		return;&#xD;
+	}&#xD;
+	dorado.MessageBox.confirm(&quot;真的要停止当前任务？&quot;,function(){&#xD;
+		var action=view.id(&quot;ajaxActionStopJob&quot;);&#xD;
+		action.set(&quot;parameter&quot;,{jobDefinitionId:data.get(&quot;id&quot;)});&#xD;
+		action.execute(function(){&#xD;
+			data.set(&quot;state&quot;,&quot;stopping&quot;);&#xD;
+			data.setState(dorado.Entity.STATE_NONE);&#xD;
+		});	&#xD;
+	});&#xD;
+}else{&#xD;
+	dorado.MessageBox.alert(&quot;当前没有数据可供操作&quot;);&#xD;
+}&#xD;
+&#xD;
+</ClientEvent>
+              <Property name="caption">停止任务</Property>
+              <Property name="icon">url(skin>common/icons.gif) -240px -220px</Property>
+            </ToolBarButton>
+          </ToolBar>
+          <DataGrid>
+            <Property name="dataSet">dataSetJob</Property>
+            <Property name="readOnly">true</Property>
+            <Property name="filterMode">serverSide</Property>
+            <Property name="showFilterBar">true</Property>
+            <DataColumn name="name">
+              <Property name="property">name</Property>
+              <Property name="width">120</Property>
+            </DataColumn>
+            <DataColumn name="beanId">
+              <Property name="property">beanId</Property>
+              <Property name="width">230</Property>
+            </DataColumn>
+            <DataColumn>
+              <ClientEvent name="onRenderCell">var state=arg.data.get(&quot;state&quot;);&#xD;
+if(state==&quot;ready&quot;){&#xD;
+	arg.dom.innerHTML=&quot;&lt;strong>&lt;font color='blue'>待命&lt;/font>&lt;/strong>&quot;;&#xD;
+}&#xD;
+if(state==&quot;running&quot;){&#xD;
+	arg.dom.innerHTML=&quot;&lt;font color='blue'>启动中&lt;/font>&quot;;&#xD;
+}&#xD;
+if(state==&quot;run&quot;){&#xD;
+	arg.dom.innerHTML=&quot;&lt;strong>&lt;font color='green'>运行中&lt;/font>&lt;/strong>&quot;;&#xD;
+}&#xD;
+if(state==&quot;pausing&quot;){&#xD;
+	arg.dom.innerHTML=&quot;&lt;font color='yellow'>暂停中&lt;/font>&quot;;&#xD;
+}&#xD;
+if(state==&quot;pause&quot;){&#xD;
+	arg.dom.innerHTML=&quot;&lt;strong>&lt;font color='yellow'>暂停&lt;/font>&lt;/strong>&quot;;&#xD;
+}&#xD;
+if(state==&quot;stopping&quot;){&#xD;
+	arg.dom.innerHTML=&quot;&lt;font color='red'>停止中&lt;/font>&quot;;&#xD;
+}&#xD;
+if(state==&quot;stop&quot;){&#xD;
+	arg.dom.innerHTML=&quot;&lt;strong>&lt;font color='red'>停止&lt;/font>&lt;/strong>&quot;;&#xD;
+}&#xD;
+</ClientEvent>
+              <Property name="property">state</Property>
+              <Property name="name">state</Property>
+              <Property name="width">100</Property>
+              <Property name="filterable">false</Property>
+              <Editor/>
+            </DataColumn>
+            <DataColumn name="cronExpression">
+              <Property name="property">cronExpression</Property>
+              <Property name="width">160</Property>
+              <Property name="filterable">false</Property>
+            </DataColumn>
+            <DataColumn name="desc">
+              <Property name="property">desc</Property>
+              <Property name="filterable">false</Property>
+            </DataColumn>
+          </DataGrid>
+          <Dialog id="dialogCron">
+            <Property name="center">true</Property>
+            <Property name="width">570</Property>
+            <Property name="height">300</Property>
+            <Property name="maximizeable">true</Property>
+            <Property name="modal">true</Property>
+            <Property name="closeable">false</Property>
+            <Property name="caption">Job信息编辑</Property>
+            <Buttons>
+              <Button>
+                <ClientEvent name="onClick">var cron=view.id(&quot;autoFormCronExp&quot;).get(&quot;entity&quot;).cron;&#xD;
+view.id(&quot;dataSetJob&quot;).getData(&quot;#&quot;).set(&quot;cronExpression&quot;,cron);&#xD;
+view.id(&quot;dialogCron&quot;).hide();</ClientEvent>
+                <Property name="caption">确认</Property>
+                <Property name="icon">url(skin>common/icons.gif) -140px -20px</Property>
+              </Button>
+              <Button>
+                <ClientEvent name="onClick">view.id(&quot;dialogCron&quot;).hide();</ClientEvent>
+                <Property name="caption">取消</Property>
+                <Property name="icon">url(skin>common/icons.gif) -40px 0px</Property>
+              </Button>
+            </Buttons>
+            <Children>
+              <TabControl>
+                <Property name="height">130</Property>
+                <ControlTab>
+                  <Property name="caption">秒</Property>
+                  <Container>
+                    <AutoForm>
+                      <Property name="cols">*</Property>
+                      <Property name="labelAlign">right</Property>
+                      <AutoFormElement>
+                        <Property name="label">类型</Property>
+                        <Property name="name">type</Property>
+                        <Editor>
+                          <RadioGroup>
+                            <ClientEvent name="onValueChange">view.id(&quot;autoFormPerSecond&quot;).set(&quot;visible&quot;,false);&#xD;
+view.id(&quot;autoFormRegionSecond&quot;).set(&quot;visible&quot;,false);&#xD;
+view.id(&quot;autoFormSpecificSecond&quot;).set(&quot;visible&quot;,false);&#xD;
+var value=self.get(&quot;value&quot;);&#xD;
+if(value==&quot;per&quot;){&#xD;
+	view.id(&quot;autoFormPerSecond&quot;).set(&quot;visible&quot;,true);&#xD;
+}&#xD;
+if(value==&quot;region&quot;){&#xD;
+	view.id(&quot;autoFormRegionSecond&quot;).set(&quot;visible&quot;,true);&#xD;
+}&#xD;
+if(value==&quot;specific&quot;){&#xD;
+	view.id(&quot;autoFormSpecificSecond&quot;).set(&quot;visible&quot;,true);&#xD;
+}</ClientEvent>
+                            <Property name="value">all</Property>
+                            <Property name="dataSet">dataSetSecond</Property>
+                            <Property name="property">type</Property>
+                            <RadioButton>
+                              <Property name="value">all</Property>
+                              <Property name="text">所有秒</Property>
+                            </RadioButton>
+                            <RadioButton>
+                              <Property name="text">每隔多少秒</Property>
+                              <Property name="value">per</Property>
+                            </RadioButton>
+                            <RadioButton>
+                              <Property name="text">秒区段</Property>
+                              <Property name="value">region</Property>
+                            </RadioButton>
+                            <RadioButton>
+                              <Property name="text">特定秒</Property>
+                              <Property name="value">specific</Property>
+                            </RadioButton>
+                          </RadioGroup>
+                        </Editor>
+                      </AutoFormElement>
+                    </AutoForm>
+                    <Container>
+                      <Property name="contentOverflow">hidden</Property>
+                      <AutoForm id="autoFormPerSecond">
+                        <Property name="labelAlign">right</Property>
+                        <Property name="cols">*</Property>
+                        <Property name="visible">false</Property>
+                        <Property name="hideMode">display</Property>
+                        <AutoFormElement>
+                          <Property name="name">per</Property>
+                          <Property name="label">从第</Property>
+                          <Property name="labelSeparator"> </Property>
+                          <Editor>
+                            <Container layout="hbox">
+                              <TextEditor>
+                                <Property name="dataSet">dataSetSecond</Property>
+                                <Property name="property">fromPerSecond</Property>
+                                <Property name="trigger">listDropDownSelectSecond</Property>
+                                <Property name="editable">false</Property>
+                                <Property name="width">90</Property>
+                              </TextEditor>
+                              <Label>
+                                <Property name="text">秒开始，每隔</Property>
+                              </Label>
+                              <TextEditor>
+                                <Property name="dataSet">dataSetSecond</Property>
+                                <Property name="property">perSecond</Property>
+                                <Property name="trigger">listDropDownSelectSecond</Property>
+                                <Property name="editable">false</Property>
+                                <Property name="width">90</Property>
+                              </TextEditor>
+                              <Label>
+                                <Property name="text">秒执行一次</Property>
+                              </Label>
+                            </Container>
+                          </Editor>
+                        </AutoFormElement>
+                      </AutoForm>
+                      <AutoForm id="autoFormRegionSecond">
+                        <Property name="cols">*</Property>
+                        <Property name="labelAlign">right</Property>
+                        <Property name="visible">false</Property>
+                        <Property name="hideMode">display</Property>
+                        <AutoFormElement>
+                          <Property name="label">在第</Property>
+                          <Property name="name">region</Property>
+                          <Property name="labelSeparator"> </Property>
+                          <Editor>
+                            <Container layout="hbox">
+                              <TextEditor>
+                                <Property name="dataSet">dataSetSecond</Property>
+                                <Property name="property">fromSecond</Property>
+                                <Property name="trigger">listDropDownSelectSecond</Property>
+                                <Property name="editable">false</Property>
+                                <Property name="width">90</Property>
+                              </TextEditor>
+                              <Label>
+                                <Property name="text">秒到</Property>
+                              </Label>
+                              <TextEditor>
+                                <Property name="dataType">int</Property>
+                                <Property name="dataSet">dataSetSecond</Property>
+                                <Property name="property">toSecond</Property>
+                                <Property name="trigger">listDropDownSelectSecond</Property>
+                                <Property name="editable">false</Property>
+                                <Property name="width">90</Property>
+                              </TextEditor>
+                              <Label>
+                                <Property name="text">秒区间执行</Property>
+                              </Label>
+                            </Container>
+                          </Editor>
+                        </AutoFormElement>
+                      </AutoForm>
+                      <AutoForm id="autoFormSpecificSecond">
+                        <Property name="cols">*</Property>
+                        <Property name="hideMode">display</Property>
+                        <Property name="visible">false</Property>
+                        <Property name="labelAlign">right</Property>
+                        <AutoFormElement>
+                          <Property name="label">选择秒</Property>
+                          <Property name="name">specific</Property>
+                          <Editor>
+                            <TagEditor>
+                              <Property name="trigger">listDropDownSecond</Property>
+                              <Property name="editable">false</Property>
+                              <Property name="dataSet">dataSetSecond</Property>
+                              <Property name="property">specificSecond</Property>
+                            </TagEditor>
+                          </Editor>
+                        </AutoFormElement>
+                      </AutoForm>
+                      <ListDropDown id="listDropDownSecond">
+                        <ClientEvent name="onReady">var seconds=[];&#xD;
+for(var i=0;i&lt;60;i++){&#xD;
+	seconds.push(i);&#xD;
+}&#xD;
+self.set(&quot;items&quot;,seconds);</ClientEvent>
+                        <ClientEvent name="onValueSelect">var selectedValue=arg.selectedValue;&#xD;
+var data=view.id(&quot;dataSetSecond&quot;).getData();&#xD;
+var orgValue=data.get(&quot;specificSecond&quot;);&#xD;
+var ok=true;&#xD;
+if(orgValue){&#xD;
+	var value=orgValue.split(&quot;,&quot;);&#xD;
+	for(var i=0;i&lt;value.length;i++){&#xD;
+		if(value[i]==selectedValue){&#xD;
+			ok=false;&#xD;
+			break;&#xD;
+		}&#xD;
+	}&#xD;
+	orgValue+=&quot;,&quot;+selectedValue;&#xD;
+}else{&#xD;
+	orgValue=selectedValue;&#xD;
+}&#xD;
+if(ok){&#xD;
+	data.set(&quot;specificSecond&quot;,orgValue);&#xD;
+}else{&#xD;
+	dorado.MessageBox.alert(&quot;当前值已选择&quot;);&#xD;
+}&#xD;
+arg.processDefault=false;</ClientEvent>
+                        <Property name="items"></Property>
+                      </ListDropDown>
+                      <ListDropDown id="listDropDownSelectSecond">
+                        <ClientEvent name="onReady">var seconds=[];&#xD;
+for(var i=0;i&lt;60;i++){&#xD;
+	seconds.push(i);&#xD;
+}&#xD;
+self.set(&quot;items&quot;,seconds);</ClientEvent>
+                        <Property name="items"></Property>
+                      </ListDropDown>
+                    </Container>
+                  </Container>
+                </ControlTab>
+                <ControlTab>
+                  <Property name="caption">分钟</Property>
+                  <Container>
+                    <AutoForm>
+                      <Property name="cols">*</Property>
+                      <Property name="labelAlign">right</Property>
+                      <AutoFormElement>
+                        <Property name="label">类型</Property>
+                        <Property name="name">type</Property>
+                        <Editor>
+                          <RadioGroup>
+                            <ClientEvent name="onValueChange">view.id(&quot;autoFormPerMinute&quot;).set(&quot;visible&quot;,false);&#xD;
+view.id(&quot;autoFormRegionMinute&quot;).set(&quot;visible&quot;,false);&#xD;
+view.id(&quot;autoFormSpecificMinute&quot;).set(&quot;visible&quot;,false);&#xD;
+var value=self.get(&quot;value&quot;);&#xD;
+if(value==&quot;per&quot;){&#xD;
+	view.id(&quot;autoFormPerMinute&quot;).set(&quot;visible&quot;,true);&#xD;
+}&#xD;
+if(value==&quot;region&quot;){&#xD;
+	view.id(&quot;autoFormRegionMinute&quot;).set(&quot;visible&quot;,true);&#xD;
+}&#xD;
+if(value==&quot;specific&quot;){&#xD;
+	view.id(&quot;autoFormSpecificMinute&quot;).set(&quot;visible&quot;,true);&#xD;
+}</ClientEvent>
+                            <Property name="value">all</Property>
+                            <Property name="dataSet">dataSetMinute</Property>
+                            <Property name="property">type</Property>
+                            <RadioButton>
+                              <Property name="value">all</Property>
+                              <Property name="text">所有分钟</Property>
+                            </RadioButton>
+                            <RadioButton>
+                              <Property name="text">每隔多少分钟</Property>
+                              <Property name="value">per</Property>
+                            </RadioButton>
+                            <RadioButton>
+                              <Property name="text">分钟区段</Property>
+                              <Property name="value">region</Property>
+                            </RadioButton>
+                            <RadioButton>
+                              <Property name="text">特定分钟</Property>
+                              <Property name="value">specific</Property>
+                            </RadioButton>
+                          </RadioGroup>
+                        </Editor>
+                      </AutoFormElement>
+                    </AutoForm>
+                    <Container>
+                      <Property name="contentOverflow">hidden</Property>
+                      <AutoForm id="autoFormPerMinute">
+                        <Property name="labelAlign">right</Property>
+                        <Property name="cols">*</Property>
+                        <Property name="visible">false</Property>
+                        <Property name="hideMode">display</Property>
+                        <AutoFormElement>
+                          <Property name="name">per</Property>
+                          <Property name="label">从第</Property>
+                          <Property name="labelSeparator"> </Property>
+                          <Editor>
+                            <Container layout="hbox">
+                              <TextEditor>
+                                <Property name="dataSet">dataSetMinute</Property>
+                                <Property name="property">fromPerMinute</Property>
+                                <Property name="trigger">listDropDownSelectMinute</Property>
+                                <Property name="editable">false</Property>
+                                <Property name="width">90</Property>
+                              </TextEditor>
+                              <Label>
+                                <Property name="text">分钟开始，每隔</Property>
+                              </Label>
+                              <TextEditor>
+                                <Property name="dataSet">dataSetMinute</Property>
+                                <Property name="property">perMinute</Property>
+                                <Property name="trigger">listDropDownSelectMinute</Property>
+                                <Property name="editable">false</Property>
+                                <Property name="width">90</Property>
+                              </TextEditor>
+                              <Label>
+                                <Property name="text">分钟执行一次</Property>
+                              </Label>
+                            </Container>
+                          </Editor>
+                        </AutoFormElement>
+                      </AutoForm>
+                      <AutoForm id="autoFormRegionMinute">
+                        <Property name="cols">*</Property>
+                        <Property name="labelAlign">right</Property>
+                        <Property name="visible">false</Property>
+                        <Property name="hideMode">display</Property>
+                        <AutoFormElement>
+                          <Property name="label">在第</Property>
+                          <Property name="name">region</Property>
+                          <Property name="labelSeparator"> </Property>
+                          <Editor>
+                            <Container layout="hbox">
+                              <TextEditor>
+                                <Property name="dataSet">dataSetMinute</Property>
+                                <Property name="property">fromMinute</Property>
+                                <Property name="trigger">listDropDownSelectMinute</Property>
+                                <Property name="editable">false</Property>
+                                <Property name="width">90</Property>
+                              </TextEditor>
+                              <Label>
+                                <Property name="text">分钟到</Property>
+                              </Label>
+                              <TextEditor>
+                                <Property name="dataSet">dataSetMinute</Property>
+                                <Property name="property">toMinute</Property>
+                                <Property name="trigger">listDropDownSelectMinute</Property>
+                                <Property name="editable">false</Property>
+                                <Property name="width">90</Property>
+                              </TextEditor>
+                              <Label>
+                                <Property name="text">分钟区间执行</Property>
+                              </Label>
+                            </Container>
+                          </Editor>
+                        </AutoFormElement>
+                      </AutoForm>
+                      <AutoForm id="autoFormSpecificMinute">
+                        <Property name="cols">*</Property>
+                        <Property name="hideMode">display</Property>
+                        <Property name="visible">false</Property>
+                        <Property name="labelAlign">right</Property>
+                        <AutoFormElement>
+                          <Property name="label">选择秒</Property>
+                          <Property name="name">specific</Property>
+                          <Editor>
+                            <TagEditor>
+                              <Property name="trigger">listDropDownMinute</Property>
+                              <Property name="editable">false</Property>
+                              <Property name="dataSet">dataSetMinute</Property>
+                              <Property name="property">specificMinute</Property>
+                            </TagEditor>
+                          </Editor>
+                        </AutoFormElement>
+                      </AutoForm>
+                      <ListDropDown id="listDropDownMinute">
+                        <ClientEvent name="onReady">var seconds=[];&#xD;
+for(var i=0;i&lt;60;i++){&#xD;
+	seconds.push(i);&#xD;
+}&#xD;
+self.set(&quot;items&quot;,seconds);</ClientEvent>
+                        <ClientEvent name="onValueSelect">var selectedValue=arg.selectedValue;&#xD;
+var data=view.id(&quot;dataSetMinute&quot;).getData();&#xD;
+var orgValue=data.get(&quot;specificMinute&quot;);&#xD;
+var ok=true;&#xD;
+if(orgValue){&#xD;
+	var value=orgValue.split(&quot;,&quot;);&#xD;
+	for(var i=0;i&lt;value.length;i++){&#xD;
+		if(value[i]==selectedValue){&#xD;
+			ok=false;&#xD;
+			break;&#xD;
+		}&#xD;
+	}&#xD;
+	orgValue+=&quot;,&quot;+selectedValue;&#xD;
+}else{&#xD;
+	orgValue=selectedValue;&#xD;
+}&#xD;
+if(ok){&#xD;
+	data.set(&quot;specificMinute&quot;,orgValue);&#xD;
+}else{&#xD;
+	dorado.MessageBox.alert(&quot;当前值已选择&quot;);&#xD;
+}&#xD;
+arg.processDefault=false;</ClientEvent>
+                        <Property name="items"></Property>
+                      </ListDropDown>
+                      <ListDropDown id="listDropDownSelectMinute">
+                        <ClientEvent name="onReady">var seconds=[];&#xD;
+for(var i=0;i&lt;60;i++){&#xD;
+	seconds.push(i);&#xD;
+}&#xD;
+self.set(&quot;items&quot;,seconds);</ClientEvent>
+                        <Property name="items"></Property>
+                      </ListDropDown>
+                    </Container>
+                  </Container>
+                </ControlTab>
+                <ControlTab>
+                  <Property name="caption">小时</Property>
+                  <Container>
+                    <AutoForm>
+                      <Property name="cols">*</Property>
+                      <Property name="labelAlign">right</Property>
+                      <AutoFormElement>
+                        <Property name="label">类型</Property>
+                        <Property name="name">type</Property>
+                        <Editor>
+                          <RadioGroup>
+                            <ClientEvent name="onValueChange">view.id(&quot;autoFormPerHour&quot;).set(&quot;visible&quot;,false);&#xD;
+view.id(&quot;autoFormRegionHour&quot;).set(&quot;visible&quot;,false);&#xD;
+view.id(&quot;autoFormSpecificHour&quot;).set(&quot;visible&quot;,false);&#xD;
+var value=self.get(&quot;value&quot;);&#xD;
+if(value==&quot;per&quot;){&#xD;
+	view.id(&quot;autoFormPerHour&quot;).set(&quot;visible&quot;,true);&#xD;
+}&#xD;
+if(value==&quot;region&quot;){&#xD;
+	view.id(&quot;autoFormRegionHour&quot;).set(&quot;visible&quot;,true);&#xD;
+}&#xD;
+if(value==&quot;specific&quot;){&#xD;
+	view.id(&quot;autoFormSpecificHour&quot;).set(&quot;visible&quot;,true);&#xD;
+}</ClientEvent>
+                            <Property name="value">all</Property>
+                            <Property name="dataSet">dataSetHour</Property>
+                            <Property name="property">type</Property>
+                            <RadioButton>
+                              <Property name="value">all</Property>
+                              <Property name="text">所有小时</Property>
+                            </RadioButton>
+                            <RadioButton>
+                              <Property name="text">每隔多少小时</Property>
+                              <Property name="value">per</Property>
+                            </RadioButton>
+                            <RadioButton>
+                              <Property name="text">小时区段</Property>
+                              <Property name="value">region</Property>
+                            </RadioButton>
+                            <RadioButton>
+                              <Property name="text">特定小时</Property>
+                              <Property name="value">specific</Property>
+                            </RadioButton>
+                          </RadioGroup>
+                        </Editor>
+                      </AutoFormElement>
+                    </AutoForm>
+                    <Container>
+                      <Property name="contentOverflow">hidden</Property>
+                      <AutoForm id="autoFormPerHour">
+                        <Property name="labelAlign">right</Property>
+                        <Property name="cols">*</Property>
+                        <Property name="visible">false</Property>
+                        <Property name="hideMode">display</Property>
+                        <AutoFormElement>
+                          <Property name="name">per</Property>
+                          <Property name="label">从第</Property>
+                          <Property name="labelSeparator"> </Property>
+                          <Editor>
+                            <Container layout="hbox">
+                              <TextEditor>
+                                <Property name="dataSet">dataSetHour</Property>
+                                <Property name="property">fromPerHour</Property>
+                                <Property name="trigger">listDropDownSelectHour</Property>
+                                <Property name="editable">false</Property>
+                                <Property name="width">90</Property>
+                              </TextEditor>
+                              <Label>
+                                <Property name="text">小时开始，每隔</Property>
+                              </Label>
+                              <TextEditor>
+                                <Property name="dataSet">dataSetHour</Property>
+                                <Property name="property">perHour</Property>
+                                <Property name="trigger">listDropDownSelectHour</Property>
+                                <Property name="editable">false</Property>
+                                <Property name="width">90</Property>
+                              </TextEditor>
+                              <Label>
+                                <Property name="text">小时执行一次</Property>
+                              </Label>
+                            </Container>
+                          </Editor>
+                        </AutoFormElement>
+                      </AutoForm>
+                      <AutoForm id="autoFormRegionHour">
+                        <Property name="cols">*</Property>
+                        <Property name="labelAlign">right</Property>
+                        <Property name="visible">false</Property>
+                        <Property name="hideMode">display</Property>
+                        <AutoFormElement>
+                          <Property name="label">在第</Property>
+                          <Property name="name">region</Property>
+                          <Property name="labelSeparator"> </Property>
+                          <Editor>
+                            <Container layout="hbox">
+                              <TextEditor>
+                                <Property name="dataSet">dataSetHour</Property>
+                                <Property name="property">fromHour</Property>
+                                <Property name="trigger">listDropDownSelectHour</Property>
+                                <Property name="editable">false</Property>
+                                <Property name="width">90</Property>
+                              </TextEditor>
+                              <Label>
+                                <Property name="text">小时到</Property>
+                              </Label>
+                              <TextEditor>
+                                <Property name="dataSet">dataSetHour</Property>
+                                <Property name="property">toHour</Property>
+                                <Property name="trigger">listDropDownSelectHour</Property>
+                                <Property name="editable">false</Property>
+                                <Property name="width">90</Property>
+                              </TextEditor>
+                              <Label>
+                                <Property name="text">小时区间执行</Property>
+                              </Label>
+                            </Container>
+                          </Editor>
+                        </AutoFormElement>
+                      </AutoForm>
+                      <AutoForm id="autoFormSpecificHour">
+                        <Property name="cols">*</Property>
+                        <Property name="hideMode">display</Property>
+                        <Property name="visible">false</Property>
+                        <Property name="labelAlign">right</Property>
+                        <AutoFormElement>
+                          <Property name="label">选择小时</Property>
+                          <Property name="name">specific</Property>
+                          <Editor>
+                            <TagEditor>
+                              <Property name="trigger">listDropDownHour</Property>
+                              <Property name="editable">false</Property>
+                              <Property name="dataSet">dataSetHour</Property>
+                              <Property name="property">specificHour</Property>
+                            </TagEditor>
+                          </Editor>
+                        </AutoFormElement>
+                      </AutoForm>
+                      <ListDropDown id="listDropDownHour">
+                        <ClientEvent name="onReady">var seconds=[];&#xD;
+for(var i=0;i&lt;24;i++){&#xD;
+	seconds.push(i);&#xD;
+}&#xD;
+self.set(&quot;items&quot;,seconds);</ClientEvent>
+                        <ClientEvent name="onValueSelect">var selectedValue=arg.selectedValue;&#xD;
+var data=view.id(&quot;dataSetHour&quot;).getData();&#xD;
+var orgValue=data.get(&quot;specificHour&quot;);&#xD;
+var ok=true;&#xD;
+if(orgValue){&#xD;
+	var value=orgValue.split(&quot;,&quot;);&#xD;
+	for(var i=0;i&lt;value.length;i++){&#xD;
+		if(value[i]==selectedValue){&#xD;
+			ok=false;&#xD;
+			break;&#xD;
+		}&#xD;
+	}&#xD;
+	orgValue+=&quot;,&quot;+selectedValue;&#xD;
+}else{&#xD;
+	orgValue=selectedValue;&#xD;
+}&#xD;
+if(ok){&#xD;
+	data.set(&quot;specificHour&quot;,orgValue);&#xD;
+}else{&#xD;
+	dorado.MessageBox.alert(&quot;当前值已选择&quot;);&#xD;
+}&#xD;
+arg.processDefault=false;</ClientEvent>
+                        <Property name="items"></Property>
+                      </ListDropDown>
+                      <ListDropDown id="listDropDownSelectHour">
+                        <ClientEvent name="onReady">var seconds=[];&#xD;
+for(var i=0;i&lt;24;i++){&#xD;
+	seconds.push(i);&#xD;
+}&#xD;
+self.set(&quot;items&quot;,seconds);</ClientEvent>
+                        <Property name="items"></Property>
+                      </ListDropDown>
+                    </Container>
+                  </Container>
+                </ControlTab>
+                <ControlTab>
+                  <Property name="caption">日期</Property>
+                  <Container>
+                    <AutoForm>
+                      <Property name="cols">*</Property>
+                      <Property name="labelAlign">right</Property>
+                      <AutoFormElement>
+                        <Property name="label">类型</Property>
+                        <Property name="name">type</Property>
+                        <Editor>
+                          <RadioGroup>
+                            <ClientEvent name="onValueChange">view.id(&quot;autoFormPerDay&quot;).set(&quot;visible&quot;,false);&#xD;
+view.id(&quot;autoFormRegionDay&quot;).set(&quot;visible&quot;,false);&#xD;
+view.id(&quot;autoFormSpecificDay&quot;).set(&quot;visible&quot;,false);&#xD;
+var value=self.get(&quot;value&quot;);&#xD;
+if(value==&quot;per&quot;){&#xD;
+	view.id(&quot;autoFormPerDay&quot;).set(&quot;visible&quot;,true);&#xD;
+}&#xD;
+if(value==&quot;region&quot;){&#xD;
+	view.id(&quot;autoFormRegionDay&quot;).set(&quot;visible&quot;,true);&#xD;
+}&#xD;
+if(value==&quot;specific&quot;){&#xD;
+	view.id(&quot;autoFormSpecificDay&quot;).set(&quot;visible&quot;,true);&#xD;
+}</ClientEvent>
+                            <Property name="value">all</Property>
+                            <Property name="dataSet">dataSetDay</Property>
+                            <Property name="property">type</Property>
+                            <RadioButton>
+                              <Property name="value">all</Property>
+                              <Property name="text">所有日</Property>
+                            </RadioButton>
+                            <RadioButton>
+                              <Property name="text">每隔多少日</Property>
+                              <Property name="value">per</Property>
+                            </RadioButton>
+                            <RadioButton>
+                              <Property name="text">日区段</Property>
+                              <Property name="value">region</Property>
+                            </RadioButton>
+                            <RadioButton>
+                              <Property name="text">特定日</Property>
+                              <Property name="value">specific</Property>
+                            </RadioButton>
+                            <RadioButton>
+                              <Property name="text">每月最后一天</Property>
+                              <Property name="value">last</Property>
+                            </RadioButton>
+                          </RadioGroup>
+                        </Editor>
+                      </AutoFormElement>
+                    </AutoForm>
+                    <Container>
+                      <Property name="contentOverflow">hidden</Property>
+                      <AutoForm id="autoFormPerDay">
+                        <Property name="labelAlign">right</Property>
+                        <Property name="cols">*</Property>
+                        <Property name="visible">false</Property>
+                        <Property name="hideMode">display</Property>
+                        <AutoFormElement>
+                          <Property name="name">per</Property>
+                          <Property name="label">从第</Property>
+                          <Property name="labelSeparator"> </Property>
+                          <Editor>
+                            <Container layout="hbox">
+                              <TextEditor>
+                                <Property name="dataSet">dataSetDay</Property>
+                                <Property name="property">fromPerDay</Property>
+                                <Property name="trigger">listDropDownSelectDay</Property>
+                                <Property name="editable">false</Property>
+                                <Property name="width">90</Property>
+                              </TextEditor>
+                              <Label>
+                                <Property name="text">日开始，每隔</Property>
+                              </Label>
+                              <TextEditor>
+                                <Property name="dataSet">dataSetDay</Property>
+                                <Property name="property">perDay</Property>
+                                <Property name="trigger">listDropDownSelectDay</Property>
+                                <Property name="editable">false</Property>
+                                <Property name="width">90</Property>
+                              </TextEditor>
+                              <Label>
+                                <Property name="text">日执行一次</Property>
+                              </Label>
+                            </Container>
+                          </Editor>
+                        </AutoFormElement>
+                      </AutoForm>
+                      <AutoForm id="autoFormRegionDay">
+                        <Property name="cols">*</Property>
+                        <Property name="labelAlign">right</Property>
+                        <Property name="visible">false</Property>
+                        <Property name="hideMode">display</Property>
+                        <AutoFormElement>
+                          <Property name="label">在第</Property>
+                          <Property name="name">region</Property>
+                          <Property name="labelSeparator"> </Property>
+                          <Editor>
+                            <Container layout="hbox">
+                              <TextEditor>
+                                <Property name="dataSet">dataSetDay</Property>
+                                <Property name="property">fromDay</Property>
+                                <Property name="trigger">listDropDownSelectDay</Property>
+                                <Property name="editable">false</Property>
+                                <Property name="width">90</Property>
+                              </TextEditor>
+                              <Label>
+                                <Property name="text">日到</Property>
+                              </Label>
+                              <TextEditor>
+                                <Property name="dataSet">dataSetDay</Property>
+                                <Property name="property">toDay</Property>
+                                <Property name="trigger">listDropDownSelectDay</Property>
+                                <Property name="editable">false</Property>
+                                <Property name="width">90</Property>
+                              </TextEditor>
+                              <Label>
+                                <Property name="text">日区间执行</Property>
+                              </Label>
+                            </Container>
+                          </Editor>
+                        </AutoFormElement>
+                      </AutoForm>
+                      <AutoForm id="autoFormSpecificDay">
+                        <Property name="cols">*</Property>
+                        <Property name="hideMode">display</Property>
+                        <Property name="visible">false</Property>
+                        <Property name="labelAlign">right</Property>
+                        <AutoFormElement>
+                          <Property name="label">选择日期</Property>
+                          <Property name="name">specific</Property>
+                          <Editor>
+                            <TagEditor>
+                              <Property name="trigger">listDropDownDay</Property>
+                              <Property name="editable">false</Property>
+                              <Property name="dataSet">dataSetDay</Property>
+                              <Property name="property">specificDay</Property>
+                            </TagEditor>
+                          </Editor>
+                        </AutoFormElement>
+                      </AutoForm>
+                      <ListDropDown id="listDropDownDay">
+                        <ClientEvent name="onReady">var seconds=[];&#xD;
+for(var i=1;i&lt;32;i++){&#xD;
+	seconds.push(i);&#xD;
+}&#xD;
+self.set(&quot;items&quot;,seconds);</ClientEvent>
+                        <ClientEvent name="onValueSelect">var selectedValue=arg.selectedValue;&#xD;
+var data=view.id(&quot;dataSetDay&quot;).getData();&#xD;
+var orgValue=data.get(&quot;specificDay&quot;);&#xD;
+var ok=true;&#xD;
+if(orgValue){&#xD;
+	var value=orgValue.split(&quot;,&quot;);&#xD;
+	for(var i=0;i&lt;value.length;i++){&#xD;
+		if(value[i]==selectedValue){&#xD;
+			ok=false;&#xD;
+			break;&#xD;
+		}&#xD;
+	}&#xD;
+	orgValue+=&quot;,&quot;+selectedValue;&#xD;
+}else{&#xD;
+	orgValue=selectedValue;&#xD;
+}&#xD;
+if(ok){&#xD;
+	data.set(&quot;specificDay&quot;,orgValue);&#xD;
+}else{&#xD;
+	dorado.MessageBox.alert(&quot;当前值已选择&quot;);&#xD;
+}&#xD;
+arg.processDefault=false;</ClientEvent>
+                        <Property name="items"></Property>
+                      </ListDropDown>
+                      <ListDropDown id="listDropDownSelectDay">
+                        <ClientEvent name="onReady">var seconds=[];&#xD;
+for(var i=1;i&lt;32;i++){&#xD;
+	seconds.push(i);&#xD;
+}&#xD;
+self.set(&quot;items&quot;,seconds);</ClientEvent>
+                        <Property name="items"></Property>
+                      </ListDropDown>
+                    </Container>
+                  </Container>
+                </ControlTab>
+                <ControlTab>
+                  <Property name="caption">月份</Property>
+                  <Container>
+                    <AutoForm>
+                      <Property name="cols">*</Property>
+                      <Property name="labelAlign">right</Property>
+                      <AutoFormElement>
+                        <Property name="label">类型</Property>
+                        <Property name="name">type</Property>
+                        <Editor>
+                          <RadioGroup>
+                            <ClientEvent name="onValueChange">view.id(&quot;autoFormPerMonth&quot;).set(&quot;visible&quot;,false);&#xD;
+view.id(&quot;autoFormRegionMonth&quot;).set(&quot;visible&quot;,false);&#xD;
+view.id(&quot;autoFormSpecificMonth&quot;).set(&quot;visible&quot;,false);&#xD;
+var value=self.get(&quot;value&quot;);&#xD;
+if(value==&quot;per&quot;){&#xD;
+	view.id(&quot;autoFormPerMonth&quot;).set(&quot;visible&quot;,true);&#xD;
+}&#xD;
+if(value==&quot;region&quot;){&#xD;
+	view.id(&quot;autoFormRegionMonth&quot;).set(&quot;visible&quot;,true);&#xD;
+}&#xD;
+if(value==&quot;specific&quot;){&#xD;
+	view.id(&quot;autoFormSpecificMonth&quot;).set(&quot;visible&quot;,true);&#xD;
+}</ClientEvent>
+                            <Property name="value">all</Property>
+                            <Property name="dataSet">dataSetMonth</Property>
+                            <Property name="property">type</Property>
+                            <RadioButton>
+                              <Property name="value">all</Property>
+                              <Property name="text">所有月份</Property>
+                            </RadioButton>
+                            <RadioButton>
+                              <Property name="text">每隔多少月</Property>
+                              <Property name="value">per</Property>
+                            </RadioButton>
+                            <RadioButton>
+                              <Property name="text">月份区段</Property>
+                              <Property name="value">region</Property>
+                            </RadioButton>
+                            <RadioButton>
+                              <Property name="text">特定月份</Property>
+                              <Property name="value">specific</Property>
+                            </RadioButton>
+                          </RadioGroup>
+                        </Editor>
+                      </AutoFormElement>
+                    </AutoForm>
+                    <Container>
+                      <Property name="contentOverflow">hidden</Property>
+                      <AutoForm id="autoFormPerMonth">
+                        <Property name="labelAlign">right</Property>
+                        <Property name="cols">*</Property>
+                        <Property name="visible">false</Property>
+                        <Property name="hideMode">display</Property>
+                        <AutoFormElement>
+                          <Property name="name">per</Property>
+                          <Property name="label">从第</Property>
+                          <Property name="labelSeparator"> </Property>
+                          <Editor>
+                            <Container layout="hbox">
+                              <TextEditor>
+                                <Property name="dataSet">dataSetMonth</Property>
+                                <Property name="property">fromPerMonth</Property>
+                                <Property name="trigger">listDropDownSelectMonth</Property>
+                                <Property name="editable">false</Property>
+                                <Property name="width">90</Property>
+                              </TextEditor>
+                              <Label>
+                                <Property name="text">月开始，每隔</Property>
+                              </Label>
+                              <TextEditor>
+                                <Property name="dataSet">dataSetMonth</Property>
+                                <Property name="property">perMonth</Property>
+                                <Property name="trigger">listDropDownSelectMonth</Property>
+                                <Property name="editable">false</Property>
+                                <Property name="width">90</Property>
+                              </TextEditor>
+                              <Label>
+                                <Property name="text">月执行一次</Property>
+                              </Label>
+                            </Container>
+                          </Editor>
+                        </AutoFormElement>
+                      </AutoForm>
+                      <AutoForm id="autoFormRegionMonth">
+                        <Property name="cols">*</Property>
+                        <Property name="labelAlign">right</Property>
+                        <Property name="visible">false</Property>
+                        <Property name="hideMode">display</Property>
+                        <AutoFormElement>
+                          <Property name="label">在第</Property>
+                          <Property name="name">region</Property>
+                          <Property name="labelSeparator"> </Property>
+                          <Editor>
+                            <Container layout="hbox">
+                              <TextEditor>
+                                <Property name="dataSet">dataSetMonth</Property>
+                                <Property name="property">fromMonth</Property>
+                                <Property name="trigger">listDropDownSelectMonth</Property>
+                                <Property name="editable">false</Property>
+                                <Property name="width">90</Property>
+                              </TextEditor>
+                              <Label>
+                                <Property name="text">月到</Property>
+                              </Label>
+                              <TextEditor>
+                                <Property name="dataSet">dataSetMonth</Property>
+                                <Property name="property">toMonth</Property>
+                                <Property name="trigger">listDropDownSelectMonth</Property>
+                                <Property name="editable">false</Property>
+                                <Property name="width">90</Property>
+                              </TextEditor>
+                              <Label>
+                                <Property name="text">月区间执行</Property>
+                              </Label>
+                            </Container>
+                          </Editor>
+                        </AutoFormElement>
+                      </AutoForm>
+                      <AutoForm id="autoFormSpecificMonth">
+                        <Property name="cols">*</Property>
+                        <Property name="hideMode">display</Property>
+                        <Property name="visible">false</Property>
+                        <Property name="labelAlign">right</Property>
+                        <AutoFormElement>
+                          <Property name="label">选择小时</Property>
+                          <Property name="name">specific</Property>
+                          <Editor>
+                            <TagEditor>
+                              <Property name="trigger">listDropDownMonth</Property>
+                              <Property name="editable">false</Property>
+                              <Property name="dataSet">dataSetMonth</Property>
+                              <Property name="property">specificMonth</Property>
+                            </TagEditor>
+                          </Editor>
+                        </AutoFormElement>
+                      </AutoForm>
+                      <ListDropDown id="listDropDownMonth">
+                        <ClientEvent name="onReady">var seconds=[];&#xD;
+for(var i=1;i&lt;13;i++){&#xD;
+	seconds.push(i);&#xD;
+}&#xD;
+self.set(&quot;items&quot;,seconds);</ClientEvent>
+                        <ClientEvent name="onValueSelect">var selectedValue=arg.selectedValue;&#xD;
+var data=view.id(&quot;dataSetMonth&quot;).getData();&#xD;
+var orgValue=data.get(&quot;specificMonth&quot;);&#xD;
+var ok=true;&#xD;
+if(orgValue){&#xD;
+	var value=orgValue.split(&quot;,&quot;);&#xD;
+	for(var i=0;i&lt;value.length;i++){&#xD;
+		if(value[i]==selectedValue){&#xD;
+			ok=false;&#xD;
+			break;&#xD;
+		}&#xD;
+	}&#xD;
+	orgValue+=&quot;,&quot;+selectedValue;&#xD;
+}else{&#xD;
+	orgValue=selectedValue;&#xD;
+}&#xD;
+if(ok){&#xD;
+	data.set(&quot;specificMonth&quot;,orgValue);&#xD;
+}else{&#xD;
+	dorado.MessageBox.alert(&quot;当前值已选择&quot;);&#xD;
+}&#xD;
+arg.processDefault=false;</ClientEvent>
+                        <Property name="items"></Property>
+                      </ListDropDown>
+                      <ListDropDown id="listDropDownSelectMonth">
+                        <ClientEvent name="onReady">var seconds=[];&#xD;
+for(var i=1;i&lt;13;i++){&#xD;
+	seconds.push(i);&#xD;
+}&#xD;
+self.set(&quot;items&quot;,seconds);</ClientEvent>
+                        <Property name="items"></Property>
+                      </ListDropDown>
+                    </Container>
+                  </Container>
+                </ControlTab>
+                <ControlTab>
+                  <Property name="caption">星期</Property>
+                  <Container>
+                    <AutoForm>
+                      <Property name="cols">*</Property>
+                      <Property name="labelAlign">right</Property>
+                      <AutoFormElement>
+                        <Property name="label">类型</Property>
+                        <Property name="name">type</Property>
+                        <Editor>
+                          <RadioGroup>
+                            <ClientEvent name="onValueChange">view.id(&quot;autoFormPerWeek&quot;).set(&quot;visible&quot;,false);&#xD;
+view.id(&quot;autoFormRegionWeek&quot;).set(&quot;visible&quot;,false);&#xD;
+view.id(&quot;autoFormSpecificWeek&quot;).set(&quot;visible&quot;,false);&#xD;
+view.id(&quot;autoFormLastWeek&quot;).set(&quot;visible&quot;,false);&#xD;
+var value=self.get(&quot;value&quot;);&#xD;
+if(value==&quot;per&quot;){&#xD;
+	view.id(&quot;autoFormPerWeek&quot;).set(&quot;visible&quot;,true);&#xD;
+}&#xD;
+if(value==&quot;region&quot;){&#xD;
+	view.id(&quot;autoFormRegionWeek&quot;).set(&quot;visible&quot;,true);&#xD;
+}&#xD;
+if(value==&quot;specific&quot;){&#xD;
+	view.id(&quot;autoFormSpecificWeek&quot;).set(&quot;visible&quot;,true);&#xD;
+}&#xD;
+if(value==&quot;last&quot;){&#xD;
+	view.id(&quot;autoFormLastWeek&quot;).set(&quot;visible&quot;,true);&#xD;
+}</ClientEvent>
+                            <Property name="value">all</Property>
+                            <Property name="dataSet">dataSetWeek</Property>
+                            <Property name="property">type</Property>
+                            <RadioButton>
+                              <Property name="value">all</Property>
+                              <Property name="text">所有星期</Property>
+                            </RadioButton>
+                            <RadioButton>
+                              <Property name="text">每隔多少星期天数</Property>
+                              <Property name="value">per</Property>
+                            </RadioButton>
+                            <RadioButton>
+                              <Property name="text">星期区段</Property>
+                              <Property name="value">region</Property>
+                            </RadioButton>
+                            <RadioButton>
+                              <Property name="text">特定星期</Property>
+                              <Property name="value">specific</Property>
+                            </RadioButton>
+                            <RadioButton>
+                              <Property name="text">每月最后一个星期</Property>
+                              <Property name="value">last</Property>
+                            </RadioButton>
+                          </RadioGroup>
+                        </Editor>
+                      </AutoFormElement>
+                    </AutoForm>
+                    <Container>
+                      <Property name="contentOverflow">hidden</Property>
+                      <AutoForm id="autoFormPerWeek">
+                        <Property name="labelAlign">right</Property>
+                        <Property name="cols">*</Property>
+                        <Property name="visible">false</Property>
+                        <Property name="hideMode">display</Property>
+                        <AutoFormElement>
+                          <Property name="name">per</Property>
+                          <Property name="label">从星期</Property>
+                          <Property name="labelSeparator"> </Property>
+                          <Editor>
+                            <Container layout="hbox">
+                              <TextEditor>
+                                <Property name="dataSet">dataSetWeek</Property>
+                                <Property name="property">fromPerWeek</Property>
+                                <Property name="trigger">listDropDownSelectWeek</Property>
+                                <Property name="editable">false</Property>
+                                <Property name="width">90</Property>
+                              </TextEditor>
+                              <Label>
+                                <Property name="text">开始，每隔</Property>
+                              </Label>
+                              <TextEditor>
+                                <Property name="dataSet">dataSetWeek</Property>
+                                <Property name="property">perWeek</Property>
+                                <Property name="trigger">listDropDownSelectWeek</Property>
+                                <Property name="editable">false</Property>
+                                <Property name="width">90</Property>
+                              </TextEditor>
+                              <Label>
+                                <Property name="text">日执行一次</Property>
+                              </Label>
+                            </Container>
+                          </Editor>
+                        </AutoFormElement>
+                      </AutoForm>
+                      <AutoForm id="autoFormRegionWeek">
+                        <Property name="cols">*</Property>
+                        <Property name="labelAlign">right</Property>
+                        <Property name="visible">false</Property>
+                        <Property name="hideMode">display</Property>
+                        <AutoFormElement>
+                          <Property name="label">在星期</Property>
+                          <Property name="name">region</Property>
+                          <Property name="labelSeparator"> </Property>
+                          <Editor>
+                            <Container layout="hbox">
+                              <TextEditor>
+                                <Property name="dataSet">dataSetWeek</Property>
+                                <Property name="property">fromWeek</Property>
+                                <Property name="trigger">listDropDownSelectWeek</Property>
+                                <Property name="editable">false</Property>
+                                <Property name="width">90</Property>
+                              </TextEditor>
+                              <Label>
+                                <Property name="text">到星期</Property>
+                              </Label>
+                              <TextEditor>
+                                <Property name="dataSet">dataSetWeek</Property>
+                                <Property name="property">toWeek</Property>
+                                <Property name="trigger">listDropDownSelectWeek</Property>
+                                <Property name="editable">false</Property>
+                                <Property name="width">90</Property>
+                              </TextEditor>
+                              <Label>
+                                <Property name="text">区间执行</Property>
+                              </Label>
+                            </Container>
+                          </Editor>
+                        </AutoFormElement>
+                      </AutoForm>
+                      <AutoForm id="autoFormSpecificWeek">
+                        <Property name="cols">*</Property>
+                        <Property name="hideMode">display</Property>
+                        <Property name="visible">false</Property>
+                        <Property name="labelAlign">right</Property>
+                        <AutoFormElement>
+                          <Property name="label">选择星期</Property>
+                          <Property name="name">specific</Property>
+                          <Editor>
+                            <TagEditor>
+                              <Property name="trigger">listDropDownWeek</Property>
+                              <Property name="editable">false</Property>
+                              <Property name="dataSet">dataSetWeek</Property>
+                              <Property name="property">specificWeek</Property>
+                            </TagEditor>
+                          </Editor>
+                        </AutoFormElement>
+                      </AutoForm>
+                      <AutoForm id="autoFormLastWeek">
+                        <Property name="cols">*</Property>
+                        <Property name="labelAlign">right</Property>
+                        <Property name="visible">false</Property>
+                        <Property name="hideMode">display</Property>
+                        <Property name="labelWidth">150</Property>
+                        <AutoFormElement>
+                          <Property name="label">每月最后一个星期的星期</Property>
+                          <Property name="name">last</Property>
+                          <Property name="labelSeparator"> </Property>
+                          <Editor>
+                            <Container layout="hbox">
+                              <TextEditor>
+                                <Property name="dataSet">dataSetWeek</Property>
+                                <Property name="property">last</Property>
+                                <Property name="trigger">listDropDownSelectWeek</Property>
+                                <Property name="editable">false</Property>
+                                <Property name="width">90</Property>
+                              </TextEditor>
+                              <Label>
+                                <Property name="text">执行</Property>
+                              </Label>
+                            </Container>
+                          </Editor>
+                        </AutoFormElement>
+                      </AutoForm>
+                      <ListDropDown id="listDropDownWeek">
+                        <ClientEvent name="onReady">var seconds=[];&#xD;
+seconds.push(&quot;SUN&quot;);&#xD;
+seconds.push(&quot;MON&quot;);&#xD;
+seconds.push(&quot;TUE&quot;);&#xD;
+seconds.push(&quot;WED&quot;);&#xD;
+seconds.push(&quot;THU&quot;);&#xD;
+seconds.push(&quot;FRI&quot;);&#xD;
+seconds.push(&quot;SAT&quot;);&#xD;
+self.set(&quot;items&quot;,seconds);</ClientEvent>
+                        <ClientEvent name="onValueSelect">var selectedValue=arg.selectedValue;&#xD;
+var data=view.id(&quot;dataSetWeek&quot;).getData();&#xD;
+var orgValue=data.get(&quot;specificWeek&quot;);&#xD;
+var ok=true;&#xD;
+if(orgValue){&#xD;
+	var value=orgValue.split(&quot;,&quot;);&#xD;
+	for(var i=0;i&lt;value.length;i++){&#xD;
+		if(value[i]==selectedValue){&#xD;
+			ok=false;&#xD;
+			break;&#xD;
+		}&#xD;
+	}&#xD;
+	orgValue+=&quot;,&quot;+selectedValue;&#xD;
+}else{&#xD;
+	orgValue=selectedValue;&#xD;
+}&#xD;
+if(ok){&#xD;
+	data.set(&quot;specificWeek&quot;,orgValue);&#xD;
+}else{&#xD;
+	dorado.MessageBox.alert(&quot;当前值已选择&quot;);&#xD;
+}&#xD;
+arg.processDefault=false;</ClientEvent>
+                        <Property name="items"></Property>
+                      </ListDropDown>
+                      <ListDropDown id="listDropDownSelectWeek">
+                        <ClientEvent name="onReady">var weeks=[];&#xD;
+weeks.push(&quot;SUN&quot;);&#xD;
+weeks.push(&quot;MON&quot;);&#xD;
+weeks.push(&quot;TUE&quot;);&#xD;
+weeks.push(&quot;WED&quot;);&#xD;
+weeks.push(&quot;THU&quot;);&#xD;
+weeks.push(&quot;FRI&quot;);&#xD;
+weeks.push(&quot;SAT&quot;);&#xD;
+self.set(&quot;items&quot;,weeks);</ClientEvent>
+                        <Property name="items"></Property>
+                      </ListDropDown>
+                    </Container>
+                  </Container>
+                </ControlTab>
+              </TabControl>
+              <AutoForm id="autoFormCronExp">
+                <Property name="cols">330,*</Property>
+                <Property name="labelSpacing">1</Property>
+                <Property name="rowPadding">1</Property>
+                <Property name="colPadding">1</Property>
+                <AutoFormElement>
+                  <Property name="label">Cron表达式</Property>
+                  <Property name="name">cron</Property>
+                  <Property name="hintWidth">2</Property>
+                  <Property name="hintSpacing">2</Property>
+                  <Editor/>
+                </AutoFormElement>
+                <Container layout="hbox pack:start">
+                  <Property name="style">
+                    <Property name="paddingTop">4px</Property>
+                  </Property>
+                  <Button layoutConstraint="align:left">
+                    <ClientEvent name="onClick">var secondData=view.id(&quot;dataSetSecond&quot;).getData();&#xD;
+var secondExpression=&quot;&quot;;&#xD;
+var error=false;&#xD;
+switch(secondData.get(&quot;type&quot;)){&#xD;
+	case &quot;all&quot;:&#xD;
+		secondExpression=&quot;*&quot;&#xD;
+		break;&#xD;
+	case &quot;per&quot;:&#xD;
+		secondExpression=secondData.get(&quot;fromPerSecond&quot;)+&quot;/&quot;+secondData.get(&quot;perSecond&quot;)&#xD;
+		break;&#xD;
+	case &quot;region&quot;:&#xD;
+		var from=secondData.get(&quot;fromSecond&quot;);&#xD;
+		var to=secondData.get(&quot;toSecond&quot;);&#xD;
+		if(from>=to){&#xD;
+			error=true;&#xD;
+			dorado.MessageBox.alert(&quot;秒采用区间定义时，开始时间应该小于结束时间!&quot;);&#xD;
+			break;&#xD;
+		}&#xD;
+		secondExpression=from+&quot;-&quot;+to;&#xD;
+		break;&#xD;
+	case &quot;specific&quot;:&#xD;
+		secondExpression=secondData.get(&quot;specificSecond&quot;);&#xD;
+		if(!secondExpression){&#xD;
+			error=true;&#xD;
+			dorado.MessageBox.alert(&quot;秒采用特定值时，必须要填充至少一个特定值!&quot;);&#xD;
+		}&#xD;
+		break;&#xD;
+}&#xD;
+if(error){&#xD;
+	return;&#xD;
+}&#xD;
+var minuteExpression=&quot;&quot;;&#xD;
+var minuteData=view.id(&quot;dataSetMinute&quot;).getData();&#xD;
+switch(minuteData.get(&quot;type&quot;)){&#xD;
+	case &quot;all&quot;:&#xD;
+		minuteExpression=&quot;*&quot;&#xD;
+		break;&#xD;
+	case &quot;per&quot;:&#xD;
+		minuteExpression=minuteData.get(&quot;fromPerMinute&quot;)+&quot;/&quot;+minuteData.get(&quot;perMinute&quot;)&#xD;
+		break;&#xD;
+	case &quot;region&quot;:&#xD;
+		var from=minuteData.get(&quot;fromMinute&quot;);&#xD;
+		var to=minuteData.get(&quot;toMinute&quot;);&#xD;
+		if(from>=to){&#xD;
+			error=true;&#xD;
+			dorado.MessageBox.alert(&quot;分钟采用区间定义时，开始时间应该小于结束时间!&quot;);&#xD;
+			break;&#xD;
+		}&#xD;
+		minuteExpression=from+&quot;-&quot;+to;&#xD;
+		break;&#xD;
+	case &quot;specific&quot;:&#xD;
+		minuteExpression=minuteData.get(&quot;specificMinute&quot;);&#xD;
+		if(!minuteExpression){&#xD;
+			error=true;&#xD;
+			dorado.MessageBox.alert(&quot;分钟采用特定值时，必须要填充至少一个特定值!&quot;);&#xD;
+		}&#xD;
+		break;&#xD;
+}&#xD;
+if(error){&#xD;
+	return;&#xD;
+}&#xD;
+&#xD;
+var hourExpression=&quot;&quot;;&#xD;
+var hourData=view.id(&quot;dataSetHour&quot;).getData();&#xD;
+switch(hourData.get(&quot;type&quot;)){&#xD;
+	case &quot;all&quot;:&#xD;
+		hourExpression=&quot;*&quot;&#xD;
+		break;&#xD;
+	case &quot;per&quot;:&#xD;
+		hourExpression=hourData.get(&quot;fromPerHour&quot;)+&quot;/&quot;+hourData.get(&quot;perHour&quot;)&#xD;
+		break;&#xD;
+	case &quot;region&quot;:&#xD;
+		var from=hourData.get(&quot;fromHour&quot;);&#xD;
+		var to=hourData.get(&quot;toHour&quot;);&#xD;
+		if(from>=to){&#xD;
+			error=true;&#xD;
+			dorado.MessageBox.alert(&quot;小时采用区间定义时，开始时间应该小于结束时间!&quot;);&#xD;
+			break;&#xD;
+		}&#xD;
+		hourExpression=from+&quot;-&quot;+to;&#xD;
+		break;&#xD;
+	case &quot;specific&quot;:&#xD;
+		hourExpression=hourData.get(&quot;specificHour&quot;);&#xD;
+		if(!hourExpression){&#xD;
+			error=true;&#xD;
+			dorado.MessageBox.alert(&quot;小时采用特定值时，必须要填充至少一个特定值!&quot;);&#xD;
+		}&#xD;
+		break;&#xD;
+}&#xD;
+if(error){&#xD;
+	return;&#xD;
+}&#xD;
+&#xD;
+var dayExpression=&quot;&quot;;&#xD;
+var dayData=view.id(&quot;dataSetDay&quot;).getData();&#xD;
+switch(dayData.get(&quot;type&quot;)){&#xD;
+	case &quot;all&quot;:&#xD;
+		dayExpression=&quot;*&quot;&#xD;
+		break;&#xD;
+	case &quot;per&quot;:&#xD;
+		dayExpression=dayData.get(&quot;fromPerDay&quot;)+&quot;/&quot;+dayData.get(&quot;perDay&quot;)&#xD;
+		break;&#xD;
+	case &quot;region&quot;:&#xD;
+		var from=dayData.get(&quot;fromDay&quot;);&#xD;
+		var to=dayData.get(&quot;toDay&quot;);&#xD;
+		if(from>=to){&#xD;
+			error=true;&#xD;
+			dorado.MessageBox.alert(&quot;日期采用区间定义时，开始时间应该小于结束时间!&quot;);&#xD;
+			break;&#xD;
+		}&#xD;
+		dayExpression=from+&quot;-&quot;+to;&#xD;
+		break;&#xD;
+	case &quot;specific&quot;:&#xD;
+		dayExpression=dayData.get(&quot;specificDay&quot;);&#xD;
+		if(!dayExpression){&#xD;
+			error=true;&#xD;
+			dorado.MessageBox.alert(&quot;日期采用特定值时，必须要填充至少一个特定值!&quot;);&#xD;
+		}		&#xD;
+		break;&#xD;
+	case &quot;last&quot;:&#xD;
+		dayExpression=&quot;L&quot;;&#xD;
+		break;&#xD;
+}&#xD;
+if(error){&#xD;
+	return;&#xD;
+}&#xD;
+&#xD;
+var monthExpression=&quot;&quot;;&#xD;
+var monthData=view.id(&quot;dataSetMonth&quot;).getData();&#xD;
+switch(monthData.get(&quot;type&quot;)){&#xD;
+	case &quot;all&quot;:&#xD;
+		monthExpression=&quot;*&quot;&#xD;
+		break;&#xD;
+	case &quot;per&quot;:&#xD;
+		monthExpression=monthData.get(&quot;fromPerMonth&quot;)+&quot;/&quot;+monthData.get(&quot;perMonth&quot;)&#xD;
+		break;&#xD;
+	case &quot;region&quot;:&#xD;
+		var from=monthData.get(&quot;fromMonth&quot;);&#xD;
+		var to=monthData.get(&quot;toMonth&quot;);&#xD;
+		if(from>=to){&#xD;
+			error=true;&#xD;
+			dorado.MessageBox.alert(&quot;小时采用区间定义时，开始时间应该小于结束时间!&quot;);&#xD;
+			break;&#xD;
+		}&#xD;
+		monthExpression=from+&quot;-&quot;+to;&#xD;
+		break;&#xD;
+	case &quot;specific&quot;:&#xD;
+		monthExpression=monthData.get(&quot;specificMonth&quot;);&#xD;
+		if(!monthExpression){&#xD;
+			error=true;&#xD;
+			dorado.MessageBox.alert(&quot;月份采用特定值时，必须要填充至少一个特定值!&quot;);&#xD;
+		}			&#xD;
+		break;&#xD;
+}&#xD;
+if(error){&#xD;
+	return;&#xD;
+}&#xD;
+&#xD;
+var weekExpression=&quot;&quot;;&#xD;
+var weekData=view.id(&quot;dataSetWeek&quot;).getData();&#xD;
+switch(weekData.get(&quot;type&quot;)){&#xD;
+	case &quot;all&quot;:&#xD;
+		weekExpression=&quot;*&quot;&#xD;
+		break;&#xD;
+	case &quot;per&quot;:&#xD;
+		weekExpression=weekData.get(&quot;fromPerWeek&quot;)+&quot;/&quot;+weekData.get(&quot;perWeek&quot;)&#xD;
+		break;&#xD;
+	case &quot;region&quot;:&#xD;
+		var from=weekData.get(&quot;fromWeek&quot;);&#xD;
+		var to=weekData.get(&quot;toWeek&quot;);&#xD;
+		weekExpression=from+&quot;-&quot;+to;&#xD;
+		break;&#xD;
+	case &quot;specific&quot;:&#xD;
+		weekExpression=weekData.get(&quot;specificWeek&quot;);&#xD;
+		if(!weekExpression){&#xD;
+			error=true;&#xD;
+			dorado.MessageBox.alert(&quot;星期采用特定值时，必须要填充至少一个特定值!&quot;);&#xD;
+		}&#xD;
+		break;&#xD;
+	case &quot;last&quot;:&#xD;
+		weekExpression=weekData.get(&quot;last&quot;)+&quot;L&quot;;&#xD;
+		break;&#xD;
+}&#xD;
+if(error){&#xD;
+	return;&#xD;
+}&#xD;
+if(dayExpression!=&quot;*&quot; &amp;&amp; weekExpression!=&quot;*&quot;){&#xD;
+	dorado.MessageBox.alert(&quot;日期与星期的值至少有一个需要设置成所有，当前日期与星期的值皆不为所有!&quot;);&#xD;
+	return;&#xD;
+}&#xD;
+if(dayExpression==&quot;*&quot;){&#xD;
+	dayExpression=&quot;?&quot;;&#xD;
+}else{&#xD;
+	weekExpression=&quot;?&quot;;&#xD;
+}&#xD;
+var expression=secondExpression+&quot; &quot;+minuteExpression+&quot; &quot;+hourExpression+&quot; &quot;+dayExpression+&quot; &quot;+monthExpression+&quot; &quot;+weekExpression;&#xD;
+view.id(&quot;autoFormCronExp&quot;).set(&quot;entity&quot;,{cron:expression});&#xD;
+</ClientEvent>
+                    <Property name="caption">生成Cron表达式</Property>
+                  </Button>
+                  <Button>
+                    <ClientEvent name="onClick">var cron=view.id(&quot;autoFormCronExp&quot;).get(&quot;entity&quot;).cron;&#xD;
+if(cron){&#xD;
+	var ds=view.id(&quot;dataSetCronDate&quot;);&#xD;
+	ds.set(&quot;parameter&quot;,{cron:cron});&#xD;
+	ds.flushAsync(function(){&#xD;
+		view.id(&quot;dialogParseCron&quot;).show();&#xD;
+	});&#xD;
+}else{&#xD;
+	dorado.MessageBox.alert(&quot;请先生成Cron表达式&quot;);&#xD;
+}&#xD;
+</ClientEvent>
+                    <Property name="caption">解析表达式</Property>
+                  </Button>
+                </Container>
+              </AutoForm>
+              <Dialog id="dialogParseCron">
+                <Property name="center">true</Property>
+                <Property name="modal">true</Property>
+                <Property name="width">220</Property>
+                <Property name="height">500</Property>
+                <Buttons/>
+                <Children>
+                  <DataGrid>
+                    <Property name="dataSet">dataSetCronDate</Property>
+                    <Property name="readOnly">true</Property>
+                    <DataColumn name="date">
+                      <Property name="property">date</Property>
+                    </DataColumn>
+                  </DataGrid>
+                  <DataSet id="dataSetCronDate">
+                    <Property name="dataType">[dataTypeCronDate]</Property>
+                    <Property name="loadMode">manual</Property>
+                    <Property name="dataProvider">bdf2.jobMaintain#parseCronExpression</Property>
+                  </DataSet>
+                </Children>
+                <Tools/>
+              </Dialog>
+            </Children>
+            <Tools/>
+          </Dialog>
+          <Dialog id="dialogJob">
+            <Property name="center">true</Property>
+            <Property name="modal">true</Property>
+            <Property name="width">500</Property>
+            <Property name="height">300</Property>
+            <Property name="closeable">false</Property>
+            <Buttons>
+              <Button>
+                <ClientEvent name="onClick">view.id(&quot;updateActionSaveJob&quot;).execute(function(){&#xD;
+	view.id(&quot;dialogJob&quot;).hide();&#xD;
+});</ClientEvent>
+                <Property name="caption">确认</Property>
+                <Property name="icon">url(skin>common/icons.gif) -140px -20px</Property>
+              </Button>
+              <Button>
+                <ClientEvent name="onClick">view.id(&quot;dataSetJob&quot;).getData().cancel();&#xD;
+view.id(&quot;dialogJob&quot;).hide();</ClientEvent>
+                <Property name="caption">取消</Property>
+                <Property name="icon">url(skin>common/icons.gif) -40px 0px</Property>
+              </Button>
+            </Buttons>
+            <Children>
+              <AutoForm>
+                <Property name="dataSet">dataSetJob</Property>
+                <Property name="cols">*</Property>
+                <Property name="labelAlign">right</Property>
+                <Property name="labelWidth">100</Property>
+                <AutoFormElement>
+                  <Property name="name">name</Property>
+                  <Property name="property">name</Property>
+                  <Editor/>
+                </AutoFormElement>
+                <AutoFormElement>
+                  <Property name="name">beanId</Property>
+                  <Property name="property">beanId</Property>
+                  <Property name="trigger">triggerBean</Property>
+                  <Editor/>
+                </AutoFormElement>
+                <AutoFormElement>
+                  <Property name="name">cronExpression</Property>
+                  <Property name="property">cronExpression</Property>
+                  <Property name="trigger">triggerCron</Property>
+                  <Editor/>
+                </AutoFormElement>
+                <AutoFormElement layoutConstraint="colSpan:2">
+                  <Property name="name">desc</Property>
+                  <Property name="property">desc</Property>
+                  <Property name="editorType">TextArea</Property>
+                  <Editor/>
+                </AutoFormElement>
+              </AutoForm>
+              <Trigger id="triggerCron">
+                <ClientEvent name="onExecute">var dialog=view.id(&quot;dialogCron&quot;).show();&#xD;
+var cronExpr=view.id(&quot;dataSetJob&quot;).getData(&quot;#.cronExpression&quot;);&#xD;
+if(!cronExpr){&#xD;
+	return;&#xD;
+}&#xD;
+var cron=cronExpr.split(&quot; &quot;);&#xD;
+if(cron.length&lt;5){&#xD;
+	dorado.MessageBox.alert(&quot;无法解析当前Cron表达式[&quot;+cronExpr+&quot;]&quot;);&#xD;
+	return;&#xD;
+}&#xD;
+view.id(&quot;autoFormPerSecond&quot;).set(&quot;visible&quot;,false);&#xD;
+view.id(&quot;autoFormRegionSecond&quot;).set(&quot;visible&quot;,false);&#xD;
+view.id(&quot;autoFormSpecificSecond&quot;).set(&quot;visible&quot;,false);&#xD;
+view.id(&quot;autoFormPerMinute&quot;).set(&quot;visible&quot;,false);&#xD;
+view.id(&quot;autoFormRegionMinute&quot;).set(&quot;visible&quot;,false);&#xD;
+view.id(&quot;autoFormSpecificMinute&quot;).set(&quot;visible&quot;,false);&#xD;
+view.id(&quot;autoFormPerHour&quot;).set(&quot;visible&quot;,false);&#xD;
+view.id(&quot;autoFormRegionHour&quot;).set(&quot;visible&quot;,false);&#xD;
+view.id(&quot;autoFormSpecificHour&quot;).set(&quot;visible&quot;,false);&#xD;
+view.id(&quot;autoFormPerDay&quot;).set(&quot;visible&quot;,false);&#xD;
+view.id(&quot;autoFormRegionDay&quot;).set(&quot;visible&quot;,false);&#xD;
+view.id(&quot;autoFormSpecificDay&quot;).set(&quot;visible&quot;,false);&#xD;
+view.id(&quot;autoFormPerMonth&quot;).set(&quot;visible&quot;,false);&#xD;
+view.id(&quot;autoFormRegionMonth&quot;).set(&quot;visible&quot;,false);&#xD;
+view.id(&quot;autoFormSpecificMonth&quot;).set(&quot;visible&quot;,false);&#xD;
+view.id(&quot;autoFormPerWeek&quot;).set(&quot;visible&quot;,false);&#xD;
+view.id(&quot;autoFormRegionWeek&quot;).set(&quot;visible&quot;,false);&#xD;
+view.id(&quot;autoFormSpecificWeek&quot;).set(&quot;visible&quot;,false);&#xD;
+view.id(&quot;autoFormLastWeek&quot;).set(&quot;visible&quot;,false);&#xD;
+var second=cron[0];&#xD;
+if(second==&quot;*&quot;){&#xD;
+	view.id(&quot;dataSetSecond&quot;).getData().set(&quot;type&quot;,&quot;all&quot;);&#xD;
+}else{&#xD;
+	var data=view.id(&quot;dataSetSecond&quot;).getData();&#xD;
+	var region=second.split(&quot;-&quot;);&#xD;
+	var per=second.split(&quot;/&quot;);&#xD;
+	if(region.length>1){&#xD;
+		data.set(&quot;type&quot;,&quot;region&quot;);&#xD;
+		data.set(&quot;fromSecond&quot;,region[0]);&#xD;
+		data.set(&quot;toSecond&quot;,region[1]);&#xD;
+		view.id(&quot;autoFormRegionSecond&quot;).set(&quot;visible&quot;,true);&#xD;
+	}else if(per.length>1){&#xD;
+		data.set(&quot;type&quot;,&quot;per&quot;);&#xD;
+		data.set(&quot;fromPerSecond&quot;,per[0]);&#xD;
+		data.set(&quot;perSecond&quot;,per[1]);&#xD;
+		view.id(&quot;autoFormPerSecond&quot;).set(&quot;visible&quot;,true);&#xD;
+	}else{&#xD;
+		data.set(&quot;type&quot;,&quot;specific&quot;);&#xD;
+		data.set(&quot;specificSecond&quot;,second);&#xD;
+		view.id(&quot;autoFormSpecificSecond&quot;).set(&quot;visible&quot;,true);&#xD;
+	}&#xD;
+}&#xD;
+//-------------------------&#xD;
+var minute=cron[1];&#xD;
+if(minute==&quot;*&quot;){&#xD;
+	view.id(&quot;dataSetMinute&quot;).getData().set(&quot;type&quot;,&quot;all&quot;);&#xD;
+}else{&#xD;
+	var data=view.id(&quot;dataSetMinute&quot;).getData();&#xD;
+	var region=minute.split(&quot;-&quot;);&#xD;
+	var per=minute.split(&quot;/&quot;);&#xD;
+	if(region.length>1){&#xD;
+		data.set(&quot;type&quot;,&quot;region&quot;);&#xD;
+		data.set(&quot;fromMinute&quot;,region[0]);&#xD;
+		data.set(&quot;toMinute&quot;,region[1]);&#xD;
+		view.id(&quot;autoFormRegionMinute&quot;).set(&quot;visible&quot;,true);&#xD;
+	}else if(per.length>1){&#xD;
+		data.set(&quot;type&quot;,&quot;per&quot;);&#xD;
+		data.set(&quot;fromPerMinute&quot;,per[0]);&#xD;
+		data.set(&quot;perMinute&quot;,per[1]);&#xD;
+		view.id(&quot;autoFormPerMinute&quot;).set(&quot;visible&quot;,true);&#xD;
+	}else{&#xD;
+		data.set(&quot;type&quot;,&quot;specific&quot;);&#xD;
+		data.set(&quot;specificMinute&quot;,minute);&#xD;
+		view.id(&quot;autoFormSpecificMinute&quot;).set(&quot;visible&quot;,true);&#xD;
+	}&#xD;
+}&#xD;
+//-------------------------&#xD;
+var hour=cron[2];&#xD;
+if(hour==&quot;*&quot;){&#xD;
+	view.id(&quot;dataSetHour&quot;).getData().set(&quot;type&quot;,&quot;all&quot;);&#xD;
+}else{&#xD;
+	var data=view.id(&quot;dataSetHour&quot;).getData();&#xD;
+	var region=hour.split(&quot;-&quot;);&#xD;
+	var per=hour.split(&quot;/&quot;);&#xD;
+	if(region.length>1){&#xD;
+		data.set(&quot;type&quot;,&quot;region&quot;);&#xD;
+		data.set(&quot;fromHour&quot;,region[0]);&#xD;
+		data.set(&quot;toHour&quot;,region[1]);&#xD;
+		view.id(&quot;autoFormRegionHour&quot;).set(&quot;visible&quot;,true);&#xD;
+	}else if(per.length>1){&#xD;
+		data.set(&quot;type&quot;,&quot;per&quot;);&#xD;
+		data.set(&quot;fromPerHour&quot;,per[0]);&#xD;
+		data.set(&quot;perHour&quot;,per[1]);&#xD;
+		view.id(&quot;autoFormPerHour&quot;).set(&quot;visible&quot;,true);&#xD;
+	}else{&#xD;
+		data.set(&quot;type&quot;,&quot;specific&quot;);&#xD;
+		data.set(&quot;specificHour&quot;,hour);&#xD;
+		view.id(&quot;autoFormSpecificHour&quot;).set(&quot;visible&quot;,true);&#xD;
+	}&#xD;
+}&#xD;
+//-------------------------&#xD;
+var day=cron[3];&#xD;
+if(day==&quot;*&quot; || day==&quot;?&quot;){&#xD;
+	view.id(&quot;dataSetDay&quot;).getData().set(&quot;type&quot;,&quot;all&quot;);&#xD;
+}else if(day==&quot;L&quot;){&#xD;
+	view.id(&quot;dataSetDay&quot;).getData().set(&quot;type&quot;,&quot;last&quot;);&#xD;
+}else{&#xD;
+	var data=view.id(&quot;dataSetDay&quot;).getData();&#xD;
+	var region=day.split(&quot;-&quot;);&#xD;
+	var per=day.split(&quot;/&quot;);&#xD;
+	if(region.length>1){&#xD;
+		data.set(&quot;type&quot;,&quot;region&quot;);&#xD;
+		data.set(&quot;fromDay&quot;,region[0]);&#xD;
+		data.set(&quot;toDay&quot;,region[1]);&#xD;
+		view.id(&quot;autoFormRegionDay&quot;).set(&quot;visible&quot;,true);&#xD;
+	}else if(per.length>1){&#xD;
+		data.set(&quot;type&quot;,&quot;per&quot;);&#xD;
+		data.set(&quot;fromPerDay&quot;,per[0]);&#xD;
+		data.set(&quot;perDay&quot;,per[1]);&#xD;
+		view.id(&quot;autoFormPerDay&quot;).set(&quot;visible&quot;,true);&#xD;
+	}else{&#xD;
+		data.set(&quot;type&quot;,&quot;specific&quot;);&#xD;
+		data.set(&quot;specificDay&quot;,day);&#xD;
+		view.id(&quot;autoFormSpecificDay&quot;).set(&quot;visible&quot;,true);&#xD;
+	}&#xD;
+}&#xD;
+//-------------------------&#xD;
+var month=cron[4];&#xD;
+if(month==&quot;*&quot;){&#xD;
+	view.id(&quot;dataSetMonth&quot;).getData().set(&quot;type&quot;,&quot;all&quot;);&#xD;
+}else{&#xD;
+	var data=view.id(&quot;dataSetMonth&quot;).getData();&#xD;
+	var region=month.split(&quot;-&quot;);&#xD;
+	var per=month.split(&quot;/&quot;);&#xD;
+	if(region.length>1){&#xD;
+		data.set(&quot;type&quot;,&quot;region&quot;);&#xD;
+		data.set(&quot;fromMonth&quot;,region[0]);&#xD;
+		data.set(&quot;toMonth&quot;,region[1]);&#xD;
+		view.id(&quot;autoFormRegionMonth&quot;).set(&quot;visible&quot;,true);&#xD;
+	}else if(per.length>1){&#xD;
+		data.set(&quot;type&quot;,&quot;per&quot;);&#xD;
+		data.set(&quot;fromPerMonth&quot;,per[0]);&#xD;
+		data.set(&quot;perMonth&quot;,per[1]);&#xD;
+		view.id(&quot;autoFormPerMonth&quot;).set(&quot;visible&quot;,true);&#xD;
+	}else{&#xD;
+		data.set(&quot;type&quot;,&quot;specific&quot;);&#xD;
+		data.set(&quot;specificMonth&quot;,month);&#xD;
+		view.id(&quot;autoFormSpecificMonth&quot;).set(&quot;visible&quot;,true);&#xD;
+	}&#xD;
+}&#xD;
+//-------------------------&#xD;
+var week=cron[5];&#xD;
+if(week==&quot;*&quot; || week==&quot;?&quot;){&#xD;
+	view.id(&quot;dataSetWeek&quot;).getData().set(&quot;type&quot;,&quot;all&quot;);&#xD;
+}else if(week.indexOf(&quot;L&quot;)>0){&#xD;
+	var data=view.id(&quot;dataSetWeek&quot;).getData();&#xD;
+	data.set(&quot;type&quot;,&quot;last&quot;);&#xD;
+	var d=week.substring(0,1);&#xD;
+	if(d){&#xD;
+		data.set(&quot;last&quot;,d);&#xD;
+	}&#xD;
+	view.id(&quot;autoFormLastWeek&quot;).set(&quot;visible&quot;,true);&#xD;
+}else{&#xD;
+	var data=view.id(&quot;dataSetWeek&quot;).getData();&#xD;
+	var region=week.split(&quot;-&quot;);&#xD;
+	var per=week.split(&quot;/&quot;);&#xD;
+	if(region.length>1){&#xD;
+		data.set(&quot;type&quot;,&quot;region&quot;);&#xD;
+		data.set(&quot;fromWeek&quot;,region[0]);&#xD;
+		data.set(&quot;toWeek&quot;,region[1]);&#xD;
+		view.id(&quot;autoFormRegionWeek&quot;).set(&quot;visible&quot;,true);&#xD;
+	}else if(per.length>1){&#xD;
+		data.set(&quot;type&quot;,&quot;per&quot;);&#xD;
+		data.set(&quot;fromPerWeek&quot;,per[0]);&#xD;
+		data.set(&quot;perWeek&quot;,per[1]);&#xD;
+		view.id(&quot;autoFormPerWeek&quot;).set(&quot;visible&quot;,true);&#xD;
+	}else{&#xD;
+		data.set(&quot;type&quot;,&quot;specific&quot;);&#xD;
+		data.set(&quot;specificWeek&quot;,week);&#xD;
+		view.id(&quot;autoFormSpecificWeek&quot;).set(&quot;visible&quot;,true);&#xD;
+	}&#xD;
+}&#xD;
+view.id(&quot;autoFormCronExp&quot;).set(&quot;entity&quot;,{cron:cronExpr});&#xD;
+</ClientEvent>
+              </Trigger>
+              <Trigger id="triggerBean">
+                <ClientEvent name="onExecute">view.id(&quot;dialogJobBeans&quot;).show();</ClientEvent>
+              </Trigger>
+            </Children>
+            <Tools/>
+          </Dialog>
+          <Dialog id="dialogJobBeans">
+            <Property name="center">true</Property>
+            <Property name="modal">true</Property>
+            <Property name="width">500</Property>
+            <Property name="height">500</Property>
+            <Buttons>
+              <Button>
+                <ClientEvent name="onClick">var data=view.id(&quot;dataSetJobInfo&quot;).getData(&quot;#&quot;);&#xD;
+if(data){&#xD;
+	var beanId=data.get(&quot;beanId&quot;);&#xD;
+	view.id(&quot;dataSetJob&quot;).getData(&quot;#&quot;).set(&quot;beanId&quot;,beanId);&#xD;
+	view.id(&quot;dialogJobBeans&quot;).hide();&#xD;
+}else{&#xD;
+	dorado.MessageBox.alert(&quot;请先选中一个Bean&quot;);&#xD;
+}</ClientEvent>
+                <Property name="caption">确认</Property>
+                <Property name="icon">url(skin>common/icons.gif) -140px -20px</Property>
+              </Button>
+              <Button>
+                <ClientEvent name="onClick">view.id(&quot;dialogJobBeans&quot;).hide();</ClientEvent>
+                <Property name="caption">取消</Property>
+                <Property name="icon">url(skin>common/icons.gif) -40px 0px</Property>
+              </Button>
+            </Buttons>
+            <Children>
+              <DataGrid>
+                <Property name="dataSet">dataSetJobInfo</Property>
+                <Property name="readOnly">true</Property>
+                <DataColumn name="beanId">
+                  <Property name="property">beanId</Property>
+                </DataColumn>
+              </DataGrid>
+            </Children>
+            <Tools/>
+          </Dialog>
+          <UpdateAction id="updateActionSaveJob">
+            <Property name="dataResolver">bdf2.jobMaintain#saveJobs</Property>
+            <Property name="successMessage">操作成功</Property>
+            <UpdateItem>
+              <Property name="dataSet">dataSetJob</Property>
+            </UpdateItem>
+          </UpdateAction>
+          <AjaxAction id="ajaxActionStopJob">
+            <Property name="service">bdf2.jobMaintain#stopJob</Property>
+            <Property name="successMessage">操作成功</Property>
+          </AjaxAction>
+          <AjaxAction id="ajaxActionRunJob">
+            <Property name="service">bdf2.jobMaintain#runJob</Property>
+            <Property name="successMessage">操作成功</Property>
+          </AjaxAction>
+        </Container>
+      </SideControl>
+    </SplitPanel>
+  </View>
+</ViewConfig>

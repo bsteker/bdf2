@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feature
+      id="com.bstek.bdf.plugins"
+      label="BDF-Plugins"
+      version="1.0.0">
+
+   <description url="http://www.bstek.com">
+      Bstek BDF Plugins
+   </description>
+
+   <copyright url="http://www.bstek.com">
+      Bstek BDF Plugins
+   </copyright>
+
+   <license url="Bstek BDF Plugins">
+      BDF, Bstek Development Framework
+Copyright 2002-2012, BSTEK
+Dual licensed under the Bstek Commercial or GPL Version 2 licenses.
+http://www.bstek.com/
+   </license>
+
+   <plugin
+         id="com.bstek.bdf.plugins.common"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="com.bstek.bdf.plugins.databasetool"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="com.bstek.bdf.plugins.jbpm4designer"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="com.bstek.bdf.plugins.pojo2datatype"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="com.bstek.bdf.plugins.propeditor"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+</feature>

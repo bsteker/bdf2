@@ -1,0 +1,47 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<artifactId>bdf2-componentprofile</artifactId>
+	<parent>
+		<groupId>com.bstek.bdf2</groupId>
+		<artifactId>bdf2-parent</artifactId>
+		<version>LATEST</version>
+	</parent>
+	<version>2.0.6</version>
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<addon.name>bdf2-compomentprofile</addon.name>
+		<addon.depends>bdf2-orm</addon.depends>
+		<addon.propertiesConfigLocations>classpath:com/bstek/bdf2/componentprofile/config/bdf2.componentprofile.properties</addon.propertiesConfigLocations>
+		<addon.contextConfigLocations>classpath:com/bstek/bdf2/componentprofile/config/bdf2-componentprofile-configs.xml</addon.contextConfigLocations>
+		<addon.componentConfigLocations>classpath:com/bstek/bdf2/componentprofile/config/bdf2-componentprofile-component-configs.xml</addon.componentConfigLocations>
+	</properties>
+	<dependencies>
+		<dependency>
+			<groupId>com.bstek.bdf2</groupId>
+			<artifactId>bdf2-orm-hibernate3</artifactId>
+			<version>LATEST</version>
+		</dependency>
+	</dependencies>
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-framework-bom</artifactId>
+				<version>4.3.0.RELEASE</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+	<description>Custom dorado7 view for user</description>
+	
+	<repositories>
+		<repository>
+			<id>bsdn</id>
+			<name>bsdn</name>
+			<url>http://nexus.bsdn.org/content/groups/public/</url>
+		</repository>
+	</repositories>
+	
+</project>

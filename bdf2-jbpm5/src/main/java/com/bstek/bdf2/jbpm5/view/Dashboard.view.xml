@@ -1,0 +1,551 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ViewConfig>
+  <Arguments/>
+  <Context/>
+  <Model>
+    <DataType name="dataTypeProcess">
+      <Property name="creationType">org.jbpm.ruleflow.core.RuleFlowProcess</Property>
+      <PropertyDef name="id">
+        <Property name="dataType">String</Property>
+        <Property name="label">ID</Property>
+      </PropertyDef>
+      <PropertyDef name="name">
+        <Property name="dataType">String</Property>
+        <Property name="label">名称</Property>
+      </PropertyDef>
+      <PropertyDef name="version">
+        <Property name="dataType">String</Property>
+        <Property name="label">版本</Property>
+      </PropertyDef>
+      <PropertyDef name="type">
+        <Property name="dataType">String</Property>
+        <Property name="label">类型</Property>
+      </PropertyDef>
+      <PropertyDef name="packageName">
+        <Property name="dataType">String</Property>
+        <Property name="label">所在包</Property>
+      </PropertyDef>
+      <Reference name="processInstances">
+        <Property name="dataType">[dataTypeProcessInstance]</Property>
+        <Property name="parameter">$${this.id}</Property>
+        <Property name="dataProvider">bdf2.jbpm5.dashboard#loadProcessInstances</Property>
+        <Property name="pageSize">10</Property>
+      </Reference>
+    </DataType>
+    <DataType name="dataTypeProcessInstance">
+      <ClientEvent name="onCurrentChange">this.tag(&quot;cliam&quot;).set(&quot;disabled&quot;,true);&#xD;
+this.tag(&quot;release&quot;).set(&quot;disabled&quot;,true);&#xD;
+this.tag(&quot;start&quot;).set(&quot;disabled&quot;,true);&#xD;
+this.tag(&quot;complete&quot;).set(&quot;disabled&quot;,true);&#xD;
+this.tag(&quot;changeowner&quot;).set(&quot;disabled&quot;,true);&#xD;
+var entity=arg.newCurrent;&#xD;
+if(entity){&#xD;
+	var status=entity.get(&quot;tasks&quot;).status;&#xD;
+	switch(status){&#xD;
+		case &quot;Ready&quot;:&#xD;
+			this.tag(&quot;cliam&quot;).set(&quot;disabled&quot;,false);&#xD;
+			break;&#xD;
+		case &quot;Created&quot;:&#xD;
+			this.tag(&quot;changeowner&quot;).set(&quot;disabled&quot;,false);&#xD;
+			this.tag(&quot;start&quot;).set(&quot;disabled&quot;,false);&#xD;
+			break;	&#xD;
+		case &quot;Reserved&quot;:&#xD;
+			this.tag(&quot;start&quot;).set(&quot;disabled&quot;,false);&#xD;
+			this.tag(&quot;release&quot;).set(&quot;disabled&quot;,false);&#xD;
+			break;	&#xD;
+		case &quot;InProgress&quot;:&#xD;
+			this.tag(&quot;complete&quot;).set(&quot;disabled&quot;,false);&#xD;
+			break;			&#xD;
+	}&#xD;
+}</ClientEvent>
+      <Property name="creationType">org.jbpm.process.audit.ProcessInstanceLog</Property>
+      <PropertyDef name="id">
+        <Property name="dataType">long</Property>
+      </PropertyDef>
+      <PropertyDef name="processInstanceId">
+        <Property name="dataType">long</Property>
+        <Property name="label">流程实例ID</Property>
+      </PropertyDef>
+      <PropertyDef name="processId">
+        <Property name="dataType">String</Property>
+        <Property name="label">所属流程</Property>
+      </PropertyDef>
+      <PropertyDef name="start">
+        <Property name="dataType">Date</Property>
+        <Property name="label">开始日期</Property>
+        <Property name="displayFormat">Y-m-d h:m:s</Property>
+      </PropertyDef>
+      <PropertyDef name="end">
+        <Property name="dataType">Date</Property>
+        <Property name="label">结束日期</Property>
+        <Property name="displayFormat">Y-m-d h:m:s</Property>
+      </PropertyDef>
+      <Reference name="nodes">
+        <Property name="dataType">[dataTypeNode]</Property>
+        <Property name="parameter">$${this.processInstanceId}</Property>
+        <Property name="dataProvider">bdf2.jbpm5.dashboard#loadNodes</Property>
+      </Reference>
+      <Reference name="tasks">
+        <Property name="dataType">[dataTypeTask]</Property>
+        <Property name="parameter">$${this.processInstanceId}</Property>
+        <Property name="dataProvider">bdf2.jbpm5.dashboard#loadTasks</Property>
+      </Reference>
+    </DataType>
+    <DataType name="dataTypeNode">
+      <Property name="creationType">org.jbpm.process.audit.NodeInstanceLog</Property>
+      <PropertyDef name="id">
+        <Property name="dataType">long</Property>
+      </PropertyDef>
+      <PropertyDef name="type">
+        <Property name="dataType">int</Property>
+        <Property name="label">事件类型</Property>
+        <Property name="mapping">
+          <Property name="mapValues">
+            <Collection>
+              <Entity>
+                <Property name="key">0</Property>
+                <Property name="value">进入节点</Property>
+              </Entity>
+              <Entity>
+                <Property name="key">1</Property>
+                <Property name="value">离开节点</Property>
+              </Entity>
+            </Collection>
+          </Property>
+          <Property name="keyProperty">key</Property>
+          <Property name="valueProperty">value</Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="date">
+        <Property name="dataType">Date</Property>
+        <Property name="label">时间</Property>
+        <Property name="displayFormat">Y-m-d h:m:s</Property>
+      </PropertyDef>
+      <PropertyDef name="processInstanceId">
+        <Property name="dataType">long</Property>
+      </PropertyDef>
+      <PropertyDef name="processId">
+        <Property name="dataType">String</Property>
+      </PropertyDef>
+      <PropertyDef name="nodeInstanceId">
+        <Property name="dataType">String</Property>
+      </PropertyDef>
+      <PropertyDef name="nodeId">
+        <Property name="dataType">String</Property>
+      </PropertyDef>
+      <PropertyDef name="nodeName">
+        <Property name="dataType">String</Property>
+        <Property name="label">节点名称</Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="dataTypeTask">
+      <ClientEvent name="onCurrentChange">this.tag(&quot;cliam&quot;).set(&quot;disabled&quot;,true);&#xD;
+this.tag(&quot;release&quot;).set(&quot;disabled&quot;,true);&#xD;
+this.tag(&quot;start&quot;).set(&quot;disabled&quot;,true);&#xD;
+this.tag(&quot;complete&quot;).set(&quot;disabled&quot;,true);&#xD;
+this.tag(&quot;changeowner&quot;).set(&quot;disabled&quot;,true);&#xD;
+var entity=arg.newCurrent;&#xD;
+if(entity){&#xD;
+	var status=entity.get(&quot;status&quot;);&#xD;
+	switch(status){&#xD;
+		case &quot;Ready&quot;:&#xD;
+			this.tag(&quot;cliam&quot;).set(&quot;disabled&quot;,false);&#xD;
+			break;&#xD;
+		case &quot;Created&quot;:&#xD;
+			this.tag(&quot;changeowner&quot;).set(&quot;disabled&quot;,false);&#xD;
+			this.tag(&quot;start&quot;).set(&quot;disabled&quot;,false);&#xD;
+			break;	&#xD;
+		case &quot;Reserved&quot;:&#xD;
+			this.tag(&quot;start&quot;).set(&quot;disabled&quot;,false);&#xD;
+			this.tag(&quot;release&quot;).set(&quot;disabled&quot;,false);&#xD;
+			break;	&#xD;
+		case &quot;InProgress&quot;:&#xD;
+			this.tag(&quot;complete&quot;).set(&quot;disabled&quot;,false);&#xD;
+			break;			&#xD;
+	}&#xD;
+}</ClientEvent>
+      <Property name="creationType">com.bstek.bdf2.jbpm5.model.Task</Property>
+      <PropertyDef name="id">
+        <Property name="dataType">long</Property>
+      </PropertyDef>
+      <PropertyDef name="name">
+        <Property name="dataType">String</Property>
+        <Property name="label">任务名称</Property>
+      </PropertyDef>
+      <PropertyDef name="businessId">
+        <Property name="dataType">String</Property>
+      </PropertyDef>
+      <PropertyDef name="priority">
+        <Property name="dataType">int</Property>
+        <Property name="label">优先级</Property>
+      </PropertyDef>
+      <PropertyDef name="owner">
+        <Property name="dataType">String</Property>
+        <Property name="label">所有者</Property>
+      </PropertyDef>
+      <PropertyDef name="actor">
+        <Property name="dataType">String</Property>
+        <Property name="label">处理人</Property>
+      </PropertyDef>
+      <PropertyDef name="cmnt">
+        <Property name="dataType">String</Property>
+        <Property name="label">描述</Property>
+      </PropertyDef>
+      <PropertyDef name="processId">
+        <Property name="dataType">String</Property>
+      </PropertyDef>
+      <PropertyDef name="workItemId">
+        <Property name="dataType">long</Property>
+      </PropertyDef>
+      <PropertyDef name="processInstanceId">
+        <Property name="dataType">long</Property>
+      </PropertyDef>
+      <PropertyDef name="sessionId">
+        <Property name="dataType">int</Property>
+      </PropertyDef>
+      <PropertyDef name="create">
+        <Property name="dataType">Date</Property>
+        <Property name="label">创建日期</Property>
+        <Property name="displayFormat">Y-m-d h:m:s</Property>
+      </PropertyDef>
+      <PropertyDef name="start">
+        <Property name="dataType">Date</Property>
+        <Property name="label">开始日期</Property>
+        <Property name="displayFormat">Y-m-d h:m:s</Property>
+      </PropertyDef>
+      <PropertyDef name="end">
+        <Property name="dataType">Date</Property>
+        <Property name="label">结束日期</Property>
+        <Property name="displayFormat">Y-m-d h:m:s</Property>
+      </PropertyDef>
+      <PropertyDef name="parentId">
+        <Property name="dataType">long</Property>
+      </PropertyDef>
+      <PropertyDef name="skippable">
+        <Property name="dataType">boolean</Property>
+      </PropertyDef>
+      <PropertyDef name="faultMessage">
+        <Property name="dataType">String</Property>
+        <Property name="label">错误消息</Property>
+      </PropertyDef>
+      <PropertyDef name="type">
+        <Property name="label">任务类型</Property>
+        <Property name="mapping">
+          <Property name="keyProperty">key</Property>
+          <Property name="valueProperty">value</Property>
+          <Property name="mapValues">
+            <Collection>
+              <Entity>
+                <Property name="key">Personal</Property>
+                <Property name="value">个人任务</Property>
+              </Entity>
+              <Entity>
+                <Property name="key">Group</Property>
+                <Property name="value">竞争任务</Property>
+              </Entity>
+              <Entity>
+                <Property name="key">Countersign</Property>
+                <Property name="value">会签任务</Property>
+              </Entity>
+            </Collection>
+          </Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="status">
+        <Property name="label">状态</Property>
+        <Property name="mapping">
+          <Property name="keyProperty">key</Property>
+          <Property name="valueProperty">value</Property>
+          <Property name="mapValues">
+            <Collection>
+              <Entity>
+                <Property name="key">Created</Property>
+                <Property name="value">已创建</Property>
+              </Entity>
+              <Entity>
+                <Property name="key">Ready</Property>
+                <Property name="value">准备就绪</Property>
+              </Entity>
+              <Entity>
+                <Property name="key">Reserved</Property>
+                <Property name="value">预订中</Property>
+              </Entity>
+              <Entity>
+                <Property name="key">InProgress</Property>
+                <Property name="value">处理中</Property>
+              </Entity>
+              <Entity>
+                <Property name="key">Suspended</Property>
+                <Property name="value">挂起中</Property>
+              </Entity>
+              <Entity>
+                <Property name="key">Completed</Property>
+                <Property name="value">已完成</Property>
+              </Entity>
+            </Collection>
+          </Property>
+        </Property>
+      </PropertyDef>
+    </DataType>
+  </Model>
+  <View>
+    <DataSet id="dataSetProcess">
+      <Property name="dataType">[dataTypeProcess]</Property>
+      <Property name="dataProvider">bdf2.jbpm5.dashboard#loadProcesses</Property>
+    </DataSet>
+    <SplitPanel>
+      <Property name="position">500</Property>
+      <MainControl>
+        <SplitPanel>
+          <Property name="position">400</Property>
+          <Property name="direction">top</Property>
+          <MainControl>
+            <Container>
+              <TabControl>
+                <ControlTab>
+                  <Property name="caption">产生的任务</Property>
+                  <Container>
+                    <ToolBar>
+                      <ToolBarButton>
+                        <ClientEvent name="onClick">var action=view.id(&quot;ajaxActionOperateTask&quot;);&#xD;
+var taskId=view.id(&quot;dataSetProcess&quot;).getData(&quot;#.#processInstances.#tasks.id&quot;);&#xD;
+action.operateTask(taskId,&quot;claim&quot;);</ClientEvent>
+                        <Property name="caption">领取任务</Property>
+                        <Property name="icon">url(skin>common/icons.gif) -20px -240px</Property>
+                        <Property name="tags">cliam</Property>
+                        <Property name="disabled">true</Property>
+                      </ToolBarButton>
+                      <ToolBarButton>
+                        <ClientEvent name="onClick">var action=view.id(&quot;ajaxActionOperateTask&quot;);&#xD;
+var taskId=view.id(&quot;dataSetProcess&quot;).getData(&quot;#.#processInstances.#tasks.id&quot;);&#xD;
+action.operateTask(taskId,&quot;release&quot;);</ClientEvent>
+                        <Property name="caption">释放任务</Property>
+                        <Property name="icon">url(skin>common/icons.gif) 0px -240px</Property>
+                        <Property name="tags">release</Property>
+                        <Property name="disabled">true</Property>
+                      </ToolBarButton>
+                      <ToolBarButton>
+                        <ClientEvent name="onClick">var action=view.id(&quot;ajaxActionOperateTask&quot;);&#xD;
+var taskId=view.id(&quot;dataSetProcess&quot;).getData(&quot;#.#processInstances.#tasks.id&quot;);&#xD;
+action.operateTask(taskId,&quot;start&quot;);</ClientEvent>
+                        <Property name="caption">开始任务</Property>
+                        <Property name="icon">url(skin>common/icons.gif) -180px -220px</Property>
+                        <Property name="tags">start</Property>
+                        <Property name="disabled">true</Property>
+                      </ToolBarButton>
+                      <ToolBarButton>
+                        <ClientEvent name="onClick">var action=view.id(&quot;ajaxActionOperateTask&quot;);&#xD;
+var taskId=view.id(&quot;dataSetProcess&quot;).getData(&quot;#.#processInstances.#tasks.id&quot;);&#xD;
+action.operateTask(taskId,&quot;complete&quot;);</ClientEvent>
+                        <Property name="caption">完成任务</Property>
+                        <Property name="icon">url(skin>common/icons.gif) -20px 0px</Property>
+                        <Property name="tags">complete</Property>
+                        <Property name="disabled">true</Property>
+                      </ToolBarButton>
+                      <ToolBarButton>
+                        <ClientEvent name="onClick">var taskId=view.id(&quot;dataSetProcess&quot;).getData(&quot;#.#processInstances.#tasks.id&quot;);&#xD;
+var action=view.id(&quot;ajaxActionChangeTaskOwner&quot;);&#xD;
+dorado.MessageBox.prompt(&quot;请输入新的任务处理人&quot;,function(newOwner){&#xD;
+	if(newOwner){&#xD;
+		dorado.MessageBox.confirm(&quot;真的要这样做吗？&quot;,function(){&#xD;
+			action.set(&quot;parameter&quot;,{taskId:taskId,newOwner:newOwner});&#xD;
+			action.execute(function(){&#xD;
+				var processInstance=view.id(&quot;dataSetProcess&quot;).getData(&quot;#.#processInstances&quot;);&#xD;
+				processInstance.reset(&quot;tasks&quot;)&#xD;
+			});	&#xD;
+		});&#xD;
+	}else{&#xD;
+		dorado.MessageBox.alert(&quot;请输入新的任务处理人！&quot;);&#xD;
+	}&#xD;
+});&#xD;
+</ClientEvent>
+                        <Property name="caption">更改任务处理人</Property>
+                        <Property name="icon">url(skin>common/icons.gif) -200px 0px</Property>
+                        <Property name="tags">changeowner</Property>
+                        <Property name="disabled">true</Property>
+                      </ToolBarButton>
+                    </ToolBar>
+                    <DataGrid>
+                      <Property name="dataSet">dataSetProcess</Property>
+                      <Property name="dataPath">#.#processInstances.tasks</Property>
+                      <Property name="readOnly">true</Property>
+                      <DataColumn name="name">
+                        <Property name="property">name</Property>
+                        <Property name="width">160</Property>
+                      </DataColumn>
+                      <DataColumn name="owner">
+                        <Property name="property">owner</Property>
+                        <Property name="width">120</Property>
+                      </DataColumn>
+                      <DataColumn name="actor">
+                        <Property name="property">actor</Property>
+                        <Property name="width">120</Property>
+                      </DataColumn>
+                      <DataColumn>
+                        <Property name="property">type</Property>
+                        <Property name="width">100</Property>
+                        <Property name="name">type</Property>
+                      </DataColumn>
+                      <DataColumn>
+                        <Property name="property">status</Property>
+                        <Property name="width">100</Property>
+                        <Property name="name">status</Property>
+                      </DataColumn>
+                      <DataColumn name="create">
+                        <Property name="property">create</Property>
+                        <Property name="width">140</Property>
+                      </DataColumn>
+                      <DataColumn name="start">
+                        <Property name="property">start</Property>
+                        <Property name="width">140</Property>
+                      </DataColumn>
+                      <DataColumn name="end">
+                        <Property name="property">end</Property>
+                        <Property name="width">140</Property>
+                      </DataColumn>
+                      <DataColumn name="cmnt">
+                        <Property name="property">cmnt</Property>
+                        <Property name="width">200</Property>
+                      </DataColumn>
+                      <DataColumn name="faultMessage">
+                        <Property name="property">faultMessage</Property>
+                        <Property name="width">200</Property>
+                      </DataColumn>
+                    </DataGrid>
+                    <AjaxAction id="ajaxActionOperateTask">
+                      <ClientEvent name="onCreate">self.operateTask=function(taskId,operate){&#xD;
+	self.set(&quot;parameter&quot;,{taskId:taskId,operate:operate});&#xD;
+	self.execute(function(){&#xD;
+		var processInstance=view.id(&quot;dataSetProcess&quot;).getData(&quot;#.#processInstances&quot;);&#xD;
+		processInstance.reset(&quot;tasks&quot;)&#xD;
+	});&#xD;
+}</ClientEvent>
+                      <Property name="service">bdf2.jbpm5.dashboard#operateTask</Property>
+                      <Property name="successMessage">操作成功！</Property>
+                      <Property name="executingMessage">操作进行中...</Property>
+                      <Property name="confirmMessage">真的要这样做吗？</Property>
+                    </AjaxAction>
+                    <AjaxAction id="ajaxActionChangeTaskOwner">
+                      <Property name="service">bdf2.jbpm5.dashboard#changeTaskOwner</Property>
+                      <Property name="successMessage">操作成功！</Property>
+                      <Property name="executingMessage">操作进行中...</Property>
+                    </AjaxAction>
+                  </Container>
+                </ControlTab>
+                <ControlTab>
+                  <Property name="caption">流经节点</Property>
+                  <Container>
+                    <DataGrid>
+                      <Property name="dataPath">#.#processInstances.nodes</Property>
+                      <Property name="dataSet">dataSetProcess</Property>
+                      <Property name="readOnly">true</Property>
+                      <DataColumn name="nodeName">
+                        <Property name="property">nodeName</Property>
+                      </DataColumn>
+                      <DataColumn name="type">
+                        <Property name="property">type</Property>
+                        <Property name="width">160</Property>
+                        <Property name="align">left</Property>
+                      </DataColumn>
+                      <DataColumn name="date">
+                        <Property name="property">date</Property>
+                        <Property name="width">160</Property>
+                      </DataColumn>
+                    </DataGrid>
+                  </Container>
+                </ControlTab>
+              </TabControl>
+            </Container>
+          </MainControl>
+          <SideControl>
+            <Container>
+              <ToolBar>
+                <DataPilot>
+                  <Property name="itemCodes">pages</Property>
+                  <Property name="dataSet">dataSetProcess</Property>
+                  <Property name="dataPath">#.processInstances</Property>
+                </DataPilot>
+                <ToolBarButton>
+                  <ClientEvent name="onClick">var ds=view.id(&quot;dataSetProcess&quot;);&#xD;
+var processInstanceId=ds.getData(&quot;#.#processInstances.id&quot;);&#xD;
+if(processInstanceId){&#xD;
+	var action=view.id(&quot;ajaxActionAbortProcessInstance&quot;);&#xD;
+	action.set(&quot;parameter&quot;,{processInstanceId:processInstanceId});&#xD;
+	action.execute(function(){&#xD;
+		ds.getData(&quot;#&quot;).reset(&quot;processInstances&quot;);&#xD;
+	});&#xD;
+}else{&#xD;
+	dorado.MessageBox.alert(&quot;当前没有选中要取消的流程实例!&quot;);&#xD;
+}</ClientEvent>
+                  <Property name="caption">取消流程实例</Property>
+                  <Property name="icon">url(skin>common/icons.gif) -40px 0px</Property>
+                </ToolBarButton>
+              </ToolBar>
+              <DataGrid>
+                <Property name="dataSet">dataSetProcess</Property>
+                <Property name="dataPath">#.processInstances</Property>
+                <Property name="readOnly">true</Property>
+                <DataColumn name="processInstanceId">
+                  <Property name="property">processInstanceId</Property>
+                  <Property name="width">160</Property>
+                  <Property name="align">left</Property>
+                </DataColumn>
+                <DataColumn name="processId">
+                  <Property name="property">processId</Property>
+                </DataColumn>
+                <DataColumn name="start">
+                  <Property name="property">start</Property>
+                </DataColumn>
+                <DataColumn name="end">
+                  <Property name="property">end</Property>
+                </DataColumn>
+              </DataGrid>
+            </Container>
+          </SideControl>
+        </SplitPanel>
+      </MainControl>
+      <SideControl>
+        <Container>
+          <ToolBar>
+            <ToolBarButton>
+              <Property name="caption">刷新流程</Property>
+              <Property name="icon">url(skin>common/icons.gif) -280px -220px</Property>
+            </ToolBarButton>
+            <ToolBarButton>
+              <Property name="caption">删除流程</Property>
+            </ToolBarButton>
+            <ToolBarButton>
+              <Property name="caption">开启流程</Property>
+            </ToolBarButton>
+            <ToolBarButton>
+              <Property name="caption">查看流程图</Property>
+            </ToolBarButton>
+          </ToolBar>
+          <DataGrid>
+            <Property name="dataSet">dataSetProcess</Property>
+            <Property name="readOnly">true</Property>
+            <DataColumn name="id">
+              <Property name="property">id</Property>
+            </DataColumn>
+            <DataColumn name="name">
+              <Property name="property">name</Property>
+            </DataColumn>
+            <DataColumn name="version">
+              <Property name="property">version</Property>
+              <Property name="width">80</Property>
+            </DataColumn>
+            <DataColumn name="packageName">
+              <Property name="property">packageName</Property>
+            </DataColumn>
+          </DataGrid>
+        </Container>
+      </SideControl>
+    </SplitPanel>
+    <AjaxAction id="ajaxActionAbortProcessInstance">
+      <Property name="service">bdf2.jbpm5.dashboard#abortProcessInstance</Property>
+      <Property name="successMessage">操作成功</Property>
+      <Property name="confirmMessage">真的要取消当前流程实例吗？</Property>
+      <Property name="executingMessage">操作进行中...</Property>
+    </AjaxAction>
+  </View>
+</ViewConfig>

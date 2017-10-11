@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema targetNamespace="http://www.bstek.com/bdf2/ws/rpc" elementFormDefault="qualified" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://www.bstek.com/bdf2/ws/rpc">
+	<element name="DataRequest">
+		<complexType>
+			<sequence>
+				<element name="beanId" type="string"></element>
+				<element name="methodName" type="string"></element>
+				<element name="methodArgements" maxOccurs="unbounded" type="string"></element>
+			</sequence>
+		</complexType>
+	</element>
+	<element name="DataResponse">
+		<complexType>
+			<all>
+				<element name="successful" type="boolean"></element>
+				<element name="returnValue" type="string"></element>
+			</all>
+		</complexType>
+	</element>
+</schema>

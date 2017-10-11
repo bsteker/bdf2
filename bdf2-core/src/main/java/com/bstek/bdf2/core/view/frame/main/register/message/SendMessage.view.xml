@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ViewConfig>
+  <Arguments/>
+  <Context/>
+  <Model/>
+  <View>
+    <DataSet id="$dataSetMessageForSend">
+      <ClientEvent name="onReady">self.insert({});&#xD;
+</ClientEvent>
+      <Property name="dataType">$dataTypeMessage</Property>
+    </DataSet>
+    <Dialog id="$dialogSendMessage">
+      <Property name="center">true</Property>
+      <Property name="width">600</Property>
+      <Property name="height">400</Property>
+      <Buttons>
+        <Button>
+          <Property name="caption">${res[&quot;bdf2.core/sendMessageButtonCaption&quot;]}</Property>
+          <Property name="icon">url(skin>common/icons.gif) -140px -80px</Property>
+          <Property name="action">$updateActionSendMessage</Property>
+        </Button>
+        <Button>
+          <ClientEvent name="onClick">view.id(&quot;$dialogSendMessage&quot;).hide();&#xD;
+</ClientEvent>
+          <Property name="caption">${res[&quot;bdf2.core/cancelSendMessageButtonCaption&quot;]}</Property>
+          <Property name="icon">url(skin>common/icons.gif) -40px 0px</Property>
+        </Button>
+      </Buttons>
+      <Children>
+        <AutoForm>
+          <Property name="dataSet">$dataSetMessageForSend</Property>
+          <Property name="cols">*</Property>
+          <Property name="showHint">false</Property>
+          <AutoFormElement>
+            <Property name="name">title</Property>
+            <Property name="property">title</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">receiver</Property>
+            <Property name="property">receiver</Property>
+            <Editor>
+              <TagEditor>
+                <Property name="dataSet">$dataSetMessageForSend</Property>
+                <Property name="property">receiver</Property>
+                <Property name="trigger">$triggerSelectReceivers</Property>
+              </TagEditor>
+            </Editor>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">content</Property>
+            <Property name="property">content</Property>
+            <Property name="editorType">TextArea</Property>
+            <Editor>
+              <TextArea>
+                <Property name="height">200</Property>
+              </TextArea>
+            </Editor>
+          </AutoFormElement>
+        </AutoForm>
+        <Trigger id="$triggerSelectReceivers">
+          <ClientEvent name="onExecute">function initCriterion(dataset){&#xD;
+	var sysParameter = dataset._sysParameter;&#xD;
+	if (!sysParameter) dataset._sysParameter = sysParameter = new dorado.util.Map();&#xD;
+	var criteria = sysParameter.get(&quot;criteria&quot;) || {};&#xD;
+	var criterions = criteria.criterions;&#xD;
+	if (!criterions){&#xD;
+		criteria.criterions = [{&#xD;
+			property:&quot;cname&quot;, &#xD;
+			dataType:&quot;String&quot;, &#xD;
+			expression:&quot;null&quot;&#xD;
+		}];&#xD;
+	}else{&#xD;
+		for (var i = 0; i &lt; criterions.length; i++) {&#xD;
+			var criterion = criterions[i];&#xD;
+			if (criterion.property==&quot;roleId&quot;){&#xD;
+				criterion.expression = roleId;&#xD;
+				break;&#xD;
+			}&#xD;
+		}	&#xD;
+	}&#xD;
+	sysParameter.put(&quot;criteria&quot;, criteria);&#xD;
+}&#xD;
+var dataSetUserSelected = view.id(&quot;$dataSetUserSelected&quot;);&#xD;
+initCriterion(dataSetUserSelected);&#xD;
+var dialog=view.id(&quot;$dialogUserSelect&quot;);&#xD;
+var config={caption:&quot;${res['bdf2.core/dialogUserSelectCaption']}&quot;, callback:function(data){&#xD;
+	var usernames=&quot;&quot;;&#xD;
+	for(var i=0;i&lt;data.length;i++){&#xD;
+		var json=data[i];&#xD;
+		if(i==0){&#xD;
+			usernames=json.username;&#xD;
+		}else{&#xD;
+			usernames=usernames+&quot;,&quot;+json.username;			&#xD;
+		}&#xD;
+	}&#xD;
+	var data=view.id(&quot;$dataSetMessageForSend&quot;).getData(&quot;#&quot;);&#xD;
+	data.set(&quot;receiver&quot;,usernames);&#xD;
+	dialog.hide();&#xD;
+}};&#xD;
+dialog.cache=true;&#xD;
+dialog.$show(config);&#xD;
+</ClientEvent>
+        </Trigger>
+        <Import src="bdf2.core.view.global.UserSelect#$dialogUserSelect"/>
+      </Children>
+      <Tools/>
+    </Dialog>
+    <SimpleIconButton>
+      <ClientEvent name="onClick">view.id(&quot;$dialogSendMessage&quot;).show();&#xD;
+</ClientEvent>
+      <Property name="icon">url(skin>common/icons.gif) -140px -80px</Property>
+      <Property name="tip">${res[&quot;bdf2.core/sendMessage&quot;]}</Property>
+    </SimpleIconButton>
+    <UpdateAction id="$updateActionSendMessage">
+      <ClientEvent name="onSuccess">view.id(&quot;$dialogSendMessage&quot;).hide();&#xD;
+</ClientEvent>
+      <Property name="dataResolver">bdf2.sendMessage#send</Property>
+      <Property name="successMessage">${res[&quot;bdf2.core/updateActionSendMessageSuccessMessage&quot;]}</Property>
+      <Property name="confirmMessage">${res[&quot;bdf2.core/updateActionSendMessageConfirmMessage&quot;]}</Property>
+      <UpdateItem>
+        <Property name="dataSet">$dataSetMessageForSend</Property>
+      </UpdateItem>
+    </UpdateAction>
+  </View>
+</ViewConfig>

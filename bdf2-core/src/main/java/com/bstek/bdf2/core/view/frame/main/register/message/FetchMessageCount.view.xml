@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ViewConfig>
+  <Arguments/>
+  <Context/>
+  <Model/>
+  <View>
+    <AjaxAction id="$ajaxActionFetchMessageCount">
+      <ClientEvent name="onReady">self.messageCount=0;&#xD;
+var tip;&#xD;
+&#xD;
+function showMessageInfo(){&#xD;
+	if(self.get(&quot;disabled&quot;)){&#xD;
+		return;&#xD;
+	}&#xD;
+	self.execute(function(count){&#xD;
+		var title = &quot;${res['bdf2.core/fetchMessageCountTitle']}&quot;;&#xD;
+		var contentHtml = $DomUtils.xCreate( {&#xD;
+			content: [{&#xD;
+				tagName: &quot;label&quot;,&#xD;
+				content: &quot;${res['bdf2.core/fetchMessageCountContent1']}&quot;&#xD;
+			},{&#xD;
+				tagName: &quot;A&quot;,&#xD;
+				href:&quot;#&quot;,&#xD;
+				content: &quot;&quot;+count+&quot;&quot;,&#xD;
+				onclick: function(){&#xD;
+					$id(&quot;$dialogSeeMessage&quot;).objects[0].show();&#xD;
+					tip.hide();&#xD;
+				}&#xD;
+			},{&#xD;
+				tagName: &quot;label&quot;,&#xD;
+				content: &quot;${res['bdf2.core/fetchMessageCountContent2']}&quot;&#xD;
+			}]&#xD;
+		});&#xD;
+		if(count>0){&#xD;
+			if(tip){&#xD;
+				tip.set(&quot;content&quot;,contentHtml);&#xD;
+			}else{&#xD;
+				tip=dorado.widget.NotifyTipManager.notify({&#xD;
+					content:contentHtml,&#xD;
+					caption:title,&#xD;
+					autoHide:false&#xD;
+				});&#xD;
+			}&#xD;
+			if(!tip.get(&quot;visible&quot;)){&#xD;
+				tip.set(&quot;visible&quot;,true);&#xD;
+			}&#xD;
+			tip.show();		&#xD;
+		}else{&#xD;
+			if(tip &amp;&amp; tip.get(&quot;visible&quot;)){&#xD;
+				tip.set(&quot;visible&quot;,false);					&#xD;
+			}&#xD;
+		}&#xD;
+		&#xD;
+	});&#xD;
+}&#xD;
+&#xD;
+self.fetchMessageCount=function(){&#xD;
+	self.intervalHandler=setInterval(showMessageInfo,parseInt(&quot;${configure.getString('bdf2.fetchInternalMessageCountInterval')}&quot;));&#xD;
+	self.set(&quot;onDestroy&quot;,function(){&#xD;
+		if(self.intervalHandler){&#xD;
+			window.clearInterval(self.intervalHandler);&#xD;
+		}&#xD;
+	});&#xD;
+};&#xD;
+self.fetchMessageCount();&#xD;
+showMessageInfo();&#xD;
+&#xD;
+</ClientEvent>
+      <ClientEvent name="onFailure">if(self.intervalHandler){&#xD;
+	window.clearInterval(self.intervalHandler);&#xD;
+}</ClientEvent>
+      <Property name="service">bdf2.fetchMessageCount#count</Property>
+      <Property name="modal">false</Property>
+    </AjaxAction>
+  </View>
+</ViewConfig>

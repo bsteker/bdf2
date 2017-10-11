@@ -1,0 +1,370 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Model>
+  <DataType name="$dataTypeComponent">
+    <Property name="creationType">com.bstek.bdf2.core.model.ComponentDefinition</Property>
+    <PropertyDef name="id">
+      <Property name="dataType">String</Property>
+    </PropertyDef>
+    <PropertyDef name="desc">
+      <Property name="dataType">String</Property>
+    </PropertyDef>
+    <PropertyDef name="componentId">
+      <Property name="dataType">String</Property>
+    </PropertyDef>
+  </DataType>
+  <DataType name="$dataTypeCompany">
+    <Property name="creationType">com.bstek.bdf2.core.model.DefaultCompany</Property>
+    <PropertyDef name="id">
+      <Property name="dataType">String</Property>
+    </PropertyDef>
+    <PropertyDef name="desc">
+      <Property name="dataType">String</Property>
+    </PropertyDef>
+    <PropertyDef name="name">
+      <Property name="dataType">String</Property>
+    </PropertyDef>
+  </DataType>
+  <DataType name="$dataTypeDept">
+    <Property name="defaultDisplayProperty">name</Property>
+    <PropertyDef name="id">
+      <Property name="dataType">String</Property>
+      <Property name="label">编号</Property>
+    </PropertyDef>
+    <PropertyDef name="name">
+      <Property name="dataType">String</Property>
+      <Property name="label">部门名称</Property>
+      <Property name="required">true</Property>
+      <Validator type="length">
+        <Property name="maxLength">60</Property>
+      </Validator>
+    </PropertyDef>
+    <PropertyDef name="companyId">
+      <Property name="dataType">String</Property>
+      <Property name="label">所属公司</Property>
+    </PropertyDef>
+    <Reference name="children">
+      <Property name="dataType">[SELF]</Property>
+      <Property name="dataProvider">bdf2.deptSelect#loadDepts</Property>
+      <Property name="parameter">$${this.id}</Property>
+    </Reference>
+  </DataType>
+  <DataType name="$dataTypePosition">
+    <Property name="defaultDisplayProperty">name</Property>
+    <PropertyDef name="id">
+      <Property name="dataType">String</Property>
+      <Property name="label">职位编号</Property>
+    </PropertyDef>
+    <PropertyDef name="name">
+      <Property name="dataType">String</Property>
+      <Property name="label">岗位名称</Property>
+      <Property name="required">true</Property>
+      <Validator type="length">
+        <Property name="maxLength">60</Property>
+      </Validator>
+    </PropertyDef>
+    <PropertyDef name="companyId">
+      <Property name="dataType">String</Property>
+      <Property name="label">所属公司ID</Property>
+    </PropertyDef>
+  </DataType>
+  <DataType name="$dataTypeUser">
+    <Property name="defaultDisplayProperty">cname</Property>
+    <PropertyDef name="username">
+      <Property name="dataType">String</Property>
+      <Property name="label">用户名</Property>
+      <Property name="required">true</Property>
+      <Validator type="length">
+        <Property name="maxLength">60</Property>
+      </Validator>
+    </PropertyDef>
+    <PropertyDef name="cname">
+      <Property name="dataType">String</Property>
+      <Property name="label">中文名</Property>
+      <Property name="required">true</Property>
+      <Validator type="length">
+        <Property name="maxLength">60</Property>
+        <Property name="minLength">2</Property>
+      </Validator>
+    </PropertyDef>
+    <PropertyDef name="ename">
+      <Property name="dataType">String</Property>
+      <Property name="label">英文名</Property>
+      <Property name="required">true</Property>
+      <Validator type="length">
+        <Property name="maxLength">60</Property>
+      </Validator>
+    </PropertyDef>
+    <PropertyDef name="email">
+      <Property name="dataType">String</Property>
+      <Property name="label">邮箱</Property>
+      <Property name="required">true</Property>
+      <Validator type="regExp">
+        <Property name="whiteRegExp">/^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+((\.[a-zA-Z0-9_-]{2,3}){1,2})$/</Property>
+        <Property name="validateMode">whiteBlack</Property>
+      </Validator>
+    </PropertyDef>
+    <PropertyDef name="administrator">
+      <Property name="dataType">boolean</Property>
+      <Property name="label">是否为管理员</Property>
+      <Property name="mapping">
+        <Property name="mapValues"></Property>
+      </Property>
+    </PropertyDef>
+    <PropertyDef name="mobile">
+      <Property name="dataType">String</Property>
+      <Property name="label">手机</Property>
+      <Property name="required">true</Property>
+      <Validator type="length">
+        <Property name="minLength">11</Property>
+        <Property name="maxLength">11</Property>
+        <Property name="resultMessage">请输入11位手机号码</Property>
+      </Validator>
+    </PropertyDef>
+    <PropertyDef name="companyId">
+      <Property name="dataType">String</Property>
+      <Property name="label">公司ID</Property>
+    </PropertyDef>
+  </DataType>
+  <DataType name="$dataTypeGroup">
+    <Property name="creationType">com.bstek.bdf2.core.model.Group</Property>
+    <Property name="defaultDisplayProperty">name</Property>
+    <PropertyDef name="id">
+      <Property name="dataType">String</Property>
+      <Property name="label">编号</Property>
+    </PropertyDef>
+    <PropertyDef name="name">
+      <Property name="dataType">String</Property>
+      <Property name="label">名称</Property>
+      <Property name="required">true</Property>
+      <Validator type="length">
+        <Property name="maxLength">60</Property>
+      </Validator>
+    </PropertyDef>
+    <PropertyDef name="desc">
+      <Property name="dataType">String</Property>
+      <Property name="label">描述</Property>
+      <Validator type="length">
+        <Property name="maxLength">120</Property>
+      </Validator>
+    </PropertyDef>
+    <PropertyDef name="companyId">
+      <Property name="dataType">String</Property>
+      <Property name="label">公司编码</Property>
+    </PropertyDef>
+  </DataType>
+  <DataType name="$dataTypeGroupMember">
+    <Property name="creationType">com.bstek.bdf2.core.model.GroupMember</Property>
+    <PropertyDef name="id">
+      <Property name="dataType">String</Property>
+    </PropertyDef>
+    <PropertyDef name="groupId">
+      <Property name="dataType">String</Property>
+    </PropertyDef>
+    <PropertyDef name="username">
+      <Property name="dataType">String</Property>
+      <Property name="label">用户名</Property>
+    </PropertyDef>
+    <PropertyDef name="positionId">
+      <Property name="dataType">String</Property>
+    </PropertyDef>
+    <PropertyDef name="deptId">
+      <Property name="dataType">String</Property>
+    </PropertyDef>
+  </DataType>
+  <DataType name="$dataTypeRole">
+    <Property name="creationType">com.bstek.bdf2.core.model.Role</Property>
+    <PropertyDef name="id">
+      <Property name="dataType">String</Property>
+    </PropertyDef>
+    <PropertyDef name="desc">
+      <Property name="dataType">String</Property>
+      <Property name="label">描述</Property>
+      <Validator type="length">
+        <Property name="minLength">2</Property>
+        <Property name="maxLength">60</Property>
+      </Validator>
+    </PropertyDef>
+    <PropertyDef name="name">
+      <Property name="dataType">String</Property>
+      <Property name="label">角色名</Property>
+      <Property name="required">true</Property>
+      <Validator type="length">
+        <Property name="minLength">2</Property>
+        <Property name="maxLength">60</Property>
+      </Validator>
+    </PropertyDef>
+    <PropertyDef name="serialVersionUID">
+      <Property name="dataType">long</Property>
+    </PropertyDef>
+    <PropertyDef name="companyId">
+      <Property name="dataType">String</Property>
+    </PropertyDef>
+    <PropertyDef name="type">
+      <Property name="dataType">String</Property>
+    </PropertyDef>
+    <PropertyDef name="parentId">
+      <Property name="dataType">String</Property>
+    </PropertyDef>
+  </DataType>
+  <DataType name="$dataTypeRoleMember">
+    <Property name="creationType">com.bstek.bdf2.core.model.RoleMember</Property>
+    <PropertyDef name="id">
+      <Property name="dataType">String</Property>
+    </PropertyDef>
+    <PropertyDef name="username">
+      <Property name="dataType">String</Property>
+    </PropertyDef>
+    <PropertyDef name="positionId">
+      <Property name="dataType">String</Property>
+    </PropertyDef>
+    <PropertyDef name="deptId">
+      <Property name="dataType">String</Property>
+    </PropertyDef>
+    <PropertyDef name="granted">
+      <Property name="dataType">boolean</Property>
+      <Property name="label">是否授权</Property>
+      <Property name="mapping">
+        <Property name="mapValues">
+          <Collection>
+            <Entity>
+              <Property name="key">true</Property>
+              <Property name="value">授权</Property>
+            </Entity>
+            <Entity>
+              <Property name="key">false</Property>
+              <Property name="value">不授权</Property>
+            </Entity>
+          </Collection>
+        </Property>
+      </Property>
+    </PropertyDef>
+  </DataType>
+  <DataType name="$dataTypeUrl">
+    <Property name="creationType">com.bstek.bdf2.core.model.Url</Property>
+    <PropertyDef name="id">
+      <Property name="dataType">String</Property>
+    </PropertyDef>
+    <PropertyDef name="name">
+      <Property name="dataType">String</Property>
+      <Property name="label">名称</Property>
+      <Property name="required">true</Property>
+      <Validator type="length">
+        <Property name="minLength">2</Property>
+        <Property name="maxLength">60</Property>
+      </Validator>
+    </PropertyDef>
+    <PropertyDef name="desc">
+      <Property name="dataType">String</Property>
+      <Property name="label">描述</Property>
+    </PropertyDef>
+    <PropertyDef name="forNavigation">
+      <Property name="dataType">boolean</Property>
+      <Property name="label">是否用于导航</Property>
+      <Property name="mapping">
+        <Property name="mapValues">
+          <Collection>
+            <Entity>
+              <Property name="key">true</Property>
+              <Property name="value">是</Property>
+            </Entity>
+            <Entity>
+              <Property name="key">false</Property>
+              <Property name="value">否</Property>
+            </Entity>
+          </Collection>
+        </Property>
+      </Property>
+      <Property name="defaultValue">true</Property>
+    </PropertyDef>
+    <PropertyDef name="companyId">
+      <Property name="dataType">String</Property>
+    </PropertyDef>
+    <PropertyDef name="url">
+      <Property name="dataType">String</Property>
+      <Property name="label">URL</Property>
+    </PropertyDef>
+    <PropertyDef name="icon">
+      <Property name="dataType">String</Property>
+      <Property name="label">图标</Property>
+    </PropertyDef>
+    <PropertyDef name="parentId">
+      <Property name="dataType">String</Property>
+    </PropertyDef>
+    <PropertyDef name="order">
+      <Property name="dataType">int</Property>
+    </PropertyDef>
+  </DataType>
+  <DataType name="dataTypeUserDept">
+    <Property name="creationType">com.bstek.bdf2.core.model.UserDept</Property>
+    <PropertyDef name="id">
+      <Property name="dataType">String</Property>
+    </PropertyDef>
+    <PropertyDef name="username">
+      <Property name="dataType">String</Property>
+    </PropertyDef>
+    <PropertyDef name="deptId">
+      <Property name="dataType">String</Property>
+    </PropertyDef>
+  </DataType>
+  <DataType name="$dataTypeUserPosition">
+    <Property name="creationType">com.bstek.bdf2.core.model.UserPosition</Property>
+    <PropertyDef name="id">
+      <Property name="dataType">String</Property>
+    </PropertyDef>
+    <PropertyDef name="username">
+      <Property name="dataType">String</Property>
+    </PropertyDef>
+    <PropertyDef name="positionId">
+      <Property name="dataType">String</Property>
+    </PropertyDef>
+  </DataType>
+  <DataType name="$dataTypeMessage">
+    <Property name="matchType">com.bstek.bdf2.core.model.Message</Property>
+    <Property name="creationType">com.bstek.bdf2.core.model.Message</Property>
+    <PropertyDef name="id">
+      <Property name="dataType">String</Property>
+    </PropertyDef>
+    <PropertyDef name="title">
+      <Property name="dataType">String</Property>
+      <Property name="label">标题</Property>
+      <Property name="required">true</Property>
+      <Validator type="length">
+        <Property name="minLength">2</Property>
+        <Property name="maxLength">60</Property>
+      </Validator>
+    </PropertyDef>
+    <PropertyDef name="content">
+      <Property name="dataType">String</Property>
+      <Property name="label">内容</Property>
+      <Property name="required">true</Property>
+      <Validator type="length">
+        <Property name="minLength">2</Property>
+        <Property name="maxLength">1000</Property>
+      </Validator>
+    </PropertyDef>
+    <PropertyDef name="sendDate">
+      <Property name="dataType">Date</Property>
+      <Property name="label">发送时间</Property>
+    </PropertyDef>
+    <PropertyDef name="sender">
+      <Property name="dataType">String</Property>
+      <Property name="label">发送人</Property>
+    </PropertyDef>
+    <PropertyDef name="receiver">
+      <Property name="dataType">String</Property>
+      <Property name="label">接收人</Property>
+      <Property name="required">true</Property>
+    </PropertyDef>
+    <PropertyDef name="read">
+      <Property name="dataType">boolean</Property>
+      <Property name="label">是否已读</Property>
+    </PropertyDef>
+    <PropertyDef name="reply">
+      <Property name="dataType">boolean</Property>
+      <Property name="label">是否为回复消息</Property>
+    </PropertyDef>
+    <PropertyDef name="tags">
+      <Property name="dataType">String</Property>
+    </PropertyDef>
+  </DataType>
+</Model>

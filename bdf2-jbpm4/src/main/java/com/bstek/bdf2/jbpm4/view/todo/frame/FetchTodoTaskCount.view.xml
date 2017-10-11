@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ViewConfig>
+  <Arguments/>
+  <Context/>
+  <Model/>
+  <View>
+    <AjaxAction id="$ajaxActionFetchTodoTaskCount">
+      <ClientEvent name="onReady">self.todoTaskCount=0;&#xD;
+var tip;&#xD;
+&#xD;
+function desktopNotice() {&#xD;
+	if (window.webkitNotifications &amp;&amp; window.webkitNotifications.checkPermission()==0){&#xD;
+		window.webkitNotifications.createNotification(&#xD;
+        'icon.png', 'Notification Title', 'Notification content...');	&#xD;
+	}&#xD;
+}&#xD;
+&#xD;
+function doFetchTodoTaskCount(){&#xD;
+	var action=view.id(&quot;$ajaxActionFetchTodoTaskCount&quot;);&#xD;
+	action.execute(function(result){&#xD;
+			var personal=parseInt(result.personal);&#xD;
+			var group=parseInt(result.group);&#xD;
+			var info=&quot;&quot;;&#xD;
+			if(personal>0){&#xD;
+				info=&quot;有&quot;+personal+&quot;条直接分配给您的待办任务,&quot;;&#xD;
+			}&#xD;
+			if(group>0){&#xD;
+				info+=&quot;您有&quot;+group+&quot;条与多个用户共享的待办任务,&quot;;&#xD;
+			}&#xD;
+			info+=&quot;点击查看&quot;;&#xD;
+			if(group>0 || personal>0){&#xD;
+				if(tip){&#xD;
+					tip.set(&quot;text&quot;,info);&#xD;
+				}else{&#xD;
+					var url=&quot;${configure.getString(&quot;bdf2.jbpm4.listTodoTaskUrl&quot;)}&quot;;&#xD;
+					tip=dorado.widget.NotifyTipManager.notify({&#xD;
+						text:info,&#xD;
+						caption:&quot;待办任务提醒&quot;,&#xD;
+						autoHide:false,&#xD;
+						style:{cursor:&quot;pointer&quot;},&#xD;
+						onClick:function(){&#xD;
+							window.openUrlInFrameTab(url,&quot;待办任务&quot;,&quot;url(skin>common/icons.gif) -160px -40px&quot;);&#xD;
+						}&#xD;
+					});&#xD;
+				}&#xD;
+				if(!tip.get(&quot;visible&quot;)){&#xD;
+					tip.set(&quot;visible&quot;,true);&#xD;
+				}&#xD;
+			}else{&#xD;
+				if(tip &amp;&amp; tip.get(&quot;visible&quot;)){&#xD;
+					tip.set(&quot;visible&quot;,false);					&#xD;
+				}&#xD;
+			}&#xD;
+		});&#xD;
+}&#xD;
+&#xD;
+self.fetchTodoTaskCount=function(){&#xD;
+	self.intervalHandler=setInterval(doFetchTodoTaskCount,parseInt(&quot;${configure.getString(&quot;bdf2.fetchInternalTodoTaskCountInterval&quot;)}&quot;));&#xD;
+	self.set(&quot;onDestroy&quot;,function(){&#xD;
+		if(self.intervalHandler){&#xD;
+			window.clearInterval(self.intervalHandler);&#xD;
+		}&#xD;
+	});&#xD;
+};&#xD;
+self.fetchTodoTaskCount();&#xD;
+doFetchTodoTaskCount();&#xD;
+</ClientEvent>
+      <ClientEvent name="onFailure">if(self.intervalHandler){&#xD;
+	window.clearInterval(self.intervalHandler);&#xD;
+}</ClientEvent>
+      <Property name="service">bdf2.jbpm4.todoTask#loadTodoTaskCount</Property>
+    </AjaxAction>
+  </View>
+</ViewConfig>

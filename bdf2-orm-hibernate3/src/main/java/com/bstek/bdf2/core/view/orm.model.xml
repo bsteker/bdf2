@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Model>
+  <DataType name="$dataTypeMessageTemplate">
+    <Property name="creationType">com.bstek.bdf2.core.model.MessageTemplate</Property>
+    <PropertyDef name="id">
+      <Property name="dataType">String</Property>
+    </PropertyDef>
+    <PropertyDef name="name">
+      <Property name="dataType">String</Property>
+      <Property name="label">模版名称</Property>
+    </PropertyDef>
+    <PropertyDef name="type">
+      <Property name="dataType">String</Property>
+      <Property name="label">类型</Property>
+    </PropertyDef>
+    <PropertyDef name="companyId">
+      <Property name="dataType">String</Property>
+    </PropertyDef>
+    <PropertyDef name="content">
+      <Property name="dataType">String</Property>
+      <Property name="label">内容</Property>
+    </PropertyDef>
+  </DataType>
+</Model>

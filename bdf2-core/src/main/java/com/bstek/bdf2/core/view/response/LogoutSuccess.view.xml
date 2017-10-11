@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ViewConfig>
+  <Arguments/>
+  <Context/>
+  <Model/>
+  <View>
+    <HtmlContainer layout="padding:10">
+      <Property name="content">成功退出系统，点击&lt;a href=&quot;${request.getContextPath()}${configure.getString(&quot;bdf2.formLoginUrl&quot;)}&quot; target=&quot;_top&quot;>此处&lt;/a>重新登录</Property>
+      <Property name="style">
+        <Property name="font-size">12pt</Property>
+        <Property name="margin">10px</Property>
+      </Property>
+    </HtmlContainer>
+  </View>
+</ViewConfig>

@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ViewConfig template="bdf2.core.view.frame.main.MainFrameTemplate">
+  <Arguments/>
+  <Context/>
+  <Model/>
+  <View>
+    <ClientEvent name="onReady">var nodeCache = $map(),&#xD;
+expanded = &quot;${configure.getBoolean(&quot;bdf2.mainFrameMenuExpanded&quot;)}&quot;,&#xD;
+dataSetChildUrl = view.id(&quot;dataSetChildUrl&quot;),&#xD;
+dataSetUrl = view.id(&quot;dataSetUrl&quot;)&#xD;
+treeUrl = view.id(&quot;treeUrl&quot;),&#xD;
+toolbar = view.id(&quot;toolBarNav&quot;),&#xD;
+toolbarCache = [];&#xD;
+&#xD;
+treeUrl.set(&quot;onDataRowClick&quot;, function(self, arg){&#xD;
+	var node = self.get(&quot;currentNode&quot;);&#xD;
+	var data = node.get(&quot;userData&quot;);&#xD;
+	if(data.get(&quot;url&quot;)){&#xD;
+		window.openUrlInFrameTab(data.get(&quot;url&quot;), data.get(&quot;name&quot;), data.get(&quot;icon&quot;));&#xD;
+	}&#xD;
+});&#xD;
+&#xD;
+treeUrl.set(&quot;onDataRowDoubleClick&quot;,function(self, arg){&#xD;
+	var node = self.get(&quot;currentNode&quot;);&#xD;
+	var data = node.get(&quot;userData&quot;);&#xD;
+	if(data.get(&quot;url&quot;)){&#xD;
+		window.openUrlInFrameTab(data.get(&quot;url&quot;), data.get(&quot;name&quot;), data.get(&quot;icon&quot;),true);&#xD;
+	}&#xD;
+});&#xD;
+&#xD;
+dataSetUrl.flushAsync(function(){&#xD;
+	var data=dataSetUrl.getData();&#xD;
+	if(!data){&#xD;
+		return;&#xD;
+	}&#xD;
+	var count = 0;&#xD;
+	data.each(function(item){&#xD;
+		var button = new dorado.widget.toolbar.Button({toggleable:true});&#xD;
+		button.set(&quot;caption&quot;, item.get(&quot;name&quot;));&#xD;
+		if(item.get(&quot;desc&quot;)){&#xD;
+			button.set(&quot;tip&quot;, item.get(&quot;desc&quot;));&#xD;
+		}&#xD;
+		if(item.get(&quot;icon&quot;)){&#xD;
+			button.set(&quot;icon&quot;, item.get(&quot;icon&quot;));&#xD;
+		}&#xD;
+		var id = item.get(&quot;id&quot;);&#xD;
+		button.set(&quot;userData&quot;, id);&#xD;
+		button.set(&quot;onClick&quot;, function(self, arg){&#xD;
+			toolbarCache.each(function(b){&#xD;
+				b.set(&quot;toggled&quot;, false);			&#xD;
+			});&#xD;
+			self.set(&quot;toggled&quot;, true);&#xD;
+			if (treeUrl.get(&quot;nodes&quot;)) clearNodeDom(treeUrl.get(&quot;nodes&quot;));&#xD;
+			treeUrl.set(&quot;nodes&quot;, nodeCache.get(self.get(&quot;userData&quot;)));&#xD;
+		});&#xD;
+		toolbar.addItem(button);&#xD;
+		toolbarCache.push(button);&#xD;
+		buildNodeCache(id);&#xD;
+		if(count == 0){&#xD;
+			button.set(&quot;toggled&quot;, true);&#xD;
+			treeUrl.set(&quot;nodes&quot;, nodeCache.get(id));&#xD;
+		}&#xD;
+		count++;	&#xD;
+ 	});&#xD;
+});&#xD;
+&#xD;
+function buildNodeCache(id){&#xD;
+	dataSetChildUrl.set(&quot;parameter&quot;, {parent:id});&#xD;
+	dataSetChildUrl.flush();&#xD;
+	var cdata=dataSetChildUrl.getData();&#xD;
+	if(!cdata){&#xD;
+		return;&#xD;
+	}&#xD;
+	var nodes=[];&#xD;
+	cdata.each(function(child){&#xD;
+		buildTreeNode(nodes, null, child);&#xD;
+	});	&#xD;
+	nodeCache.put(id,nodes);&#xD;
+}&#xD;
+&#xD;
+function clearNodeDom(nodes){&#xD;
+	nodes.each(function(node){&#xD;
+		delete node._dom;&#xD;
+		if (node.get(&quot;nodes&quot;)){&#xD;
+			clearNodeDom(node.get(&quot;nodes&quot;));&#xD;
+		}&#xD;
+	});	&#xD;
+}&#xD;
+function buildTreeNode(nodes,parentNode,url){&#xD;
+	var node = new dorado.widget.tree.Node();&#xD;
+	if(expanded==&quot;true&quot;){&#xD;
+		node.set(&quot;expanded&quot;,true);&#xD;
+	}&#xD;
+	node.set(&quot;label&quot;, url.get(&quot;name&quot;));&#xD;
+	node.expand();&#xD;
+	if(url.get(&quot;desc&quot;)){&#xD;
+		node.set(&quot;tip&quot;,url.get(&quot;desc&quot;));&#xD;
+	}&#xD;
+	if(url.get(&quot;icon&quot;)){&#xD;
+		node.set(&quot;icon&quot;,url.get(&quot;icon&quot;));&#xD;
+	}&#xD;
+	node.set(&quot;userData&quot;,url);&#xD;
+	if(!parentNode){&#xD;
+		nodes.push(node);&#xD;
+	}else{		&#xD;
+		parentNode.addNode(node);&#xD;
+	}&#xD;
+	var children=url.get(&quot;children&quot;);&#xD;
+	if(!children){&#xD;
+		return;&#xD;
+	}&#xD;
+	children.each(function(child){&#xD;
+		buildTreeNode(nodes,node,child);&#xD;
+	});	&#xD;
+}</ClientEvent>
+    <Property name="packages">tree</Property>
+    <GroupStart id="workspace"/>
+    <DataSet id="dataSetUrl">
+      <Property name="dataProvider">bdf2.mainFrame#loadMeunUrls</Property>
+      <Property name="dataType">[dataTypeUrl]</Property>
+      <Property name="loadMode">manual</Property>
+    </DataSet>
+    <DataSet id="dataSetChildUrl">
+      <Property name="dataProvider">bdf2.mainFrame#loadContainChildMeunUrls</Property>
+      <Property name="dataType">[dataTypeUrl]</Property>
+      <Property name="loadMode">manual</Property>
+    </DataSet>
+    <ToolBar id="toolBarNav" layoutConstraint="top"/>
+    <SplitPanel layoutConstraint="center">
+      <Property name="position">200</Property>
+      <MainControl>
+        <Panel id="panelWorkarea">
+          <Property name="border">none</Property>
+          <Property name="maximizeable">true</Property>
+          <Buttons/>
+          <Children>
+            <TabControl id="tabControlWorkarea">
+              <ClientEvent name="onTabContextMenu">view.id(&quot;menuForTab&quot;).show({&#xD;
+	position:{&#xD;
+		left:arg.event.pageX,&#xD;
+		top:arg.event.pageY&#xD;
+	}&#xD;
+});&#xD;
+</ClientEvent>
+              <Property name="showMenuButton">true</Property>
+            </TabControl>
+          </Children>
+          <Tools/>
+        </Panel>
+      </MainControl>
+      <SideControl>
+        <Container>
+          <Tree id="treeUrl">
+            <Property name="expandingAnimated">false</Property>
+            <Property name="expandingMode">sync</Property>
+          </Tree>
+        </Container>
+      </SideControl>
+    </SplitPanel>
+    <GroupEnd/>
+  </View>
+</ViewConfig>

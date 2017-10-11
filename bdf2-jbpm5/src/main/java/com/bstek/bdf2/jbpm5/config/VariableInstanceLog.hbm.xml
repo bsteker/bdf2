@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping package="org.jbpm.process.audit">
+
+    <!-- access="field" for fields that have no setter methods -->
+    <class name="VariableInstanceLog" table="JBPM5_VARIABLE_INSTANCE_LOG">
+    
+        <id name="id" type="long" column="ID_">
+            <generator class="native" />
+        </id>
+        <property name="processInstanceId" column="PROCESS_INSTANCE_ID_" type="long" access="field" />
+        <property name="processId" column="PROCESS_ID_" type="string" length="100" access="field" />
+        <property name="variableInstanceId" column="VARIABLE_INSTANCE_ID_" type="string" length="100" access="field" />
+        <property name="variableId" column="VARIABLE_ID_" type="string" length="100" access="field" />
+        <property name="value" column="VALUE_" type="string" access="field" />
+        <property name="date" column="DATE_" type="timestamp" access="field" />
+    </class>
+
+</hibernate-mapping>

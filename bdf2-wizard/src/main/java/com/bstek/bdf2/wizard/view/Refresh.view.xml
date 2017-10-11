@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ViewConfig>
+  <Arguments/>
+  <Context/>
+  <Model/>
+  <View>
+    <Property name="title">刷新缓存</Property>
+    <Property name="packages">font-awesome</Property>
+    <Button>
+      <Property name="action">ajaxActionRefresh</Property>
+      <Property name="caption">刷新版本缓存</Property>
+      <Property name="iconClass">fa fa-refresh</Property>
+    </Button>
+    <AjaxAction id="ajaxActionRefresh">
+      <ClientEvent name="onSuccess">location.href=&quot;view.Wizard.d&quot;;&#xD;
+</ClientEvent>
+      <Property name="service">bdf2.wizard.refreshMaintain#refresh</Property>
+      <Property name="successMessage">刷新缓存成功！</Property>
+      <Property name="executingMessage">正在刷新缓存..</Property>
+    </AjaxAction>
+  </View>
+</ViewConfig>

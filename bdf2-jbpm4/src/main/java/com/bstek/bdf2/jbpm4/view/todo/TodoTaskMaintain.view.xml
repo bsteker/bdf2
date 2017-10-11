@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ViewConfig>
+  <Arguments/>
+  <Context/>
+  <Model>
+    <DataType name="dataTypeTodoTask">
+      <Property name="creationType">com.bstek.bdf2.jbpm4.model.TodoTask</Property>
+      <PropertyDef name="id">
+        <Property name="dataType">String</Property>
+      </PropertyDef>
+      <PropertyDef name="name">
+        <Property name="dataType">String</Property>
+        <Property name="label">任务名称</Property>
+      </PropertyDef>
+      <PropertyDef name="desc">
+        <Property name="dataType">String</Property>
+        <Property name="label">描述</Property>
+      </PropertyDef>
+      <PropertyDef name="createDate">
+        <Property name="dataType">Date</Property>
+        <Property name="label">创建日期</Property>
+        <Property name="displayFormat">Y-m-d H:i:s</Property>
+      </PropertyDef>
+      <PropertyDef name="principal">
+        <Property name="dataType">String</Property>
+      </PropertyDef>
+      <PropertyDef name="executionId">
+        <Property name="dataType">String</Property>
+      </PropertyDef>
+      <PropertyDef name="url">
+        <Property name="dataType">String</Property>
+      </PropertyDef>
+      <PropertyDef name="businessId">
+        <Property name="dataType">String</Property>
+      </PropertyDef>
+    </DataType>
+  </Model>
+  <View>
+    <Dialog id="dialogProcessImage">
+      <Property name="center">true</Property>
+      <Property name="modal">true</Property>
+      <Property name="width">666</Property>
+      <Property name="height">500</Property>
+      <Property name="maximizeable">true</Property>
+      <Buttons/>
+      <Children>
+        <Jbpm4ProcessImage id="jbpm4ProcessImage"/>
+      </Children>
+      <Tools/>
+    </Dialog>
+    <Dialog id="dialogDoTask">
+      <Property name="center">true</Property>
+      <Property name="modal">true</Property>
+      <Property name="width">700</Property>
+      <Property name="height">555</Property>
+      <Property name="maximizeable">true</Property>
+      <Property name="maximized">true</Property>
+      <Buttons/>
+      <Children>
+        <IFrame id="iFrame"/>
+      </Children>
+      <Tools/>
+    </Dialog>
+    <DataSet id="dataSetGroupTodoTask">
+      <ClientEvent name="onDataLoad">var count=self.get(&quot;data&quot;).entityCount;&#xD;
+if(count>0){&#xD;
+	view.tag(&quot;groupTab&quot;).set(&quot;visible&quot;,true);&#xD;
+}else{&#xD;
+	view.tag(&quot;groupTab&quot;).set(&quot;visible&quot;,false);&#xD;
+}</ClientEvent>
+      <Property name="dataType">[dataTypeTodoTask]</Property>
+      <Property name="pageSize">20</Property>
+      <Property name="dataProvider">bdf2.jbpm4.todoTask#loadGroupTodoTasks</Property>
+      <Property name="loadMode">onReady</Property>
+    </DataSet>
+    <DataSet id="dataSetPersonalTodoTask">
+      <ClientEvent name="onDataLoad">var count=self.get(&quot;data&quot;).entityCount;&#xD;
+if(count>0){&#xD;
+	view.tag(&quot;personalTab&quot;).set(&quot;visible&quot;,true);&#xD;
+}else{&#xD;
+	view.tag(&quot;personalTab&quot;).set(&quot;visible&quot;,false);&#xD;
+}</ClientEvent>
+      <Property name="dataType">[dataTypeTodoTask]</Property>
+      <Property name="pageSize">20</Property>
+      <Property name="dataProvider">bdf2.jbpm4.todoTask#loadPersonalTodoTasks</Property>
+      <Property name="loadMode">onReady</Property>
+    </DataSet>
+    <TabControl>
+      <ControlTab>
+        <Property name="caption">直接分给我的任务</Property>
+        <Property name="icon">url(skin>common/icons.gif) -220px 0px</Property>
+        <Property name="tags">personalTab</Property>
+        <Container>
+          <ToolBar>
+            <DataPilot>
+              <Property name="dataSet">dataSetPersonalTodoTask</Property>
+              <Property name="itemCodes">pages</Property>
+            </DataPilot>
+            <ToolBarButton>
+              <ClientEvent name="onClick">var data=view.id(&quot;dataSetPersonalTodoTask&quot;).getData(&quot;#&quot;);&#xD;
+if(data){&#xD;
+	var taskId=data.get(&quot;id&quot;);&#xD;
+	var businessId=data.get(&quot;businessId&quot;);&#xD;
+	var executionId=data.get(&quot;executionId&quot;);&#xD;
+	var url=data.get(&quot;url&quot;);&#xD;
+	if(!url){&#xD;
+		dorado.MessageBox.alert(&quot;任务[&quot;+data.get(&quot;name&quot;)+&quot;]上没有定义URL!&quot;);&#xD;
+		return;&#xD;
+	}&#xD;
+	url+=&quot;?businessId=&quot;+businessId+&quot;&amp;taskId=&quot;+taskId+&quot;&amp;executionId=&quot;+executionId;&#xD;
+	view.id(&quot;iFrame&quot;).set(&quot;path&quot;,url);&#xD;
+	view.id(&quot;dialogDoTask&quot;).show();&#xD;
+}else{&#xD;
+	dorado.MessageBox.alert(&quot;当前没有待办任务!&quot;);&#xD;
+}</ClientEvent>
+              <Property name="caption">处理该任务</Property>
+              <Property name="icon">url(skin>common/icons.gif) -60px -20px</Property>
+            </ToolBarButton>
+            <ToolBarButton>
+              <ClientEvent name="onClick">var data=view.id(&quot;dataSetPersonalTodoTask&quot;).getData(&quot;#&quot;);&#xD;
+if(data){&#xD;
+	var taskId=data.get(&quot;id&quot;);&#xD;
+	view.id(&quot;jbpm4ProcessImage&quot;).set(&quot;taskId&quot;,taskId);&#xD;
+	var dialog=view.id(&quot;dialogProcessImage&quot;);&#xD;
+	dialog.set(&quot;caption&quot;,&quot;任务[&quot;+data.get(&quot;name&quot;)+&quot;]在流程中的状态&quot;);&#xD;
+	dialog.show();&#xD;
+}else{&#xD;
+	dorado.MessageBox.alert(&quot;当前没有待办任务!&quot;);&#xD;
+}</ClientEvent>
+              <Property name="caption">查看流程图</Property>
+              <Property name="icon">url(skin>common/icons.gif) -280px -40px</Property>
+            </ToolBarButton>
+          </ToolBar>
+          <DataGrid>
+            <Property name="dataSet">dataSetPersonalTodoTask</Property>
+            <Property name="readOnly">true</Property>
+            <DataColumn name="name">
+              <Property name="property">name</Property>
+            </DataColumn>
+            <DataColumn name="desc">
+              <Property name="property">desc</Property>
+            </DataColumn>
+            <DataColumn name="createDate">
+              <Property name="property">createDate</Property>
+            </DataColumn>
+          </DataGrid>
+        </Container>
+      </ControlTab>
+      <ControlTab>
+        <Property name="caption">与多个用户共享的任务</Property>
+        <Property name="icon">url(skin>common/icons.gif) -240px 0px</Property>
+        <Property name="tags">groupTab</Property>
+        <Container>
+          <ToolBar>
+            <DataPilot>
+              <Property name="dataSet">dataSetGroupTodoTask</Property>
+              <Property name="itemCodes">pages</Property>
+            </DataPilot>
+            <ToolBarButton>
+              <ClientEvent name="onClick">var data=view.id(&quot;dataSetGroupTodoTask&quot;).getData(&quot;#&quot;);&#xD;
+if(data){&#xD;
+	var taskId=data.get(&quot;id&quot;);&#xD;
+	var businessId=data.get(&quot;businessId&quot;);&#xD;
+	var executionId=data.get(&quot;executionId&quot;);&#xD;
+	var url=data.get(&quot;url&quot;);&#xD;
+	if(!url){&#xD;
+		dorado.MessageBox.alert(&quot;任务[&quot;+data.get(&quot;name&quot;)+&quot;]上没有定义URL!&quot;);&#xD;
+		return;&#xD;
+	}&#xD;
+	url+=&quot;?businessId=&quot;+businessId+&quot;&amp;taskId=&quot;+taskId+&quot;&amp;executionId=&quot;+executionId;&#xD;
+	view.id(&quot;iFrame&quot;).set(&quot;path&quot;,url);&#xD;
+	view.id(&quot;dialogDoTask&quot;).show();&#xD;
+}else{&#xD;
+	dorado.MessageBox.alert(&quot;当前没有待办任务!&quot;);&#xD;
+}</ClientEvent>
+              <Property name="caption">处理该任务</Property>
+              <Property name="icon">url(skin>common/icons.gif) -60px -20px</Property>
+            </ToolBarButton>
+            <ToolBarButton>
+              <ClientEvent name="onClick">var data=view.id(&quot;dataSetGroupTodoTask&quot;).getData(&quot;#&quot;);&#xD;
+if(data){&#xD;
+	var taskId=data.get(&quot;id&quot;);&#xD;
+	view.id(&quot;jbpm4ProcessImage&quot;).set(&quot;taskId&quot;,taskId);&#xD;
+	var dialog=view.id(&quot;dialogProcessImage&quot;);&#xD;
+	dialog.set(&quot;caption&quot;,&quot;任务[&quot;+data.get(&quot;name&quot;)+&quot;]在流程中的状态&quot;);&#xD;
+	dialog.show();&#xD;
+}else{&#xD;
+	dorado.MessageBox.alert(&quot;当前没有待办任务!&quot;);&#xD;
+}</ClientEvent>
+              <Property name="caption">查看流程图</Property>
+              <Property name="icon">url(skin>common/icons.gif) -280px -40px</Property>
+            </ToolBarButton>
+          </ToolBar>
+          <DataGrid>
+            <Property name="dataSet">dataSetGroupTodoTask</Property>
+            <Property name="readOnly">true</Property>
+            <DataColumn name="name">
+              <Property name="property">name</Property>
+            </DataColumn>
+            <DataColumn name="desc">
+              <Property name="property">desc</Property>
+            </DataColumn>
+            <DataColumn name="createDate">
+              <Property name="property">createDate</Property>
+            </DataColumn>
+          </DataGrid>
+        </Container>
+      </ControlTab>
+    </TabControl>
+  </View>
+</ViewConfig>

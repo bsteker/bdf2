@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ViewConfig>
+  <Arguments/>
+  <Context/>
+  <Model>
+    <DataType name="dataTypeTest">
+      <PropertyDef name="p1"/>
+      <PropertyDef name="propertyDef2"/>
+      <PropertyDef name="propertyDef3"/>
+    </DataType>
+    <DataType name="aa" parent="$dataTypeComponentInfo">
+      <PropertyDef name="aa"/>
+      <PropertyDef name="bb"/>
+    </DataType>
+  </Model>
+  <View>
+    <Container>
+      <Button id="button2"/>
+    </Container>
+    <Button id="button1"/>
+    <AutoForm id="autoForm1">
+      <Property name="dataSet">dataSet1</Property>
+      <AutoFormElement>
+        <Property name="name">aa</Property>
+        <Property name="property">aa</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement>
+        <Property name="name">bb</Property>
+        <Property name="property">bb</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement>
+        <Property name="name">id</Property>
+        <Property name="property">id</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement>
+        <Property name="name">assignTargetId</Property>
+        <Property name="property">assignTargetId</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement>
+        <Property name="name">type</Property>
+        <Property name="property">type</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement>
+        <Property name="name">controlId</Property>
+        <Property name="property">controlId</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement>
+        <Property name="name">url</Property>
+        <Property name="property">url</Property>
+        <Editor/>
+      </AutoFormElement>
+    </AutoForm>
+    <DataGrid id="dataGrid1">
+      <DataColumn>
+        <Property name="name">c1</Property>
+        <Editor/>
+      </DataColumn>
+      <DataColumn>
+        <Property name="property">c2</Property>
+        <Editor/>
+      </DataColumn>
+      <DataColumn>
+        <Property name="property">c3</Property>
+        <Editor/>
+      </DataColumn>
+    </DataGrid>
+    <DataSet id="dataSet1">
+      <Property name="dataType">[aa]</Property>
+    </DataSet>
+  </View>
+</ViewConfig>

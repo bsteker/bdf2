@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd
+	">
+	<context:component-scan base-package="com.bstek.bdf2.core.view.*"></context:component-scan>
+	
+	<bean id="bdf2.globalMethodInterceptor" class="com.bstek.bdf2.core.aop.GlobalMethodInterceptor"></bean>
+	
+	<bean class="com.bstek.bdf2.core.aop.SpringBeanNameAutoProxyCreator">
+		<property name="proxyTargetClass" value="true"></property>
+		<property name="order" value="100"></property>
+		<property name="beanNames" value="${bdf2.globalMethodIntercetporBeanNamesPattern}" />
+		<property name="interceptorNames">
+			<list>
+				<value>bdf2.globalMethodInterceptor</value>
+			</list>
+		</property>
+	</bean>
+	<bean id="bdf2.refreshCacheRegister" class="com.bstek.bdf2.core.cache.RefreshCacheRegister"></bean>
+	
+	<bean class="com.bstek.bdf2.core.aop.RefreshCacheMethodInterceptor">
+    	<property name="refreshMethodInterceptors" value="${bdf2.cache.refreshMethodInterceptor}"></property>
+    	<property name="apps" value="${bdf2.cache.appList}"></property>
+    </bean>
+	
+	<bean id="bdf2.applicationCache" class="com.bstek.bdf2.core.cache.ApplicationCacheImpl" depends-on="bdf2.contextHolder">
+		<property name="terracottaServer" value="${bdf2.terracottaServer}"></property>
+	</bean>
+	<bean id="bdf2.emailSender" class="com.bstek.bdf2.core.message.EmailSender">
+		<property name="smtpHost" value="${bdf2.smtpHost}"></property>
+		<property name="smtpPort" value="${bdf2.smtpPort}"></property>
+		<property name="smtpUser" value="${bdf2.smtpUser}"></property>
+		<property name="smtpPassword" value="${bdf2.smtpPassword}"></property>
+		<property name="smtpIsAuth" value="${bdf2.smtpIsAuth}"></property>
+		<property name="defaultSenderEmailAddress" value="${bdf2.defaultSenderEmailAddress}"></property>
+	</bean>
+	
+	<bean class="com.bstek.bdf2.core.orm.jpa.JpaEntityManagerRepository"></bean>
+
+	<bean class="com.bstek.bdf2.core.message.impl.EmailMessageSender">
+		<property name="diableEmailMessageSender" value="${bdf2.diableEmailMessageSender}"></property>
+		<property name="emailSender" ref="bdf2.emailSender"></property>
+	</bean>
+	<bean  id="bdf2.internalMessageSender" class="com.bstek.bdf2.core.message.impl.InternalMessageSender">
+		<property name="diableInternalMessageSender" value="${bdf2.diableInternalMessageSender}"></property>
+	</bean>
+	
+	<bean id="bdf2.viewManagerHelper" class="com.bstek.bdf2.core.view.ViewManagerHelper">
+		<property name="viewConfigManager" ref="dorado.viewConfigManager"/>
+		<property name="dataProviderManager" ref="dorado.dataProviderManager"/>
+	</bean>
+	
+	<bean parent="dorado.dataConfigLoader">
+		<property name="configLocation"
+			value="classpath:com/bstek/bdf2/core/view/orm.model.xml" />
+	</bean>
+	
+	<bean id="bdf2.messageTemplateService" class="com.bstek.bdf2.core.service.impl.MessageTemplateServiceImpl"></bean>
+	
+	<bean class="com.bstek.bdf2.core.orm.hibernate.HibernateSessionFactoryRepository"></bean>
+	<bean id="bdf2.sessionFactory" class="com.bstek.bdf2.core.orm.hibernate.HibernateSessionFactory" abstract="true"/>
+	<bean id="bdf2.dataSourceRegister" class="com.bstek.bdf2.core.orm.DataSourceRegister" abstract="true"/>
+	<bean id="bdf2.dataSourceRepository" class="com.bstek.bdf2.core.orm.DataSourceRepository"></bean>
+	<bean id="bdf2.unByteCodeProxyInterceptor" class="com.bstek.bdf2.core.orm.hibernate.UnByteCodeProxyInterceptor"></bean>
+	<bean id="bdf2.jpaEntityManagerFactory" class="com.bstek.bdf2.core.orm.jpa.JpaEntityManagerFactory" abstract="true"></bean>
+	<bean id="bdf2.contextHolder" class="com.bstek.bdf2.core.context.ContextHolder"></bean>
+	
+	<bean class="com.bstek.bdf2.core.orm.jdbc.dialect.DB2Dialect"></bean>
+	<bean class="com.bstek.bdf2.core.orm.jdbc.dialect.H2Dialect"></bean>
+	<bean class="com.bstek.bdf2.core.orm.jdbc.dialect.HiInformixMapDialect"></bean>
+	<bean class="com.bstek.bdf2.core.orm.jdbc.dialect.InformixDialect"></bean>
+	<bean class="com.bstek.bdf2.core.orm.jdbc.dialect.HsqlDialect"></bean>
+	<bean class="com.bstek.bdf2.core.orm.jdbc.dialect.MySQLDialect"></bean>
+	<bean class="com.bstek.bdf2.core.orm.jdbc.dialect.OracleDialect"></bean>
+	<bean class="com.bstek.bdf2.core.orm.jdbc.dialect.SqlLiteDialect"></bean>
+	<bean class="com.bstek.bdf2.core.orm.jdbc.dialect.SQLServer2000Dialect"></bean>
+	<bean class="com.bstek.bdf2.core.orm.jdbc.dialect.SQLServer2003Dialect"></bean>
+	<bean class="com.bstek.bdf2.core.orm.jdbc.dialect.SQLServer2005Dialect"></bean>
+	<bean class="com.bstek.bdf2.core.orm.jdbc.dialect.SQLServer2008Dialect"></bean>
+	<bean class="com.bstek.bdf2.core.orm.jdbc.dialect.SQLServer2012Dialect"></bean>
+	<bean class="com.bstek.bdf2.core.orm.jdbc.dialect.SQLServer2014Dialect"></bean>
+	<bean class="com.bstek.bdf2.core.orm.jdbc.dialect.DmDialect"></bean>
+</beans>

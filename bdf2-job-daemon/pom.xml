@@ -1,0 +1,37 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <artifactId>bdf2-job-daemon</artifactId>
+  <parent>
+  	<groupId>com.bstek.bdf2</groupId>
+  	<artifactId>bdf2-parent</artifactId>
+  	<version>2.0.5-SNAPSHOT</version>
+  </parent>
+  <version>2.0.4-SNAPSHOT</version>
+  <properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<addon.name>bdf2-job-deamon</addon.name>
+		<addon.depends>bdf2-job</addon.depends>
+		<addon.contextConfigLocations>classpath:bdf2-job-daemon-configs.xml</addon.contextConfigLocations>
+		<addon.servletContextConfigLocations>classpath:bdf2-job-daemon-servlet-context.xml</addon.servletContextConfigLocations>
+		<addon.propertiesConfigLocations>classpath:bdf2.job.daemon.properties</addon.propertiesConfigLocations>
+  </properties>
+  <dependencies>
+  	<dependency>
+  		<groupId>com.bstek.bdf2</groupId>
+  		<artifactId>bdf2-job</artifactId>
+  		<version>LATEST</version>
+  	</dependency>
+  </dependencies>
+ 	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-framework-bom</artifactId>
+				<version>4.3.0.RELEASE</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+  <description>Deploy job application for cluster environment</description>
+</project>

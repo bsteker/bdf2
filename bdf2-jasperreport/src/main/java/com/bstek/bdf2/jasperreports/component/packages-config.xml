@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+    <Packages>
+        <Package name="JasperreportsExporter" pattern="dorado-js" depends="base-widget">
+        classpath:dorado/scripts/jasprereports-exporter
+        </Package>
+    </Packages>
+</config>

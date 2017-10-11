@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ViewConfig>
+  <Arguments/>
+  <Context/>
+  <Model/>
+  <View>
+    <DataSet id="dataSetRole">
+      <Property name="dataType">[$dataTypeRole]</Property>
+      <Property name="dataProvider">bdf2.roleMaintain#loadRoles</Property>
+      <Property name="pageSize">20</Property>
+    </DataSet>
+    <ToolBar>
+      <DataPilot>
+        <ClientEvent name="onSubControlAction">var ds=view.id(&quot;dataSetRole&quot;);&#xD;
+switch(arg.code){&#xD;
+	case &quot;+&quot;:&#xD;
+		ds.insert();&#xD;
+		view.id(&quot;dialogRole&quot;).show();&#xD;
+		arg.processDefault=false;&#xD;
+		break;&#xD;
+	case &quot;-&quot;:&#xD;
+		dorado.MessageBox.confirm(&quot;真的要删除当前角色及其关联信息吗？&quot;,function(){&#xD;
+			var data=ds.getData(&quot;#&quot;);&#xD;
+			data.remove();&#xD;
+			view.id(&quot;updateActionRole&quot;).execute();		&#xD;
+		});&#xD;
+		arg.processDefault=false;&#xD;
+		break;&#xD;
+}&#xD;
+</ClientEvent>
+        <Property name="dataSet">dataSetRole</Property>
+        <Property name="itemCodes">pages,+,-</Property>
+      </DataPilot>
+      <ToolBarButton>
+        <ClientEvent name="onClick">var data=view.id(&quot;dataSetRole&quot;).getData(&quot;#&quot;);&#xD;
+if(data){&#xD;
+	view.id(&quot;dialogRole&quot;).show();&#xD;
+}else{&#xD;
+	dorado.MessageBox.alert(&quot;当前没有数据可供编辑&quot;);&#xD;
+}&#xD;
+</ClientEvent>
+        <Property name="caption">修改</Property>
+        <Property name="icon">url(skin>common/icons.gif) -200px 0px</Property>
+      </ToolBarButton>
+    </ToolBar>
+    <DataGrid>
+      <Property name="dataSet">dataSetRole</Property>
+      <Property name="readOnly">true</Property>
+      <Property name="showFilterBar">true</Property>
+      <Property name="filterMode">serverSide</Property>
+      <DataColumn name="name">
+        <Property name="property">name</Property>
+      </DataColumn>
+      <DataColumn name="desc">
+        <Property name="property">desc</Property>
+        <Property name="filterable">false</Property>
+      </DataColumn>
+    </DataGrid>
+    <Dialog id="dialogRole">
+      <Property name="center">true</Property>
+      <Property name="modal">true</Property>
+      <Property name="width">300</Property>
+      <Property name="height">220</Property>
+      <Buttons>
+        <Button>
+          <Property name="caption">确认</Property>
+          <Property name="icon">url(skin>common/icons.gif) -140px -20px</Property>
+          <Property name="action">updateActionRole</Property>
+        </Button>
+        <Button>
+          <ClientEvent name="onClick">view.id(&quot;dataSetRole&quot;).getData().cancel();&#xD;
+view.id(&quot;dialogRole&quot;).hide();&#xD;
+</ClientEvent>
+          <Property name="caption">关闭</Property>
+          <Property name="icon">url(skin>common/icons.gif) -40px 0px</Property>
+        </Button>
+      </Buttons>
+      <Children>
+        <AutoForm>
+          <Property name="cols">*</Property>
+          <Property name="dataSet">dataSetRole</Property>
+          <AutoFormElement>
+            <Property name="name">name</Property>
+            <Property name="property">name</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">desc</Property>
+            <Property name="property">desc</Property>
+            <Property name="editorType">TextArea</Property>
+            <Editor/>
+          </AutoFormElement>
+        </AutoForm>
+      </Children>
+      <Tools/>
+    </Dialog>
+    <UpdateAction id="updateActionRole">
+      <ClientEvent name="onSuccess">view.id(&quot;dialogRole&quot;).hide();&#xD;
+</ClientEvent>
+      <Property name="dataResolver">bdf2.roleMaintain#saveRoles</Property>
+      <Property name="successMessage">操作成功！</Property>
+      <UpdateItem>
+        <Property name="dataSet">dataSetRole</Property>
+      </UpdateItem>
+    </UpdateAction>
+  </View>
+</ViewConfig>

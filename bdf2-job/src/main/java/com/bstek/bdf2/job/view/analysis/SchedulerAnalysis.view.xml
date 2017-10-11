@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ViewConfig>
+  <Arguments/>
+  <Context/>
+  <Model>
+    <DataType name="dataTypeSchedulerInfo">
+      <Property name="creationType">com.bstek.bdf2.job.view.analysis.SchedulerInfo</Property>
+      <PropertyDef name="jobInstanceName">
+        <Property name="dataType">String</Property>
+        <Property name="label">当前运行调试服务的实例名</Property>
+      </PropertyDef>
+      <PropertyDef name="runJob">
+        <Property name="dataType">boolean</Property>
+      </PropertyDef>
+      <PropertyDef name="state">
+        <Property name="label">调试服务当前状态</Property>
+        <Property name="mapping">
+          <Property name="mapValues">
+            <Collection>
+              <Entity>
+                <Property name="key">standby</Property>
+                <Property name="value">待命中</Property>
+              </Entity>
+              <Entity>
+                <Property name="key">shutdown</Property>
+                <Property name="value">服务已关闭</Property>
+              </Entity>
+              <Entity>
+                <Property name="key">started</Property>
+                <Property name="value">服务运行中</Property>
+              </Entity>
+            </Collection>
+          </Property>
+          <Property name="keyProperty">key</Property>
+          <Property name="valueProperty">value</Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="jobs">
+        <Property name="dataType">[dataTypeJobInfo]</Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="dataTypeJobInfo">
+      <Property name="creationType">com.bstek.bdf2.job.view.analysis.JobInfo</Property>
+      <PropertyDef name="name">
+        <Property name="dataType">String</Property>
+        <Property name="label">Job名称</Property>
+      </PropertyDef>
+      <PropertyDef name="group">
+        <Property name="dataType">String</Property>
+        <Property name="label">所在组</Property>
+      </PropertyDef>
+      <PropertyDef name="triggerInfo">
+        <Property name="dataType">String</Property>
+        <Property name="label">触发器信息</Property>
+      </PropertyDef>
+      <PropertyDef name="calendarInfo">
+        <Property name="dataType">String</Property>
+        <Property name="label">要排除的日历信息</Property>
+      </PropertyDef>
+      <PropertyDef name="targetJobInfo">
+        <Property name="dataType">String</Property>
+        <Property name="label">目标Job类信息</Property>
+      </PropertyDef>
+      <PropertyDef name="nextFireDate">
+        <Property name="dataType">Date</Property>
+        <Property name="label">下次触发时间</Property>
+        <Property name="displayFormat">Y-m-d H:i:s</Property>
+      </PropertyDef>
+      <PropertyDef name="previousFireDate">
+        <Property name="dataType">Date</Property>
+        <Property name="label">上次触发时间</Property>
+        <Property name="displayFormat">Y-m-d H:i:s</Property>
+      </PropertyDef>
+    </DataType>
+  </Model>
+  <View>
+    <DataSet id="dataSetSchedulerInfo">
+      <Property name="dataType">dataTypeSchedulerInfo</Property>
+      <Property name="dataProvider">bdf2.schedulerAnalysis#loadScheduerInfo</Property>
+    </DataSet>
+    <Label>
+      <Property name="text">当前页面请在非集群环境下使用，如在集群环境可能看到任何信息或看到的只是集群环境当中其中一个调试服务器信息（非所有）。如一定要在集群环境下使用，请直接访问某个集群服务器实例所在地址，然后再访问该页面，而不要通过集群分发服务器访问。</Property>
+      <Property name="style">
+        <Property name="background">yellow</Property>
+        <Property name="border">solid 1px yellow</Property>
+        <Property name="padding">10px</Property>
+        <Property name="line-height">1.5</Property>
+      </Property>
+      <Property name="height">60</Property>
+    </Label>
+    <Panel>
+      <Property name="caption">调度服务器信息</Property>
+      <Buttons/>
+      <Children>
+        <AutoForm>
+          <Property name="dataSet">dataSetSchedulerInfo</Property>
+          <Property name="labelWidth">160</Property>
+          <Property name="cols">*,*,*</Property>
+          <Property name="readOnly">true</Property>
+          <Property name="labelAlign">right</Property>
+          <AutoFormElement>
+            <Property name="name">jobInstanceName</Property>
+            <Property name="property">jobInstanceName</Property>
+            <Property name="editorType">TextEditor</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">state</Property>
+            <Property name="property">state</Property>
+            <Property name="editorType">TextEditor</Property>
+            <Editor/>
+          </AutoFormElement>
+          <Button>
+            <ClientEvent name="onClick">dorado.MessageBox.confirm(&quot;要重启当前实例上的任务调度服务，将影响部分JOB的运行，您确定吗？&quot;,function(){&#xD;
+	var action=view.id(&quot;ajaxActionResetScheduler&quot;);&#xD;
+	action.execute(function(msg){&#xD;
+		if(msg){&#xD;
+			dorado.MessageBox.alert(msg);&#xD;
+		}else{&#xD;
+			dorado.MessageBox.alert(&quot;重启成功！&quot;);&#xD;
+		}&#xD;
+	});&#xD;
+});&#xD;
+</ClientEvent>
+            <Property name="caption">重启调度服务</Property>
+            <Property name="icon">url(skin>common/icons.gif) -40px -240px</Property>
+          </Button>
+        </AutoForm>
+        <AjaxAction id="ajaxActionResetScheduler">
+          <Property name="service">bdf2.schedulerAnalysis#resetScheduler</Property>
+        </AjaxAction>
+      </Children>
+      <Tools/>
+    </Panel>
+    <DataGrid>
+      <Property name="dataSet">dataSetSchedulerInfo</Property>
+      <Property name="dataPath">#.jobs</Property>
+      <Property name="readOnly">true</Property>
+      <Property name="showFilterBar">true</Property>
+      <Property name="fixedColumnCount">1</Property>
+      <DataColumn name="name">
+        <Property name="property">name</Property>
+        <Property name="width">300</Property>
+      </DataColumn>
+      <DataColumn name="group">
+        <Property name="property">group</Property>
+        <Property name="width">140</Property>
+      </DataColumn>
+      <DataColumn name="triggerInfo">
+        <Property name="property">triggerInfo</Property>
+        <Property name="width">260</Property>
+      </DataColumn>
+      <DataColumn name="targetJobInfo">
+        <Property name="property">targetJobInfo</Property>
+        <Property name="width">300</Property>
+      </DataColumn>
+      <DataColumn name="previousFireDate">
+        <Property name="property">previousFireDate</Property>
+        <Property name="width">140</Property>
+      </DataColumn>
+      <DataColumn name="nextFireDate">
+        <Property name="property">nextFireDate</Property>
+        <Property name="width">140</Property>
+      </DataColumn>
+    </DataGrid>
+  </View>
+</ViewConfig>

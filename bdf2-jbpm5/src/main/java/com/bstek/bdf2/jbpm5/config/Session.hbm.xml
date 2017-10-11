@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping package="org.drools.persistence.info">
+
+    <!-- access="field" for fields that have no setter methods -->
+    <class name="SessionInfo" table="JBPM5_SESSION">
+    
+        <id name="id" type="integer" column="ID_">
+            <generator class="native" />
+        </id>
+        
+        <version name="version" type="integer" unsaved-value="null" access="field">
+          <column name="OPT_LOCK_" not-null="false" />
+        </version>
+        
+        <property name="startDate" column="START_DATE_" type="timestamp" access="field" />
+        <property name="lastModificationDate" column="LAST_MODIFICATION_DATE_" type="timestamp" access="field" />
+        
+        <property name="rulesByteArray" column="RULES_BYTE_ARRAY_" type="org.hibernate.type.PrimitiveByteArrayBlobType" access="field" length="2147483647" />  
+        
+    </class>
+
+</hibernate-mapping>

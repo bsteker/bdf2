@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ViewConfig>
+  <Arguments/>
+  <Context/>
+  <Model>
+    <DataType name="dataTypeRole" parent="$dataTypeRole">
+      <Reference name="roleUrls">
+        <Property name="dataType">[dataTypeUrl]</Property>
+        <Property name="dataProvider">bdf2.roleUrlMaintain#loadUrls</Property>
+        <Property name="parameter">
+          <Entity>
+            <Property name="parentId"></Property>
+            <Property name="roleId">$${this.id}</Property>
+          </Entity>
+        </Property>
+      </Reference>
+    </DataType>
+    <DataType name="dataTypeUrl" parent="$dataTypeUrl">
+      <PropertyDef name="use">
+        <Property name="dataType">boolean</Property>
+      </PropertyDef>
+      <Reference name="children">
+        <Property name="dataProvider">bdf2.roleUrlMaintain#loadUrls</Property>
+        <Property name="dataType">[SELF]</Property>
+      </Reference>
+    </DataType>
+  </Model>
+  <View>
+    <DataSet id="dataSetRole">
+      <Property name="dataProvider">bdf2.roleUrlMaintain#loadRoles</Property>
+      <Property name="pageSize">20</Property>
+      <Property name="dataType">[dataTypeRole]</Property>
+    </DataSet>
+    <Container layoutConstraint="left">
+      <Property name="width">300</Property>
+      <ToolBar>
+        <DataPilot>
+          <Property name="dataSet">dataSetRole</Property>
+          <Property name="itemCodes">pages</Property>
+        </DataPilot>
+      </ToolBar>
+      <DataGrid>
+        <Property name="dataSet">dataSetRole</Property>
+        <Property name="readOnly">true</Property>
+        <Property name="showFilterBar">true</Property>
+        <Property name="filterMode">serverSide</Property>
+        <DataColumn name="name">
+          <Property name="property">name</Property>
+        </DataColumn>
+        <DataColumn name="desc">
+          <Property name="property">desc</Property>
+          <Property name="filterable">false</Property>
+        </DataColumn>
+      </DataGrid>
+    </Container>
+    <Container layoutConstraint="center">
+      <ToolBar>
+        <ToolBarButton id="buttonSave">
+          <Property name="caption">保存</Property>
+          <Property name="icon">url(skin>common/icons.gif) -140px -20px</Property>
+          <Property name="tags">button</Property>
+        </ToolBarButton>
+        <ToolBarButton id="buttonRefreshCache">
+          <Property name="icon">url(skin>common/icons.gif) -40px -240px</Property>
+          <Property name="caption">刷新缓存</Property>
+          <Property name="tags">button</Property>
+          <Property name="action">ajaxActionRefreshCache</Property>
+        </ToolBarButton>
+        <CheckBox id="checkBoxAutoCheckChildren"/>
+        <ToolBarLabel>
+          <Property name="text">自动勾选子节点</Property>
+        </ToolBarLabel>
+      </ToolBar>
+      <DataTree id="dataTreeUrl">
+        <Property name="dataSet">dataSetRole</Property>
+        <Property name="dataPath">#.roleUrls</Property>
+        <Property name="currentNodeDataPath">CURRNODE</Property>
+        <BindingConfigs>
+          <BindingConfig>
+            <Property name="childrenProperty">children</Property>
+            <Property name="expandLevel">2</Property>
+            <Property name="labelProperty">name</Property>
+            <Property name="recursive">true</Property>
+            <Property name="tipProperty">desc</Property>
+            <Property name="iconProperty">icon</Property>
+            <Property name="checkedProperty">use</Property>
+            <Property name="checkable">true</Property>
+            <Property name="autoCheckChildren">false</Property>
+          </BindingConfig>
+        </BindingConfigs>
+      </DataTree>
+      <AjaxAction id="ajaxActionSaveRoleUrls">
+        <Property name="service">bdf2.roleUrlMaintain#saveRoleUrls</Property>
+        <Property name="successMessage">操作成功</Property>
+      </AjaxAction>
+      <AjaxAction id="ajaxActionRefreshCache">
+        <Property name="service">bdf2.roleUrlMaintain#refreshUrlSecurityMetadata</Property>
+        <Property name="confirmMessage">真的要刷新权限缓存信息吗?</Property>
+        <Property name="successMessage">操作成功</Property>
+      </AjaxAction>
+    </Container>
+  </View>
+</ViewConfig>

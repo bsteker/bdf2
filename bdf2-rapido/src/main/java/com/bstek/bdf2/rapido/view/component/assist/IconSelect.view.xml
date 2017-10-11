@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ViewConfig>
+  <Property name="metaData">
+    <Property name="securityTag">rapid</Property>
+  </Property>
+  <Arguments/>
+  <Context/>
+  <Model/>
+  <View>
+    <Dialog id="$dialogSelectIcon">
+      <ClientEvent name="onReady">$(&quot;#forSelectIcons&quot;).ready(function(){&#xD;
+	var UNIT = 20;&#xD;
+	var ROWS = this.width / UNIT;&#xD;
+	var COLS = this.height / UNIT;&#xD;
+	var x1, y1, x2, y2;&#xD;
+	for (i = 0; i &lt; COLS; i++) {&#xD;
+		for (j = 0; j &lt; ROWS; j++) {&#xD;
+			x1 = i * UNIT;&#xD;
+			y1 = j * UNIT;&#xD;
+			x2 = x1 + UNIT;&#xD;
+			y2 = y1 + UNIT;&#xD;
+			var offset = &quot; &quot; + x1 * (-1) + &quot;px&quot; + &quot; &quot; + y1 * (-1) + &quot;px&quot;;&#xD;
+			var bgStyle = &quot;url(&quot; + $('#forSelectIcons').attr('src')+ &quot;)&quot; + offset;&#xD;
+			var title = &quot;url(skin>common/icons.gif)&quot; + offset;&#xD;
+			&#xD;
+			$(&quot;&lt;area/>&quot;,{&#xD;
+					shape : &quot;rect&quot;,&#xD;
+					coords : x1 + &quot;,&quot; + y1 + &quot;,&quot; + x2 + &quot;,&quot; + y2,&#xD;
+					title : title,&#xD;
+					href:&quot;javascript:$('#selectIconSpan').css(\&quot;background\&quot;,\&quot;&quot;+bgStyle+&quot;\&quot;);window.$selectedIconUrl='&quot;+title+&quot;';&quot;&#xD;
+				}).appendTo($('#coordmap'));&#xD;
+		}&#xD;
+	}&#xD;
+	&#xD;
+});&#xD;
+</ClientEvent>
+      <Property name="center">true</Property>
+      <Property name="width">360</Property>
+      <Property name="height">435</Property>
+      <Property name="modal">true</Property>
+      <Property name="caption">图标选择</Property>
+      <Buttons>
+        <Button>
+          <ClientEvent name="onClick">var $selectedIconUrl=window.$selectedIconUrl;&#xD;
+if($selectedIconUrl){&#xD;
+	var callback=this.id(&quot;$dialogSelectIcon&quot;).callback;&#xD;
+	if(callback){&#xD;
+		var dialog=this.id(&quot;$dialogSelectIcon&quot;);&#xD;
+		callback.call(this,$selectedIconUrl);&#xD;
+		dialog.hide();&#xD;
+	}else{&#xD;
+		dorado.MessageBox.alert(&quot;调用图标选择窗口需要定义一个名为callback的回调函数！&quot;);&#xD;
+	}&#xD;
+}else{&#xD;
+	dorado.MessageBox.alert(&quot;请先选择一个图标！&quot;);&#xD;
+}&#xD;
+</ClientEvent>
+          <Property name="caption">确认</Property>
+          <Property name="icon">url(skin>common/icons.gif) -140px -20px</Property>
+        </Button>
+        <Button>
+          <ClientEvent name="onClick">this.id(&quot;$dialogSelectIcon&quot;).hide();&#xD;
+</ClientEvent>
+          <Property name="caption">关闭</Property>
+          <Property name="icon">url(skin>common/icons.gif) -40px 0px</Property>
+        </Button>
+      </Buttons>
+      <Children>
+        <HtmlContainer>
+          <Property name="content">&lt;div id=&quot;selectIconSpan&quot; title=&quot;当前选中的图标&quot; style=&quot;width:20px;height:20px;align:center&quot;>&lt;/div>&#xD;
+&lt;img id=&quot;forSelectIcons&quot; src=&quot;dorado/client/skins/~current/common/icons.gif&quot; usemap=&quot;#coordmap&quot;>&#xD;
+&lt;map id=&quot;coordmap&quot; name=&quot;coordmap&quot;>&lt;/map></Property>
+        </HtmlContainer>
+      </Children>
+      <Tools/>
+    </Dialog>
+  </View>
+</ViewConfig>

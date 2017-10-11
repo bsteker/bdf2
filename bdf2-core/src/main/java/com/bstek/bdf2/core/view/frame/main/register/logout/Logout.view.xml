@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ViewConfig>
+  <Arguments/>
+  <Context/>
+  <Model/>
+  <View>
+    <SimpleIconButton>
+      <ClientEvent name="onClick">dorado.MessageBox.confirm(&quot;${res['bdf2.core/logoutConfirm']}&quot;,function(){&#xD;
+	var logoutUrl=&quot;${request.getContextPath()}&quot;+&quot;${configure.getString(&quot;bdf2.logoutURL&quot;)}&quot;;&#xD;
+	open(logoutUrl,&quot;_self&quot;);&#xD;
+});&#xD;
+</ClientEvent>
+      <Property name="icon">>dorado/res/icons/logout.png</Property>
+      <Property name="tip">${res[&quot;bdf2.core/logoutTip&quot;]}</Property>
+    </SimpleIconButton>
+  </View>
+</ViewConfig>

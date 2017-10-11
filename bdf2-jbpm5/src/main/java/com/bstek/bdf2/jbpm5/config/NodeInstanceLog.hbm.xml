@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping package="org.jbpm.process.audit">
+	<class name="NodeInstanceLog" table="JBPM5_NODE_INSTANCE_LOG">
+        <id name="id" column="ID_">
+            <generator class="native"/>
+        </id>
+        <property name="type" column="TYPE_"/>
+        <property name="nodeInstanceId" column="NODE_INSTANCE_ID_"/>
+        <property name="nodeId" column="NODE_ID_"/>
+        <property name="nodeName" column="NODE_NAME_" type="string" length="100"/>
+        <property name="processInstanceId" column="PROCESS_INSTANCE_ID_"/>
+        <property name="processId" column="PROCESS_ID_"/>
+        <property name="date" type="timestamp" column="LOG_DATE_"/>
+    </class>
+
+</hibernate-mapping>

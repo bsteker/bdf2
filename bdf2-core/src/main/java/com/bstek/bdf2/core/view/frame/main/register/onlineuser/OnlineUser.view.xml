@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ViewConfig>
+  <Arguments/>
+  <Context/>
+  <Model/>
+  <View>
+    <ClientEvent name="onReady">window.showOnlineUserDialog=function(){&#xD;
+	view.id(&quot;dialogLoginUsers&quot;).show();&#xD;
+}&#xD;
+</ClientEvent>
+    <Property name="contentOverflow">hidden</Property>
+    <Property name="contentOverflowX">hidden</Property>
+    <Property name="contentOverflowY">hidden</Property>
+    <Property name="style">
+      <Property name="margin">0</Property>
+      <Property name="padding">0</Property>
+    </Property>
+    <AjaxAction id="ajaxActionGetLoginUserCount">
+      <ClientEvent name="onReady">var title = &quot;${res.get('bdf2.core/loginUserCountLabel', 0)}&quot;;
+
+function showOnlineUserCountInfo(){
+	if(self.get(&quot;disabled&quot;)){
+		return;
+	}
+	self.execute(function(count){
+		$id(&quot;onlineUserCountLabel&quot;).objects[0].set(&quot;text&quot;, title.replace(/0/, count));
+	});
+}
+
+self.fetchOnlineUserCount=function(){
+	self.intervalHandler=setInterval(showOnlineUserCountInfo,parseInt(&quot;${configure.getString('bdf2.fetchOnlineUserCountInterval')}&quot;));
+	self.set(&quot;onDestroy&quot;,function(){
+		if(self.intervalHandler){
+			window.clearInterval(self.intervalHandler);
+		}
+	});
+};
+var showCountInfo = &quot;${configure.getBoolean('bdf2.showOnlineUserCount')}&quot;;
+if (showCountInfo==&quot;true&quot;){
+	self.fetchOnlineUserCount();
+	showOnlineUserCountInfo();
+}</ClientEvent>
+      <Property name="service">bdf2.onlineUserShortcutRegister#getLoginuserCount</Property>
+      <Property name="modal">false</Property>
+    </AjaxAction>
+    <Dialog id="dialogLoginUsers">
+      <ClientEvent name="beforeShow" signature="dataSetLoginUsers">dataSetLoginUsers.flushAsync();</ClientEvent>
+      <Property name="maximizeable">true</Property>
+      <Property name="width">300</Property>
+      <Property name="height">400</Property>
+      <Property name="center">true</Property>
+      <Property name="modal">true</Property>
+      <Buttons/>
+      <Children>
+        <DataSet id="dataSetLoginUsers">
+          <Property name="dataType">[Map]</Property>
+          <Property name="dataProvider">bdf2.onlineUserShortcutRegister#loadAllLoginUsers</Property>
+          <Property name="loadMode">manual</Property>
+        </DataSet>
+        <DataGrid>
+          <Property name="dataSet">dataSetLoginUsers</Property>
+          <Property name="readOnly">true</Property>
+          <DataColumn>
+            <Property name="caption">${res[&quot;bdf2.core/onlineUserUserName&quot;]}</Property>
+            <Property name="name">username</Property>
+            <Property name="property">username</Property>
+            <Editor/>
+          </DataColumn>
+          <DataColumn>
+            <Property name="property">cname</Property>
+            <Property name="name">cname</Property>
+            <Property name="caption">${res[&quot;bdf2.core/onlineUserCName&quot;]}</Property>
+            <Editor/>
+          </DataColumn>
+        </DataGrid>
+      </Children>
+      <Tools/>
+    </Dialog>
+  </View>
+</ViewConfig>

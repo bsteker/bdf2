@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ViewConfig>
+  <Arguments/>
+  <Context/>
+  <Model>
+    <DataType name="dataTypeDept" parent="$dataTypeDept">
+      <Property name="creationType">com.bstek.bdf2.core.model.DefaultDept</Property>
+      <PropertyDef name="desc">
+        <Property name="dataType">String</Property>
+        <Property name="label">部门描述</Property>
+        <Validator type="length">
+          <Property name="maxLength">120</Property>
+        </Validator>
+      </PropertyDef>
+      <PropertyDef name="parentId">
+        <Property name="dataType">String</Property>
+      </PropertyDef>
+      <Reference name="children">
+        <Property name="dataType">[dataTypeDept]</Property>
+        <Property name="dataProvider">bdf2.deptSelect#loadDepts</Property>
+        <Property name="parameter">$${this.id}</Property>
+      </Reference>
+      <PropertyDef name="id">
+        <Property name="dataType">String</Property>
+        <Property name="label">ID</Property>
+        <Property name="required">true</Property>
+        <Validator type="ajax">
+          <Property name="service">bdf2.deptMaintain#uniqueCheck</Property>
+        </Validator>
+      </PropertyDef>
+    </DataType>
+  </Model>
+  <View>
+    <Intro id="intro">
+      <Property name="prevLabel">上一步</Property>
+      <Property name="nextLabel">下一步</Property>
+      <Property name="skipLabel">跳出</Property>
+      <Property name="doneLabel">完成</Property>
+      <Step>
+        <Property name="element">dataTreeDept</Property>
+        <Property name="name">step1</Property>
+        <Property name="intro">&lt;h1>说明&lt;/h1>
+&lt;b>在空白区域右键单击增加新的部门&lt;/b></Property>
+      </Step>
+      <Step>
+        <Property name="element">autoFormDept</Property>
+        <Property name="name">step2</Property>
+        <Property name="intro">&lt;h1>说明&lt;/h1>
+&lt;b>请右键单击增加新的部门&lt;/b></Property>
+      </Step>
+    </Intro>
+    <DataSet id="dataSetDept">
+      <ClientEvent name="onLoadData" signature="self,arg,intro">if (self.getData().entityCount == 0){
+	intro.start();
+}</ClientEvent>
+      <Property name="dataType">[dataTypeDept]</Property>
+      <Property name="dataProvider">bdf2.deptMaintain#loadDepts</Property>
+    </DataSet>
+    <DataTree id="dataTreeDept" layoutConstraint="left">
+      <ClientEvent name="onContextMenu">view.id(&quot;menuDepts&quot;).show({&#xD;
+	position:{&#xD;
+		left:arg.event.pageX,&#xD;
+		top:arg.event.pageY&#xD;
+	}&#xD;
+});</ClientEvent>
+      <ClientEvent name="onDraggingSourceDrop">var draggingInfo=arg.draggingInfo;&#xD;
+if(!draggingInfo){&#xD;
+	return true;&#xD;
+}&#xD;
+var parentNode=draggingInfo.get(&quot;targetObject&quot;);&#xD;
+if(!parentNode){&#xD;
+	return true;&#xD;
+}&#xD;
+var parentId=parentNode.get(&quot;data.id&quot;);&#xD;
+parentNode.get(&quot;nodes&quot;).each(function(node){&#xD;
+	var data=node.get(&quot;data&quot;);&#xD;
+	data.set(&quot;parentId&quot;,parentId);&#xD;
+});&#xD;
+view.id(&quot;updateActionSaveDepts&quot;).execute();</ClientEvent>
+      <ClientEvent name="beforeCurrentChange">var node=arg.oldCurrent;&#xD;
+if(node){&#xD;
+	var data=node.get(&quot;data&quot;);&#xD;
+	if(data &amp;&amp; data.state!=dorado.Entity.STATE_NONE){&#xD;
+		view.id(&quot;updateActionSaveDepts&quot;).execute();&#xD;
+		if(data.validate()!=&quot;ok&quot;){&#xD;
+			arg.processDefault=false;&#xD;
+		}&#xD;
+	}&#xD;
+}</ClientEvent>
+      <Property name="dataSet">dataSetDept</Property>
+      <Property name="defaultIcon"> url(>skin>common/icons.gif) -260px -40px</Property>
+      <Property name="currentNodeDataPath">CurrentDept</Property>
+      <Property name="draggable">true</Property>
+      <Property name="dragTags">dept</Property>
+      <Property name="droppableTags">dept</Property>
+      <Property name="droppable">true</Property>
+      <Property name="dropMode">onOrInsertItems</Property>
+      <BindingConfigs>
+        <BindingConfig>
+          <Property name="recursive">true</Property>
+          <Property name="expandLevel">1</Property>
+          <Property name="labelProperty">name</Property>
+          <Property name="icon"> url(>skin>common/icons.gif) -260px -40px</Property>
+          <Property name="childrenProperty">children</Property>
+        </BindingConfig>
+      </BindingConfigs>
+    </DataTree>
+    <AutoForm id="autoFormDept" layoutConstraint="center">
+      <Property name="dataSet">dataSetDept</Property>
+      <Property name="dataPath">!CurrentDept</Property>
+      <AutoFormElement>
+        <Property name="property">id</Property>
+        <Property name="name">id</Property>
+        <Property name="label">ID</Property>
+        <Property name="tags">deptId</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement layoutConstraint="colSpan:2">
+        <Property name="name">name</Property>
+        <Property name="property">name</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement layoutConstraint="colSpan:2">
+        <Property name="name">desc</Property>
+        <Property name="property">desc</Property>
+        <Property name="editorType">TextArea</Property>
+        <Editor/>
+      </AutoFormElement>
+    </AutoForm>
+    <Container layout="anchor" layoutConstraint="center">
+      <Property name="height">30</Property>
+      <Button layoutConstraint="right:30">
+        <Property name="caption">保存</Property>
+        <Property name="icon"> url(>skin>common/icons.gif) -20px -0px</Property>
+        <Property name="action">updateActionSaveDepts</Property>
+      </Button>
+    </Container>
+    <Menu id="menuDepts">
+      <MenuItem>
+        <ClientEvent name="onClick">var dsDept=view.id(&quot;dataSetDept&quot;);&#xD;
+var entity=dsDept.getData().insert();&#xD;
+this.id(&quot;dataTreeDept&quot;).set(&quot;currentEntity&quot;, entity);&#xD;
+&#xD;
+</ClientEvent>
+        <Property name="caption">添加顶级部门</Property>
+        <Property name="icon"> url(>skin>common/icons.gif) -260px -100px</Property>
+      </MenuItem>
+      <MenuItem>
+        <ClientEvent name="onClick">var treeDept = this.id(&quot;dataTreeDept&quot;);&#xD;
+var currentEntity = treeDept.get(&quot;currentEntity&quot;);&#xD;
+if (currentEntity) {&#xD;
+	   newEntity = currentEntity.createChild(&quot;children&quot;, {&#xD;
+        parentId: currentEntity.get(&quot;id&quot;)&#xD;
+    });&#xD;
+    treeDept.get(&quot;currentNode&quot;).expand();&#xD;
+    treeDept.set(&quot;currentEntity&quot;, newEntity);&#xD;
+}&#xD;
+</ClientEvent>
+        <Property name="caption">添加子部门</Property>
+        <Property name="icon"> url(>skin>common/icons.gif) -280px -120px</Property>
+      </MenuItem>
+      <MenuItem>
+        <ClientEvent name="onClick">var treeDept = this.id(&quot;dataTreeDept&quot;);&#xD;
+var currentEntity = treeDept.get(&quot;currentEntity&quot;);&#xD;
+if (currentEntity) {&#xD;
+	view.id(&quot;ajaxActionCheckDeptChildren&quot;).set(&quot;parameter&quot;, currentEntity.get(&quot;id&quot;)).execute(function(count){&#xD;
+		if (count>0){&#xD;
+			dorado.MessageBox.alert(&quot;请先删除子部门&quot;);&#xD;
+		} else {&#xD;
+			dorado.MessageBox.confirm(&quot;是否确定删除此部门及其子部门信息？&quot;,function(){&#xD;
+				currentEntity.remove();&#xD;
+			});&#xD;
+		}&#xD;
+	});&#xD;
+}&#xD;
+</ClientEvent>
+        <Property name="caption">删除当前部门</Property>
+        <Property name="icon"> url(>skin>common/icons.gif) -40px -0px</Property>
+      </MenuItem>
+    </Menu>
+    <UpdateAction id="updateActionSaveDepts">
+      <Property name="dataResolver">bdf2.deptMaintain#saveDepts</Property>
+      <Property name="successMessage">数据保存成功!</Property>
+      <UpdateItem>
+        <Property name="dataSet">dataSetDept</Property>
+      </UpdateItem>
+    </UpdateAction>
+    <AjaxAction id="ajaxActionCheckDeptChildren">
+      <Property name="service">bdf2.deptMaintain#countChildren</Property>
+    </AjaxAction>
+  </View>
+</ViewConfig>

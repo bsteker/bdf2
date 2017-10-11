@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ViewConfig>
+  <Arguments/>
+  <Context/>
+  <Model/>
+  <View>
+    <HtmlContainer>
+      <Property name="content">&lt;h2>通过自动登录方式登录失败，点击&lt;a href=&quot;${request.getContextPath()}${configure.getString(&quot;bdf2.formLoginUrl&quot;)}&quot;  target=&quot;_top&quot;>此处&lt;/a>重新登录&lt;/h2></Property>
+    </HtmlContainer>
+  </View>
+</ViewConfig>

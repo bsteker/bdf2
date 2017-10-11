@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ViewConfig>
+  <Property name="metaData">
+    <Property name="securityTag">DB.Console</Property>
+  </Property>
+  <Arguments/>
+  <Context/>
+  <Model>
+    <DataType listener="spring:bdf2.DataViewMaintain#onInit" name="dataTypeData">
+      <ClientEvent name="onStateChange">this.$checkSaveButton();&#xD;
+</ClientEvent>
+      <Property name="autoCreatePropertyDefs">true</Property>
+    </DataType>
+  </Model>
+  <View>
+    <ClientEvent name="onReady">this.$checkSaveButton = function(){&#xD;
+    var toolBarButtonSave = this.id(&quot;toolBarButtonSave&quot;);&#xD;
+    var dataSet = this.id(&quot;dataSetData&quot;);&#xD;
+    var data = dataSet.queryData(&quot;[#dirty]&quot;);&#xD;
+    if (data!=&quot;&quot;) {&#xD;
+        toolBarButtonSave.set(&quot;disabled&quot;, false);&#xD;
+    }&#xD;
+    else {&#xD;
+        toolBarButtonSave.set(&quot;disabled&quot;, true);&#xD;
+    }&#xD;
+    &#xD;
+}&#xD;
+</ClientEvent>
+    <DataSet id="dataSetData">
+      <Property name="dataProvider">bdf2.DataViewMaintain#loadQueryData</Property>
+      <Property name="dataType">[dataTypeData]</Property>
+      <Property name="loadMode">onReady</Property>
+    </DataSet>
+    <DataGrid id="dataGridData" listener="spring:bdf2.DataViewMaintain#onInit" layoutConstraint="center">
+      <ClientEvent name="onRenderCell">var data = arg.data;&#xD;
+var column = arg.column;&#xD;
+arg.processDefault = false;&#xD;
+if (column instanceof dorado.widget.grid.RowNumColumn) {&#xD;
+    arg.processDefault = true;&#xD;
+}else {&#xD;
+    var value = data.get(column.get(&quot;name&quot;));&#xD;
+    var re = new RegExp(/^&lt;font color=/);&#xD;
+    if (re.test(value)) {&#xD;
+        arg.dom.innerHTML = value;&#xD;
+    }    else {&#xD;
+        arg.processDefault = true;&#xD;
+    }}    &#xD;
+</ClientEvent>
+      <Property name="height">100%</Property>
+      <Property name="dataSet">dataSetData</Property>
+      <Property name="stretchColumnsMode">off</Property>
+      <Property name="readOnly">true</Property>
+      <Property name="selectionMode">multiRows</Property>
+      <Property name="width">100%</Property>
+    </DataGrid>
+  </View>
+</ViewConfig>

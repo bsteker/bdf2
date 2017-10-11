@@ -1,0 +1,276 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ViewConfig>
+  <Arguments/>
+  <Context/>
+  <Model>
+    <DataType name="dataTypeMessage" parent="$dataTypeMessage">
+      <PropertyDef name="id">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="title">
+        <Property></Property>
+        <Property name="label">${res[&quot;bdf2.core/messageTitle&quot;]}</Property>
+      </PropertyDef>
+      <PropertyDef name="content">
+        <Property></Property>
+        <Property name="label">${res[&quot;bdf2.core/messageContent&quot;]}</Property>
+      </PropertyDef>
+      <PropertyDef name="sendDate">
+        <Property name="dataType">Date</Property>
+        <Property name="label">${res[&quot;bdf2.core/messageSendDate&quot;]}</Property>
+      </PropertyDef>
+      <PropertyDef name="sender">
+        <Property></Property>
+        <Property name="label">${res[&quot;bdf2.core/messageSender&quot;]}</Property>
+      </PropertyDef>
+      <PropertyDef name="receiver">
+        <Property></Property>
+        <Property name="label">${res[&quot;bdf2.core/messageReceiver&quot;]}</Property>
+      </PropertyDef>
+      <PropertyDef name="read">
+        <Property name="dataType">boolean</Property>
+        <Property name="label">${res[&quot;bdf2.core/messageRead&quot;]}</Property>
+      </PropertyDef>
+      <PropertyDef name="reply">
+        <Property name="dataType">boolean</Property>
+        <Property name="label">${res[&quot;bdf2.core/messageReply&quot;]}</Property>
+      </PropertyDef>
+    </DataType>
+  </Model>
+  <View layout="native">
+    <DataSet id="$dataSetSendMessage">
+      <Property name="dataType">[dataTypeMessage]</Property>
+      <Property name="dataProvider">bdf2.seeMessage#loadSendMessages</Property>
+      <Property name="pageSize">20</Property>
+    </DataSet>
+    <DataSet id="$dataSetReceiveMessage">
+      <Property name="dataType">[dataTypeMessage]</Property>
+      <Property name="dataProvider">bdf2.seeMessage#loadReceiveMessages</Property>
+      <Property name="pageSize">20</Property>
+    </DataSet>
+    <Dialog id="$dialogSeeMessage">
+      <Property name="center">true</Property>
+      <Property name="width">700</Property>
+      <Property name="height">500</Property>
+      <Property name="caption">${res[&quot;bdf2.core/dialogSeeMessageCaption&quot;]}</Property>
+      <Buttons>
+        <Button>
+          <ClientEvent name="onClick">view.id(&quot;$dialogSeeMessage&quot;).hide();&#xD;
+</ClientEvent>
+          <Property name="caption">${res[&quot;bdf2.core/closeDialogSeeMessage&quot;]}</Property>
+          <Property name="icon">url(skin>common/icons.gif) -40px 0px</Property>
+        </Button>
+      </Buttons>
+      <Children>
+        <TabControl>
+          <ControlTab>
+            <Property name="caption">${res[&quot;bdf2.core/receivedMessage&quot;]}</Property>
+            <Container>
+              <ToolBar>
+                <DataPilot>
+                  <Property name="dataSet">$dataSetReceiveMessage</Property>
+                  <Property name="itemCodes">pages</Property>
+                </DataPilot>
+                <ToolBarButton>
+                  <ClientEvent name="onClick">var data=view.id(&quot;$dataSetReceiveMessage&quot;).getData(&quot;#&quot;);&#xD;
+if(data){&#xD;
+	view.id(&quot;$dialogMessageDetail&quot;).show();&#xD;
+	view.id(&quot;$autoFormMessageDetail&quot;).set(&quot;entity&quot;,data.toJSON());&#xD;
+	if(!data.get(&quot;read&quot;)){&#xD;
+		data.set(&quot;read&quot;,true);&#xD;
+		view.id(&quot;$updateActionSetRead&quot;).execute();&#xD;
+	}&#xD;
+}else{&#xD;
+	dorado.MessageBox.alert(&quot;${res['bdf2.core/showDetailMessageError']}&quot;)&#xD;
+}&#xD;
+</ClientEvent>
+                  <Property name="caption">${res[&quot;bdf2.core/showDetailMessage&quot;]}</Property>
+                  <Property name="icon">url(skin>common/icons.gif) -180px -80px</Property>
+                </ToolBarButton>
+                <ToolBarButton>
+                  <ClientEvent name="onClick">var data=view.get(&quot;#$dataSetReceiveMessage&quot;).getData(&quot;#&quot;);&#xD;
+var selection=view.get(&quot;#dataGridRecMsg.selection&quot;);&#xD;
+if(selection&amp;&amp;selection.length>0){&#xD;
+	selection.each(function(msg){&#xD;
+		msg.set('read',true);&#xD;
+	});&#xD;
+	view.id(&quot;$updateActionSetRead&quot;).execute(function(){&#xD;
+		view.set(&quot;#dataGridRecMsg.selection&quot;,null);&#xD;
+	});&#xD;
+}else if(data){&#xD;
+	if(!data.get(&quot;read&quot;)){&#xD;
+		data.set(&quot;read&quot;,true);&#xD;
+		view.id(&quot;$updateActionSetRead&quot;).execute();&#xD;
+	}else{&#xD;
+		dorado.MessageBox.alert(&quot;${res['bdf2.core/markedMessageReadDoneError']}&quot;);&#xD;
+	}&#xD;
+}else{&#xD;
+	dorado.MessageBox.alert(&quot;${res['bdf2.core/markedMessageReadDoneNoMessage']}&quot;);&#xD;
+}</ClientEvent>
+                  <Property name="caption">${res[&quot;bdf2.core/markedMessageReadDone&quot;]}</Property>
+                  <Property name="icon">url(skin>common/icons.gif) -180px -100px</Property>
+                </ToolBarButton>
+                <ToolBarButton>
+                  <ClientEvent name="onClick">var data=view.id(&quot;$dataSetReceiveMessage&quot;).getData(&quot;#&quot;);
+if(data){
+	dorado.MessageBox.confirm(&quot;${res['bdf2.core/deleteCurrentMessageConfirm']}&quot;, function(){
+		data.remove();
+		view.id(&quot;$updateActionSetRead&quot;).execute();		
+	});
+}
+</ClientEvent>
+                  <Property name="caption">${res[&quot;bdf2.core/deleteMessage&quot;]}</Property>
+                  <Property name="icon">url(skin>common/icons.gif) -140px 0px</Property>
+                </ToolBarButton>
+              </ToolBar>
+              <DataGrid id="dataGridRecMsg">
+                <ClientEvent name="beforeSelectionChange">var added=arg.added;&#xD;
+if(added){&#xD;
+	var obj=added[0];&#xD;
+	if(obj.get('read')){&#xD;
+		arg.added=null;&#xD;
+	}&#xD;
+}</ClientEvent>
+                <Property name="dataSet">$dataSetReceiveMessage</Property>
+                <Property name="filterMode">serverSide</Property>
+                <Property name="showFilterBar">true</Property>
+                <Property name="readOnly">true</Property>
+                <Property name="selectionMode">multiRows</Property>
+                <RowSelectorColumn/>
+                <DataColumn name="title">
+                  <ClientEvent name="onRenderCell">var read=arg.data.get(&quot;read&quot;);&#xD;
+if(read){&#xD;
+	arg.dom.innerHTML=&quot;&lt;font color='green'>&quot;+arg.data.get(&quot;title&quot;)+&quot;&lt;/font>&quot;;&#xD;
+	arg.processDefault=false;&#xD;
+}else{&#xD;
+	arg.dom.innerHTML=arg.data.get(&quot;title&quot;);	&#xD;
+}&#xD;
+</ClientEvent>
+                  <Property name="property">title</Property>
+                  <Property name="width">200</Property>
+                </DataColumn>
+                <DataColumn name="sendDate">
+                  <Property name="property">sendDate</Property>
+                </DataColumn>
+                <DataColumn name="sender">
+                  <Property name="property">sender</Property>
+                </DataColumn>
+                <DataColumn name="receiver">
+                  <Property name="property">receiver</Property>
+                </DataColumn>
+                <DataColumn name="read">
+                  <Property name="property">read</Property>
+                  <Property name="width">90</Property>
+                </DataColumn>
+              </DataGrid>
+            </Container>
+          </ControlTab>
+          <ControlTab>
+            <Property name="caption">${res[&quot;bdf2.core/postedMessage&quot;]}</Property>
+            <Container>
+              <ToolBar>
+                <DataPilot>
+                  <Property name="dataSet">$dataSetSendMessage</Property>
+                  <Property name="itemCodes">pages</Property>
+                </DataPilot>
+                <ToolBarButton>
+                  <ClientEvent name="onClick">var data=view.id(&quot;$dataSetSendMessage&quot;).getData(&quot;#&quot;);&#xD;
+if(data){&#xD;
+	view.id(&quot;$dialogMessageDetail&quot;).show();&#xD;
+	view.id(&quot;$autoFormMessageDetail&quot;).set(&quot;entity&quot;,data.toJSON());&#xD;
+}else{&#xD;
+	dorado.MessageBox.alert(&quot;${res['bdf2.core/showDetailMessageError']}&quot;)&#xD;
+}&#xD;
+</ClientEvent>
+                  <Property name="caption">${res[&quot;bdf2.core/showDetailMessage&quot;]}</Property>
+                  <Property name="icon">url(skin>common/icons.gif) -180px -80px</Property>
+                </ToolBarButton>
+              </ToolBar>
+              <DataGrid>
+                <Property name="dataSet">$dataSetSendMessage</Property>
+                <Property name="filterMode">serverSide</Property>
+                <Property name="showFilterBar">true</Property>
+                <Property name="readOnly">true</Property>
+                <DataColumn name="title">
+                  <ClientEvent name="onRenderCell">var read=arg.data.get(&quot;read&quot;);&#xD;
+if(read){&#xD;
+	arg.dom.innerHTML=&quot;&lt;font color='green'>&quot;+arg.data.get(&quot;title&quot;)+&quot;&lt;/font>&quot;;&#xD;
+	arg.processDefault=false;&#xD;
+}else{&#xD;
+	arg.dom.innerHTML=arg.data.get(&quot;title&quot;);	&#xD;
+}&#xD;
+</ClientEvent>
+                  <Property name="property">title</Property>
+                  <Property name="width">200</Property>
+                </DataColumn>
+                <DataColumn name="sendDate">
+                  <Property name="property">sendDate</Property>
+                </DataColumn>
+                <DataColumn name="receiver">
+                  <Property name="property">receiver</Property>
+                </DataColumn>
+                <DataColumn name="read">
+                  <Property name="property">read</Property>
+                  <Property name="width">80</Property>
+                </DataColumn>
+                <DataColumn name="reply">
+                  <Property name="property">reply</Property>
+                  <Property name="width">90</Property>
+                </DataColumn>
+              </DataGrid>
+            </Container>
+          </ControlTab>
+        </TabControl>
+        <Dialog id="$dialogMessageDetail">
+          <Property name="center">true</Property>
+          <Property name="modal">true</Property>
+          <Property name="width">500</Property>
+          <Property name="height">300</Property>
+          <Buttons>
+            <Button>
+              <ClientEvent name="onClick">view.id(&quot;$dialogMessageDetail&quot;).hide();&#xD;
+</ClientEvent>
+              <Property name="caption">${res[&quot;bdf2.core/closeDialogDetailSeeMessage&quot;]}</Property>
+            </Button>
+          </Buttons>
+          <Children>
+            <AutoForm id="$autoFormMessageDetail">
+              <Property name="readOnly">true</Property>
+              <Property name="cols">*</Property>
+              <AutoFormElement>
+                <Property name="name">title</Property>
+                <Property name="property">title</Property>
+                <Property name="label">${res[&quot;bdf2.core/messageTitle&quot;]}</Property>
+                <Editor/>
+              </AutoFormElement>
+              <AutoFormElement>
+                <Property name="name">content</Property>
+                <Property name="property">content</Property>
+                <Property name="editorType">TextArea</Property>
+                <Property name="label">${res[&quot;bdf2.core/messageContent&quot;]}</Property>
+                <Property name="height">160</Property>
+                <Editor/>
+              </AutoFormElement>
+            </AutoForm>
+          </Children>
+          <Tools/>
+        </Dialog>
+      </Children>
+      <Tools/>
+    </Dialog>
+    <SimpleIconButton>
+      <ClientEvent name="onClick">view.id(&quot;$dialogSeeMessage&quot;).show();&#xD;
+</ClientEvent>
+      <Property name="icon">url(skin>common/icons.gif) -40px -100px</Property>
+      <Property name="tip">${res[&quot;bdf2.core/showMessages&quot;]}</Property>
+    </SimpleIconButton>
+    <UpdateAction id="$updateActionSetRead">
+      <Property name="dataResolver">bdf2.seeMessage#updateMessage</Property>
+      <Property name="successMessage">${res[&quot;bdf2.core/updateActionSetReadSuccessMessage&quot;]}</Property>
+      <UpdateItem>
+        <Property name="dataSet">$dataSetReceiveMessage</Property>
+        <Property name="dataPath">!DIRTY_TREE</Property>
+      </UpdateItem>
+    </UpdateAction>
+  </View>
+</ViewConfig>

@@ -1,0 +1,442 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Model>
+  <DataType name="$dataTypeJobCalendar">
+    <Property name="creationType">com.bstek.bdf2.job.model.JobCalendar</Property>
+    <PropertyDef name="id">
+      <Property name="dataType">String</Property>
+    </PropertyDef>
+    <PropertyDef name="desc">
+      <Property name="dataType">String</Property>
+      <Property name="label">描述</Property>
+      <Validator type="length">
+        <Property name="maxLength">120</Property>
+        <Property name="minLength">2</Property>
+        <Property name="resultMessage">长度需要在2~120之间</Property>
+      </Validator>
+    </PropertyDef>
+    <PropertyDef name="name">
+      <Property name="dataType">String</Property>
+      <Property name="label">日期名称</Property>
+      <Property name="required">true</Property>
+      <Validator type="length">
+        <Property name="maxLength">60</Property>
+        <Property name="minLength">2</Property>
+        <Property name="resultMessage">长度需要在2~60之间</Property>
+      </Validator>
+    </PropertyDef>
+    <PropertyDef name="companyId">
+      <Property name="dataType">String</Property>
+    </PropertyDef>
+    <PropertyDef name="type">
+      <Property name="label">类型</Property>
+      <Property name="mapping">
+        <Property name="mapValues">
+          <Collection>
+            <Entity>
+              <Property name="key">weekly</Property>
+              <Property name="value">星期中的某些天</Property>
+            </Entity>
+            <Entity>
+              <Property name="key">monthly</Property>
+              <Property name="value">月份中的某些天</Property>
+            </Entity>
+            <Entity>
+              <Property name="key">holiday</Property>
+              <Property name="value">具体日期</Property>
+            </Entity>
+            <Entity>
+              <Property name="key">annual</Property>
+              <Property name="value">每年都经历的日期</Property>
+            </Entity>
+          </Collection>
+        </Property>
+        <Property name="keyProperty">key</Property>
+        <Property name="valueProperty">value</Property>
+      </Property>
+      <Property name="defaultValue">holiday</Property>
+      <Property name="required">true</Property>
+    </PropertyDef>
+  </DataType>
+  <DataType name="$dataTypeJobCalendarDate">
+    <Property name="creationType">com.bstek.bdf2.job.model.JobCalendarDate</Property>
+    <PropertyDef name="calendarDate">
+      <Property name="dataType">Date</Property>
+      <Property name="label">具体日期</Property>
+    </PropertyDef>
+    <PropertyDef name="id">
+      <Property name="dataType">String</Property>
+    </PropertyDef>
+    <PropertyDef name="calendarId">
+      <Property name="dataType">String</Property>
+    </PropertyDef>
+    <PropertyDef name="dayOfMonth">
+      <Property name="dataType">int</Property>
+      <Property name="label">日期</Property>
+      <Property name="mapping">
+        <Property name="keyProperty">key</Property>
+        <Property name="valueProperty">value</Property>
+        <Property name="mapValues">
+          <Collection>
+            <Entity>
+              <Property name="key">1</Property>
+              <Property name="value">1号</Property>
+            </Entity>
+            <Entity>
+              <Property name="key">2</Property>
+              <Property name="value">2号</Property>
+            </Entity>
+            <Entity>
+              <Property name="key">3</Property>
+              <Property name="value">3号</Property>
+            </Entity>
+            <Entity>
+              <Property name="key">4</Property>
+              <Property name="value">4号</Property>
+            </Entity>
+            <Entity>
+              <Property name="key">5</Property>
+              <Property name="value">5号</Property>
+            </Entity>
+            <Entity>
+              <Property name="key">6</Property>
+              <Property name="value">6号</Property>
+            </Entity>
+            <Entity>
+              <Property name="key">6</Property>
+              <Property name="value">6号</Property>
+            </Entity>
+            <Entity>
+              <Property name="key">7</Property>
+              <Property name="value">7号</Property>
+            </Entity>
+            <Entity>
+              <Property name="key">8</Property>
+              <Property name="value">8号</Property>
+            </Entity>
+            <Entity>
+              <Property name="key">9</Property>
+              <Property name="value">9号</Property>
+            </Entity>
+            <Entity>
+              <Property name="key">10</Property>
+              <Property name="value">10号</Property>
+            </Entity>
+            <Entity>
+              <Property name="key">11</Property>
+              <Property name="value">11号</Property>
+            </Entity>
+            <Entity>
+              <Property name="key">12</Property>
+              <Property name="value">12号</Property>
+            </Entity>
+            <Entity>
+              <Property name="key">13</Property>
+              <Property name="value">13号</Property>
+            </Entity>
+            <Entity>
+              <Property name="key">14</Property>
+              <Property name="value">14号</Property>
+            </Entity>
+            <Entity>
+              <Property name="key">15</Property>
+              <Property name="value">15号</Property>
+            </Entity>
+            <Entity>
+              <Property name="key">16</Property>
+              <Property name="value">16号</Property>
+            </Entity>
+            <Entity>
+              <Property name="key">17</Property>
+              <Property name="value">17号</Property>
+            </Entity>
+            <Entity>
+              <Property name="key">18</Property>
+              <Property name="value">18号</Property>
+            </Entity>
+            <Entity>
+              <Property name="key">19</Property>
+              <Property name="value">19号</Property>
+            </Entity>
+            <Entity>
+              <Property name="key">20</Property>
+              <Property name="value">20号</Property>
+            </Entity>
+            <Entity>
+              <Property name="key">21</Property>
+              <Property name="value">21号</Property>
+            </Entity>
+            <Entity>
+              <Property name="key">22</Property>
+              <Property name="value">22号</Property>
+            </Entity>
+            <Entity>
+              <Property name="key">23</Property>
+              <Property name="value">23号</Property>
+            </Entity>
+            <Entity>
+              <Property name="key">24</Property>
+              <Property name="value">24号</Property>
+            </Entity>
+            <Entity>
+              <Property name="key">25</Property>
+              <Property name="value">25号</Property>
+            </Entity>
+            <Entity>
+              <Property name="key">26</Property>
+              <Property name="value">26号</Property>
+            </Entity>
+            <Entity>
+              <Property name="key">27</Property>
+              <Property name="value">27号</Property>
+            </Entity>
+            <Entity>
+              <Property name="key">28</Property>
+              <Property name="value">28号</Property>
+            </Entity>
+            <Entity>
+              <Property name="key">29</Property>
+              <Property name="value">29号</Property>
+            </Entity>
+            <Entity>
+              <Property name="key">30</Property>
+              <Property name="value">30号</Property>
+            </Entity>
+            <Entity>
+              <Property name="key">31</Property>
+              <Property name="value">31号</Property>
+            </Entity>
+          </Collection>
+        </Property>
+      </Property>
+      <Property name="defaultValue">1</Property>
+    </PropertyDef>
+    <PropertyDef name="name">
+      <Property name="dataType">String</Property>
+      <Property name="label">名称</Property>
+      <Property name="required">true</Property>
+      <Validator type="length">
+        <Property name="minLength">1</Property>
+        <Property name="maxLength">60</Property>
+        <Property name="resultMessage">长度需要在1~60之间</Property>
+      </Validator>
+    </PropertyDef>
+    <PropertyDef name="dayOfWeek">
+      <Property name="dataType">int</Property>
+      <Property name="label">星期</Property>
+      <Property name="mapping">
+        <Property name="keyProperty">key</Property>
+        <Property name="valueProperty">value</Property>
+        <Property name="mapValues">
+          <Collection>
+            <Entity>
+              <Property name="key">2</Property>
+              <Property name="value">星期一</Property>
+            </Entity>
+            <Entity>
+              <Property name="key">3</Property>
+              <Property name="value">星期二</Property>
+            </Entity>
+            <Entity>
+              <Property name="key">4</Property>
+              <Property name="value">星期三</Property>
+            </Entity>
+            <Entity>
+              <Property name="key">5</Property>
+              <Property name="value">星期四</Property>
+            </Entity>
+            <Entity>
+              <Property name="key">6</Property>
+              <Property name="value">星期五</Property>
+            </Entity>
+            <Entity>
+              <Property name="key">7</Property>
+              <Property name="value">星期六</Property>
+            </Entity>
+            <Entity>
+              <Property name="key">1</Property>
+              <Property name="value">星期日</Property>
+            </Entity>
+          </Collection>
+        </Property>
+      </Property>
+      <Property name="defaultValue">1</Property>
+    </PropertyDef>
+    <PropertyDef name="monthOfYear">
+      <Property name="dataType">int</Property>
+      <Property name="label">月份</Property>
+      <Property name="mapping">
+        <Property name="keyProperty">key</Property>
+        <Property name="valueProperty">value</Property>
+        <Property name="mapValues">
+          <Collection>
+            <Entity>
+              <Property name="key">0</Property>
+              <Property name="value">一月</Property>
+            </Entity>
+            <Entity>
+              <Property name="key">1</Property>
+              <Property name="value">二月</Property>
+            </Entity>
+            <Entity>
+              <Property name="key">2</Property>
+              <Property name="value">三月</Property>
+            </Entity>
+            <Entity>
+              <Property name="key">3</Property>
+              <Property name="value">四月</Property>
+            </Entity>
+            <Entity>
+              <Property name="key">4</Property>
+              <Property name="value">五月</Property>
+            </Entity>
+            <Entity>
+              <Property name="key">5</Property>
+              <Property name="value">六月</Property>
+            </Entity>
+            <Entity>
+              <Property name="key">6</Property>
+              <Property name="value">七月</Property>
+            </Entity>
+            <Entity>
+              <Property name="key">7</Property>
+              <Property name="value">八月</Property>
+            </Entity>
+            <Entity>
+              <Property name="key">8</Property>
+              <Property name="value">九月</Property>
+            </Entity>
+            <Entity>
+              <Property name="key">9</Property>
+              <Property name="value">十月</Property>
+            </Entity>
+            <Entity>
+              <Property name="key">10</Property>
+              <Property name="value">十一月</Property>
+            </Entity>
+            <Entity>
+              <Property name="key">11</Property>
+              <Property name="value">十二月</Property>
+            </Entity>
+          </Collection>
+        </Property>
+      </Property>
+      <Property name="defaultValue">1</Property>
+    </PropertyDef>
+  </DataType>
+  <DataType name="$dataTypeJobDefinition">
+    <Property name="creationType">com.bstek.bdf2.job.model.JobDefinition</Property>
+    <PropertyDef name="id">
+      <Property name="dataType">String</Property>
+    </PropertyDef>
+    <PropertyDef name="startDate">
+      <Property name="dataType">Date</Property>
+      <Property name="label">开始日期</Property>
+    </PropertyDef>
+    <PropertyDef name="desc">
+      <Property name="dataType">String</Property>
+      <Property name="label">描述</Property>
+      <Validator type="length">
+        <Property name="maxLength">120</Property>
+        <Property name="minLength">2</Property>
+        <Property name="resultMessage">值要在2~120之间</Property>
+      </Validator>
+    </PropertyDef>
+    <PropertyDef name="beanId">
+      <Property name="dataType">String</Property>
+      <Property name="label">使用的BeanId</Property>
+      <Property name="required">true</Property>
+      <Validator type="length">
+        <Property name="maxLength">60</Property>
+        <Property name="minLength">2</Property>
+        <Property name="resultMessage">值要在2~60之间</Property>
+      </Validator>
+    </PropertyDef>
+    <PropertyDef name="name">
+      <Property name="dataType">String</Property>
+      <Property name="label">Job名称</Property>
+      <Property name="required">true</Property>
+      <Validator type="length">
+        <Property name="maxLength">60</Property>
+        <Property name="minLength">2</Property>
+        <Property name="resultMessage">值要在2~60之间</Property>
+      </Validator>
+    </PropertyDef>
+    <PropertyDef name="endDate">
+      <Property name="dataType">Date</Property>
+      <Property name="label">结束日期</Property>
+    </PropertyDef>
+    <PropertyDef name="companyId">
+      <Property name="dataType">String</Property>
+    </PropertyDef>
+    <PropertyDef name="cronExpression">
+      <Property name="dataType">String</Property>
+      <Property name="label">Cron表达式</Property>
+      <Property name="required">true</Property>
+      <Validator type="length">
+        <Property name="maxLength">60</Property>
+        <Property name="minLength">2</Property>
+        <Property name="resultMessage">值要在2~60之间</Property>
+      </Validator>
+    </PropertyDef>
+    <PropertyDef name="state">
+      <Property name="label">当前状态</Property>
+    </PropertyDef>
+  </DataType>
+  <DataType name="$dataTypeJobHistory">
+    <Property name="creationType">com.bstek.bdf2.job.model.JobHistory</Property>
+    <PropertyDef name="exceptionMessage">
+      <Property name="dataType">String</Property>
+      <Property name="label">异常消息</Property>
+    </PropertyDef>
+    <PropertyDef name="id">
+      <Property name="dataType">String</Property>
+    </PropertyDef>
+    <PropertyDef name="startDate">
+      <Property name="dataType">Date</Property>
+      <Property name="label">执行开始时间</Property>
+      <Property name="displayFormat">Y-m-d H:i:s</Property>
+    </PropertyDef>
+    <PropertyDef name="jobId">
+      <Property name="dataType">String</Property>
+    </PropertyDef>
+    <PropertyDef name="endDate">
+      <Property name="dataType">Date</Property>
+      <Property name="label">执行结束时间</Property>
+      <Property name="displayFormat">Y-m-d H:i:s</Property>
+    </PropertyDef>
+    <PropertyDef name="successful">
+      <Property name="dataType">boolean</Property>
+      <Property name="label">是否成功</Property>
+    </PropertyDef>
+  </DataType>
+  <DataType name="$dataTypeJobParameter">
+    <Property name="matchType">com.bstek.bdf2.job.model.JobParameter</Property>
+    <Property name="creationType">com.bstek.bdf2.job.model.JobParameter</Property>
+    <PropertyDef name="id">
+      <Property name="dataType">String</Property>
+    </PropertyDef>
+    <PropertyDef name="jobId">
+      <Property name="dataType">String</Property>
+    </PropertyDef>
+    <PropertyDef name="name">
+      <Property name="dataType">String</Property>
+      <Property name="label">属性名</Property>
+      <Property name="required">true</Property>
+      <Validator type="length">
+        <Property name="minLength">1</Property>
+        <Property name="maxLength">60</Property>
+        <Property name="resultMessage">长度需要在1~60之间</Property>
+      </Validator>
+    </PropertyDef>
+    <PropertyDef name="value">
+      <Property name="dataType">String</Property>
+      <Property name="label">属性值</Property>
+      <Property name="required">true</Property>
+      <Validator type="length">
+        <Property name="minLength">1</Property>
+        <Property name="maxLength">120</Property>
+        <Property name="resultMessage">长度需要在1~120之间</Property>
+      </Validator>
+    </PropertyDef>
+  </DataType>
+</Model>

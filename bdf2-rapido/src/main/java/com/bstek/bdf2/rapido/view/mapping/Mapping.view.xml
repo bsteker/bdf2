@@ -1,0 +1,277 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ViewConfig>
+  <Property name="metaData">
+    <Property name="securityTag">rapid</Property>
+  </Property>
+  <Arguments/>
+  <Context>
+    <Attribute name="packageId">
+      <Property name="value">${request.getParameter(&quot;packageId&quot;)}</Property>
+    </Attribute>
+  </Context>
+  <Model>
+    <DataType name="dataTypeMapping">
+      <ClientEvent name="onDataChange">if(arg.property==&quot;source&quot;){&#xD;
+	if(arg.newValue==&quot;table&quot;){&#xD;
+		this.tag(&quot;customKeyValueTag&quot;).set(&quot;readOnly&quot;,true);&#xD;
+		this.tag(&quot;querySqlTag&quot;).set(&quot;readOnly&quot;,false);&#xD;
+	}else{&#xD;
+		this.tag(&quot;customKeyValueTag&quot;).set(&quot;readOnly&quot;,false);&#xD;
+		this.tag(&quot;querySqlTag&quot;).set(&quot;readOnly&quot;,true);&#xD;
+	}&#xD;
+}</ClientEvent>
+      <Property name="creationType">com.bstek.bdf2.rapido.domain.Mapping</Property>
+      <PropertyDef name="id">
+        <Property name="dataType">String</Property>
+      </PropertyDef>
+      <PropertyDef name="name">
+        <Property name="dataType">String</Property>
+        <Property name="label">名称</Property>
+      </PropertyDef>
+      <PropertyDef name="source">
+        <Property name="label">映射数据来源</Property>
+        <Property name="mapping">
+          <Property name="mapValues">
+            <Collection>
+              <Entity>
+                <Property name="key">table</Property>
+                <Property name="value">数据库表</Property>
+              </Entity>
+              <Entity>
+                <Property name="key">custom</Property>
+                <Property name="value">自定义</Property>
+              </Entity>
+            </Collection>
+          </Property>
+        </Property>
+        <Property name="dataType">String</Property>
+      </PropertyDef>
+      <PropertyDef name="packageId">
+        <Property name="dataType">String</Property>
+      </PropertyDef>
+      <PropertyDef name="valueField">
+        <Property name="dataType">String</Property>
+        <Property name="label">显示用字段名</Property>
+      </PropertyDef>
+      <PropertyDef name="keyField">
+        <Property name="dataType">String</Property>
+        <Property name="label">实际值字段名</Property>
+      </PropertyDef>
+      <PropertyDef name="querySql">
+        <Property name="dataType">String</Property>
+        <Property name="label">查询SQL</Property>
+      </PropertyDef>
+      <PropertyDef name="customKeyValue">
+        <Property name="dataType">String</Property>
+        <Property name="label">自定义键值对</Property>
+        <Property name="tags">customKeyValueTag</Property>
+      </PropertyDef>
+    </DataType>
+  </Model>
+  <View>
+    <DataSet id="dataSetMapping">
+      <Property name="dataType">[dataTypeMapping]</Property>
+      <Property name="dataProvider">bdf.rapido.mappingPR#loadMappings</Property>
+    </DataSet>
+    <ToolBar>
+      <DataPilot>
+        <ClientEvent name="onSubControlAction">var code=arg.code;&#xD;
+var action=this.id(&quot;updateActionMapping&quot;);&#xD;
+var dialog=this.id(&quot;dialogMapping&quot;);&#xD;
+var ds=this.id(&quot;dataSetMapping&quot;);&#xD;
+var data=ds.getData(&quot;#&quot;);&#xD;
+switch(code){&#xD;
+	case &quot;+&quot;:&#xD;
+		ds.getData().insert({packageId:&quot;${request.getParameter(&quot;packageId&quot;)}&quot;});&#xD;
+		dialog.show();&#xD;
+		break;&#xD;
+	case &quot;-&quot;:&#xD;
+		dorado.MessageBox.confirm(&quot;真的要删除当前记录吗？&quot;,function(){&#xD;
+			data.remove();&#xD;
+			action.execute();&#xD;
+		});&#xD;
+		break;&#xD;
+}&#xD;
+arg.processDefault=false;</ClientEvent>
+        <Property name="itemCodes">+,-</Property>
+        <Property name="dataSet">dataSetMapping</Property>
+      </DataPilot>
+      <ToolBarButton>
+        <ClientEvent name="onClick">var data=this.id(&quot;dataSetMapping&quot;).getData(&quot;#&quot;);&#xD;
+if(data){&#xD;
+	this.id(&quot;dialogMapping&quot;).show();&#xD;
+}else{&#xD;
+	dorado.MessageBox.alert(&quot;当前没有数据可供编辑!&quot;)&#xD;
+}</ClientEvent>
+        <Property name="caption">修改</Property>
+        <Property name="icon">url(skin>common/icons.gif) -200px 0px</Property>
+      </ToolBarButton>
+    </ToolBar>
+    <DataGrid>
+      <Property name="dataSet">dataSetMapping</Property>
+      <Property name="dataType">dataTypeMapping</Property>
+      <Property name="readOnly">true</Property>
+      <Property name="stretchColumnsMode">off</Property>
+      <DataColumn name="name">
+        <Property name="property">name</Property>
+        <Property name="width">120</Property>
+      </DataColumn>
+      <DataColumn name="source">
+        <Property name="property">source</Property>
+        <Property name="width">120</Property>
+      </DataColumn>
+      <DataColumn name="valueField">
+        <Property name="property">valueField</Property>
+        <Property name="width">120</Property>
+      </DataColumn>
+      <DataColumn name="keyField">
+        <Property name="property">keyField</Property>
+        <Property name="width">120</Property>
+      </DataColumn>
+      <DataColumn name="querySql">
+        <Property name="property">querySql</Property>
+        <Property name="width">300</Property>
+      </DataColumn>
+      <DataColumn name="customKeyValue">
+        <Property name="property">customKeyValue</Property>
+        <Property name="width">300</Property>
+      </DataColumn>
+    </DataGrid>
+    <Dialog id="dialogMapping">
+      <ClientEvent name="onReady">var data=this.id(&quot;dataSetMapping&quot;).getData(&quot;#&quot;);&#xD;
+if(data){&#xD;
+	if(data.get(&quot;source&quot;)==&quot;table&quot;){&#xD;
+		this.tag(&quot;customKeyValueTag&quot;).set(&quot;readOnly&quot;,true);&#xD;
+		this.tag(&quot;querySqlTag&quot;).set(&quot;readOnly&quot;,false);&#xD;
+	}else{&#xD;
+		this.tag(&quot;customKeyValueTag&quot;).set(&quot;readOnly&quot;,false);&#xD;
+		this.tag(&quot;querySqlTag&quot;).set(&quot;readOnly&quot;,true);&#xD;
+	}&#xD;
+}</ClientEvent>
+      <Property name="modal">true</Property>
+      <Property name="width">600</Property>
+      <Property name="height">370</Property>
+      <Property name="center">true</Property>
+      <Buttons>
+        <Button>
+          <ClientEvent name="onClick">var action=this.id(&quot;updateActionMapping&quot;);&#xD;
+var dialog=this.id(&quot;dialogMapping&quot;)&#xD;
+dorado.MessageBox.confirm(&quot;真的要保存吗？&quot;,function(){&#xD;
+	action.execute(function(){&#xD;
+		dialog.hide();&#xD;
+	});&#xD;
+});</ClientEvent>
+          <Property name="icon">url(skin>common/icons.gif) -140px -20px</Property>
+          <Property name="caption">保存</Property>
+        </Button>
+        <Button>
+          <ClientEvent name="onClick">this.id(&quot;dataSetMapping&quot;).getData().cancel();&#xD;
+this.id(&quot;dialogMapping&quot;).hide();</ClientEvent>
+          <Property name="caption">取消</Property>
+          <Property name="icon">url(skin>common/icons.gif) -40px 0px</Property>
+        </Button>
+      </Buttons>
+      <Children>
+        <AutoForm>
+          <Property name="dataSet">dataSetMapping</Property>
+          <Property name="dataType">dataTypeMapping</Property>
+          <Property name="labelAlign">right</Property>
+          <Property name="labelWidth">100</Property>
+          <AutoFormElement>
+            <Property name="name">name</Property>
+            <Property name="property">name</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">source</Property>
+            <Property name="property">source</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">valueField</Property>
+            <Property name="property">valueField</Property>
+            <Property name="tags">querySqlTag</Property>
+            <Property name="readOnly">true</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">keyField</Property>
+            <Property name="property">keyField</Property>
+            <Property name="tags">querySqlTag</Property>
+            <Property name="readOnly">true</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement layoutConstraint="colSpan:2">
+            <Property name="name">querySql</Property>
+            <Property name="property">querySql</Property>
+            <Property name="height">100</Property>
+            <Property name="trigger">triggerSQLWizard</Property>
+            <Property name="tags">querySqlTag</Property>
+            <Property name="readOnly">true</Property>
+            <Property name="editorType">TextArea</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement layoutConstraint="colSpan:2">
+            <Property name="name">customKeyValue</Property>
+            <Property name="property">customKeyValue</Property>
+            <Property name="editorType">TextArea</Property>
+            <Property name="height">100</Property>
+            <Property name="tip">格式为：key1=value1;key2=value2，如：F=女;M=男</Property>
+            <Property name="tags">customKeyValueTag</Property>
+            <Property name="readOnly">true</Property>
+            <Editor/>
+          </AutoFormElement>
+        </AutoForm>
+      </Children>
+      <Tools/>
+    </Dialog>
+    <UpdateAction id="updateActionMapping">
+      <Property name="successMessage">操作成功！</Property>
+      <Property name="dataResolver">bdf.rapido.mappingPR#saveMappings</Property>
+      <UpdateItem>
+        <Property name="dataSet">dataSetMapping</Property>
+      </UpdateItem>
+    </UpdateAction>
+    <Trigger id="triggerSQLWizard">
+      <ClientEvent name="onExecute">this.id(&quot;dialogWizard&quot;).show();</ClientEvent>
+    </Trigger>
+    <Dialog id="dialogWizard">
+      <Property name="width">750</Property>
+      <Property name="height">600</Property>
+      <Property name="center">true</Property>
+      <Property name="modal">true</Property>
+      <Property name="caption">SQL创建向导</Property>
+      <Property name="closeable">false</Property>
+      <Buttons>
+        <Button>
+          <ClientEvent name="onClick">var view=this.id(&quot;iFrameWizard&quot;).get(&quot;iFrameWindow&quot;).doradoView;&#xD;
+var tables=view.id(&quot;dataSetTable&quot;).getData();&#xD;
+if(!tables){&#xD;
+	dorado.MessageBox.alert(&quot;请先定义实体表信息！&quot;);&#xD;
+	return;&#xD;
+}&#xD;
+var action=view.id(&quot;updateActionSaveTable&quot;);&#xD;
+var dialog=this.id(&quot;dialogWizard&quot;);&#xD;
+var entity=this.id(&quot;dataSetMapping&quot;).getData(&quot;#&quot;);&#xD;
+action.execute(function(data){&#xD;
+	entity.set(&quot;querySql&quot;,data.querySql);&#xD;
+	dialog.hide();&#xD;
+});</ClientEvent>
+          <Property name="caption">确定</Property>
+          <Property name="icon">url(skin>common/icons.gif) -140px -20px</Property>
+        </Button>
+        <Button>
+          <ClientEvent name="onClick">this.id(&quot;dialogWizard&quot;).hide();</ClientEvent>
+          <Property name="caption">取消</Property>
+          <Property name="icon">	url(skin>common/icons.gif) -40px 0px</Property>
+        </Button>
+      </Buttons>
+      <Children>
+        <IFrame id="iFrameWizard">
+          <Property name="path">bdf2.rapido.view.wizard.QueryWizard.d</Property>
+        </IFrame>
+      </Children>
+      <Tools/>
+    </Dialog>
+  </View>
+</ViewConfig>

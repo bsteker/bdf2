@@ -1,0 +1,537 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ViewConfig>
+  <Arguments/>
+  <Context/>
+  <Model>
+    <DataType name="dataTypeAssignTarget" parent="$dataTypeAssignTarget">
+      <Reference name="urls">
+        <Property name="dataProvider">bdf2.profile.componentMaintain#loadUrls</Property>
+        <Property name="dataType">[dataTypeUrlDef]</Property>
+        <Property name="parameter">
+          <Entity>
+            <Property name="companyId">$${this.id}</Property>
+          </Entity>
+        </Property>
+      </Reference>
+    </DataType>
+    <DataType name="dataTypeUrlDef" parent="$dataTypeUrlDefinition">
+      <Reference name="children">
+        <ClientEvent name="beforeLoadData">var parentId=arg.entity.get(&quot;id&quot;);&#xD;
+var companyId=view.id(&quot;dataSetAssignTarget&quot;).getData(&quot;#.id&quot;);&#xD;
+self.set(&quot;parameter&quot;,{companyId:companyId,parentId:parentId});</ClientEvent>
+        <Property name="dataType">[SELF]</Property>
+        <Property name="dataProvider">bdf2.profile.componentMaintain#loadUrls</Property>
+      </Reference>
+      <Reference name="components">
+        <ClientEvent name="beforeLoadData">var assignTargetId=view.id(&quot;dataSetAssignTarget&quot;).getData(&quot;#.id&quot;);&#xD;
+self.set(&quot;parameter&quot;,{viewName:arg.entity.get(&quot;url&quot;),assignTargetId:assignTargetId});</ClientEvent>
+        <Property name="dataType">[dataTypeComponent]</Property>
+        <Property name="dataProvider">bdf2.profile.componentMaintain#loadViewComponents</Property>
+      </Reference>
+    </DataType>
+    <DataType name="dataTypeComponent">
+      <Property name="creationType">com.bstek.bdf2.core.view.ViewComponent</Property>
+      <PropertyDef name="id">
+        <Property name="dataType">String</Property>
+      </PropertyDef>
+      <PropertyDef name="icon">
+        <Property name="dataType">String</Property>
+      </PropertyDef>
+      <PropertyDef name="urlComponentId">
+        <Property name="dataType">String</Property>
+      </PropertyDef>
+      <PropertyDef name="desc">
+        <Property name="dataType">String</Property>
+      </PropertyDef>
+      <PropertyDef name="enabled">
+        <Property name="dataType">boolean</Property>
+      </PropertyDef>
+      <PropertyDef name="use">
+        <Property name="dataType">boolean</Property>
+      </PropertyDef>
+      <PropertyDef name="name">
+        <Property name="dataType">String</Property>
+      </PropertyDef>
+      <PropertyDef name="componentInfoId">
+        <Property name="dataType">String</Property>
+      </PropertyDef>
+      <PropertyDef name="sortabled">
+        <Property name="dataType">boolean</Property>
+      </PropertyDef>
+      <PropertyDef name="children">
+        <Property name="dataType">[SELF]</Property>
+      </PropertyDef>
+      <Reference name="properties">
+        <Property name="dataType">[dataTypeProperty]</Property>
+        <Property name="dataProvider">bdf2.profile.componentMaintain#loadProperties</Property>
+        <Property name="parameter">$${this.componentInfoId}</Property>
+      </Reference>
+      <Reference name="events">
+        <Property name="dataType">[dataTypeEvent]</Property>
+        <Property name="dataProvider">bdf2.profile.componentMaintain#loadEvents</Property>
+        <Property name="parameter">$${this.componentInfoId}</Property>
+      </Reference>
+      <Reference name="sorts">
+        <ClientEvent name="beforeLoadData">var data=arg.entity;&#xD;
+if(!data)return;&#xD;
+self.set(&quot;parameter&quot;,{children:data.get(&quot;children&quot;).toJSON(),parentComponentId:data.get(&quot;componentInfoId&quot;)});</ClientEvent>
+        <Property name="dataProvider">bdf2.profile.componentMaintain#loadSorts</Property>
+        <Property name="dataType">[dataTypeSort]</Property>
+        <Property name="parameter">$${this.id}</Property>
+      </Reference>
+      <Reference name="validators">
+        <Property name="dataType">[dataTypeValidator]</Property>
+        <Property name="dataProvider">bdf2.profile.componentMaintain#loadValidators</Property>
+        <Property name="parameter">$${this.componentInfoId}</Property>
+      </Reference>
+    </DataType>
+    <DataType name="dataTypeProperty" parent="$dataTypeComponentProperty"/>
+    <DataType name="dataTypeEvent" parent="$dataTypeComponentEvent"/>
+    <DataType name="dataTypeSort" parent="$dataTypeComponentSort"/>
+    <DataType name="dataTypeName">
+      <Property name="creationType">com.bstek.bdf2.profile.view.component.NameData</Property>
+      <PropertyDef name="name">
+        <Property name="dataType">String</Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="dataTypeValidator" parent="$dataTypeValidatorDef"/>
+  </Model>
+  <View>
+    <DataSet id="dataSetPropertyName">
+      <Property name="dataType">[dataTypeName]</Property>
+      <Property name="dataProvider">bdf2.profile.componentMaintain#loadControlProperties</Property>
+      <Property name="loadMode">manual</Property>
+    </DataSet>
+    <DataSet id="dataSetValidator">
+      <Property name="dataType">[dataTypeValidator]</Property>
+      <Property name="dataProvider">bdf2.profile.componentMaintain#loadAllValidators</Property>
+      <Property name="pageSize">10</Property>
+    </DataSet>
+    <DataSet id="dataSetEventName">
+      <Property name="dataType">[dataTypeName]</Property>
+      <Property name="dataProvider">bdf2.profile.componentMaintain#loadControlEvents</Property>
+      <Property name="loadMode">manual</Property>
+    </DataSet>
+    <DataSet id="dataSetAssignTarget">
+      <Property name="dataType">[dataTypeAssignTarget]</Property>
+      <Property name="dataProvider">bdf2.profile.componentMaintain#loadAssignTargets</Property>
+      <Property name="pageSize">20</Property>
+    </DataSet>
+    <DataSetDropDown id="dataSetDropDownEventNames">
+      <Property name="dataSet">dataSetEventName</Property>
+      <Property name="property">name</Property>
+    </DataSetDropDown>
+    <DataSetDropDown id="dataSetDropDownPropertyNames">
+      <Property name="dataSet">dataSetPropertyName</Property>
+      <Property name="property">name</Property>
+    </DataSetDropDown>
+    <SplitPanel>
+      <Property name="position">260</Property>
+      <MainControl>
+        <SplitPanel>
+          <Property name="position">260</Property>
+          <MainControl>
+            <Container>
+              <SplitPanel>
+                <Property name="position">260</Property>
+                <MainControl>
+                  <Container id="containerOverride">
+                    <Property name="visible">false</Property>
+                    <TabControl id="tabControlConfig">
+                      <ControlTab>
+                        <Property name="caption">属性</Property>
+                        <Property name="name">tabProp</Property>
+                        <Container>
+                          <ToolBar>
+                            <DataPilot>
+                              <Property name="itemCodes">+,-</Property>
+                              <Property name="dataSet">dataSetAssignTarget</Property>
+                              <Property name="dataPath">!currentComponent.properties</Property>
+                            </DataPilot>
+                            <ToolBarButton>
+                              <ClientEvent name="onClick">var ds=view.id(&quot;dataSetAssignTarget&quot;);&#xD;
+var data=ds.getData(&quot;!currentComponent&quot;);&#xD;
+var urlData=ds.getData(&quot;!currentUrl&quot;);&#xD;
+var id=ds.getData(&quot;#.id&quot;);&#xD;
+var action=view.id(&quot;updateActionSaveProperty&quot;);&#xD;
+action.set(&quot;parameter&quot;,{parentComponentId:data.get(&quot;componentInfoId&quot;),controlId:data.get(&quot;id&quot;),url:urlData.get(&quot;url&quot;),assignTargetId:id,type:data.get(&quot;name&quot;)});&#xD;
+action.execute();</ClientEvent>
+                              <Property name="caption">保存</Property>
+                              <Property name="icon">url(skin>common/icons.gif) -140px -20px</Property>
+                            </ToolBarButton>
+                          </ToolBar>
+                          <DataGrid>
+                            <Property name="dataSet">dataSetAssignTarget</Property>
+                            <Property name="dataPath">!currentComponent.properties</Property>
+                            <DataColumn name="name">
+                              <Property name="property">name</Property>
+                              <Property name="trigger">dataSetDropDownPropertyNames</Property>
+                            </DataColumn>
+                            <DataColumn name="value">
+                              <Property name="property">value</Property>
+                            </DataColumn>
+                          </DataGrid>
+                          <UpdateAction id="updateActionSaveProperty">
+                            <Property name="dataResolver">bdf2.profile.componentMaintain#saveProperties</Property>
+                            <Property name="successMessage">操作成功</Property>
+                            <Property name="alwaysExecute">true</Property>
+                            <UpdateItem>
+                              <Property name="dataPath">!currentComponent.properties</Property>
+                              <Property name="dataSet">dataSetAssignTarget</Property>
+                              <Property name="alias">properties</Property>
+                            </UpdateItem>
+                          </UpdateAction>
+                        </Container>
+                      </ControlTab>
+                      <ControlTab>
+                        <Property name="caption">事件</Property>
+                        <Container>
+                          <ToolBar>
+                            <DataPilot>
+                              <Property name="itemCodes">+,-</Property>
+                              <Property name="dataSet">dataSetAssignTarget</Property>
+                              <Property name="dataPath">!currentComponent.events</Property>
+                            </DataPilot>
+                            <ToolBarButton>
+                              <ClientEvent name="onClick">var ds=view.id(&quot;dataSetAssignTarget&quot;);&#xD;
+var data=ds.getData(&quot;!currentComponent&quot;);&#xD;
+var urlData=ds.getData(&quot;!currentUrl&quot;);&#xD;
+var id=ds.getData(&quot;#.id&quot;);&#xD;
+var action=view.id(&quot;updateActionSaveEvent&quot;);&#xD;
+action.set(&quot;parameter&quot;,{parentComponentId:data.get(&quot;componentInfoId&quot;),controlId:data.get(&quot;id&quot;),url:urlData.get(&quot;url&quot;),assignTargetId:id,type:data.get(&quot;name&quot;)});&#xD;
+action.execute();</ClientEvent>
+                              <Property name="caption">保存</Property>
+                              <Property name="icon">url(skin>common/icons.gif) -140px -20px</Property>
+                            </ToolBarButton>
+                          </ToolBar>
+                          <DataGrid>
+                            <Property name="dataSet">dataSetAssignTarget</Property>
+                            <Property name="dataPath">!currentComponent.events</Property>
+                            <Property name="dynaRowHeight">true</Property>
+                            <DataColumn name="name">
+                              <Property name="property">name</Property>
+                              <Property name="trigger">dataSetDropDownEventNames</Property>
+                            </DataColumn>
+                            <DataColumn name="content">
+                              <Property name="property">content</Property>
+                              <Property name="editorType">TextArea</Property>
+                              <Property name="wrappable">true</Property>
+                            </DataColumn>
+                          </DataGrid>
+                          <UpdateAction id="updateActionSaveEvent">
+                            <Property name="dataResolver">bdf2.profile.componentMaintain#saveEvents</Property>
+                            <Property name="successMessage">操作成功</Property>
+                            <Property name="alwaysExecute">true</Property>
+                            <UpdateItem>
+                              <Property name="dataPath">!currentComponent.events</Property>
+                              <Property name="dataSet">dataSetAssignTarget</Property>
+                              <Property name="alias">events</Property>
+                            </UpdateItem>
+                          </UpdateAction>
+                        </Container>
+                      </ControlTab>
+                      <ControlTab>
+                        <Property name="caption">排序</Property>
+                        <Property name="name">sortTab</Property>
+                        <Property name="tags">sortTab</Property>
+                        <Container>
+                          <ToolBar>
+                            <ToolBarButton>
+                              <ClientEvent name="onClick">var ds=view.id(&quot;dataSetAssignTarget&quot;);&#xD;
+var data=ds.getData(&quot;!currentComponent&quot;);&#xD;
+var urlData=ds.getData(&quot;!currentUrl&quot;);&#xD;
+var id=ds.getData(&quot;#.id&quot;);&#xD;
+var action=view.id(&quot;updateActionSaveSort&quot;);&#xD;
+action.set(&quot;parameter&quot;,{parentComponentId:data.get(&quot;componentInfoId&quot;),controlId:data.get(&quot;id&quot;),url:urlData.get(&quot;url&quot;),assignTargetId:id,type:data.get(&quot;name&quot;)});&#xD;
+action.execute();</ClientEvent>
+                              <Property name="caption">保存</Property>
+                              <Property name="icon">url(skin>common/icons.gif) -140px -20px</Property>
+                            </ToolBarButton>
+                            <ToolBarButton>
+                              <ClientEvent name="onClick">dorado.MessageBox.confirm(&quot;真的要重置当前排序信息吗？&quot;,function(){&#xD;
+	var action=view.id(&quot;ajaxActionResetSorts&quot;);&#xD;
+	var ds=view.id(&quot;dataSetAssignTarget&quot;);&#xD;
+	var data=ds.getData(&quot;!currentComponent&quot;);	&#xD;
+	action.set(&quot;parameter&quot;,{parentComponentId:data.get(&quot;componentInfoId&quot;)});&#xD;
+	action.execute(function(){&#xD;
+		data.reset(&quot;sorts&quot;);&#xD;
+	});&#xD;
+});</ClientEvent>
+                              <Property name="caption">重置</Property>
+                              <Property name="icon">url(skin>common/icons.gif) -220px -240px</Property>
+                            </ToolBarButton>
+                          </ToolBar>
+                          <DataGrid>
+                            <ClientEvent name="onDraggingSourceDrop">var data=view.id(&quot;dataSetAssignTarget&quot;).getData(&quot;!currentComponent.sorts&quot;);&#xD;
+var order=1;&#xD;
+data.each(function(data){&#xD;
+	data.set(&quot;order&quot;,order++);&#xD;
+});</ClientEvent>
+                            <Property name="dataSet">dataSetAssignTarget</Property>
+                            <Property name="dataPath">!currentComponent.sorts</Property>
+                            <Property name="readOnly">true</Property>
+                            <Property name="draggable">true</Property>
+                            <Property name="droppable">true</Property>
+                            <Property name="dragTags">col</Property>
+                            <Property name="droppableTags">col</Property>
+                            <IndicatorColumn/>
+                            <DataColumn name="componentId">
+                              <Property name="property">controlId</Property>
+                            </DataColumn>
+                          </DataGrid>
+                          <UpdateAction id="updateActionSaveSort">
+                            <Property name="dataResolver">bdf2.profile.componentMaintain#saveSorts</Property>
+                            <Property name="successMessage">操作成功</Property>
+                            <UpdateItem>
+                              <Property name="dataPath">!currentComponent.sorts</Property>
+                              <Property name="dataSet">dataSetAssignTarget</Property>
+                              <Property name="alias">sorts</Property>
+                            </UpdateItem>
+                          </UpdateAction>
+                          <AjaxAction id="ajaxActionResetSorts">
+                            <Property name="service">bdf2.profile.componentMaintain#resetSorts</Property>
+                            <Property name="successMessage">重置成功</Property>
+                          </AjaxAction>
+                        </Container>
+                      </ControlTab>
+                      <ControlTab>
+                        <Property name="name">validatorTab</Property>
+                        <Property name="caption">验证器</Property>
+                        <Property name="tags">validatorTab</Property>
+                        <Container>
+                          <ToolBar>
+                            <DataPilot>
+                              <ClientEvent name="onSubControlAction">switch(arg.code){&#xD;
+	case &quot;+&quot;:&#xD;
+		view.id(&quot;dialogValidators&quot;).show();&#xD;
+		break;&#xD;
+	case &quot;-&quot;:&#xD;
+		dorado.MessageBox.confirm(&quot;确认要删除吗？&quot;,function(){&#xD;
+			var ds=view.id(&quot;dataSetAssignTarget&quot;);&#xD;
+			var validator=ds.getData(&quot;!currentComponent.#validators&quot;);&#xD;
+			var component=ds.getData(&quot;!currentComponent&quot;);&#xD;
+			var action=view.id(&quot;ajaxActionDeleteValidator&quot;);&#xD;
+			action.set(&quot;parameter&quot;,{validatorId:validator.get(&quot;id&quot;),componentId:component.get(&quot;componentInfoId&quot;)});&#xD;
+			action.execute(function(){&#xD;
+				component.reset(&quot;validators&quot;);&#xD;
+			});		&#xD;
+		});&#xD;
+		break;&#xD;
+}&#xD;
+arg.processDefault=false;</ClientEvent>
+                              <Property name="dataSet">dataSetAssignTarget</Property>
+                              <Property name="dataPath">!currentComponent.validators</Property>
+                              <Property name="itemCodes">+,-</Property>
+                            </DataPilot>
+                          </ToolBar>
+                          <DataGrid>
+                            <Property name="dataPath">!currentComponent.validators</Property>
+                            <Property name="dataSet">dataSetAssignTarget</Property>
+                            <Property name="readOnly">true</Property>
+                            <DataColumn name="name">
+                              <Property name="property">name</Property>
+                            </DataColumn>
+                            <DataColumn name="desc">
+                              <Property name="property">desc</Property>
+                            </DataColumn>
+                            <DataColumn name="type">
+                              <Property name="property">type</Property>
+                            </DataColumn>
+                          </DataGrid>
+                          <Dialog id="dialogValidators">
+                            <Property name="center">true</Property>
+                            <Property name="width">500</Property>
+                            <Property name="height">450</Property>
+                            <Property name="modal">true</Property>
+                            <Buttons>
+                              <Button>
+                                <ClientEvent name="onClick">var data=view.id(&quot;dataSetValidator&quot;).getData(&quot;#&quot;);&#xD;
+if(!data){&#xD;
+	dorado.MessageBox.alert(&quot;请先选中一个验证器&quot;);&#xD;
+	return;&#xD;
+}&#xD;
+var ds=view.id(&quot;dataSetAssignTarget&quot;);&#xD;
+var component=ds.getData(&quot;!currentComponent&quot;);&#xD;
+var urlData=ds.getData(&quot;!currentUrl&quot;);&#xD;
+var id=data.get(&quot;id&quot;);&#xD;
+var action=view.id(&quot;ajaxActionAddValidators&quot;);&#xD;
+action.set(&quot;parameter&quot;,{validatorId:id,componentInfoId:component.get(&quot;componentInfoId&quot;),controlId:component.get(&quot;id&quot;),url:urlData.get(&quot;url&quot;),assignTargetId:ds.getData(&quot;#.id&quot;),type:component.get(&quot;name&quot;)});&#xD;
+action.execute(function(msg){&#xD;
+	if(msg){&#xD;
+		dorado.MessageBox.alert(&quot;验证器[&quot;+data.get(&quot;name&quot;)+&quot;]已存在&quot;);&#xD;
+	}else{&#xD;
+		component.reset(&quot;validators&quot;);&#xD;
+		view.id(&quot;dialogValidators&quot;).hide();&#xD;
+	}&#xD;
+});</ClientEvent>
+                                <Property name="caption">确定</Property>
+                                <Property name="icon">url(skin>common/icons.gif) -140px -20px</Property>
+                              </Button>
+                              <Button>
+                                <ClientEvent name="onClick">view.id(&quot;dialogValidators&quot;).hide();</ClientEvent>
+                                <Property name="caption">取消</Property>
+                                <Property name="icon">url(skin>common/icons.gif) -40px 0px</Property>
+                              </Button>
+                            </Buttons>
+                            <Children>
+                              <DataGrid>
+                                <Property name="dataSet">dataSetValidator</Property>
+                                <Property name="readOnly">true</Property>
+                                <Property name="filterMode">serverSide</Property>
+                                <Property name="showFilterBar">true</Property>
+                                <DataColumn name="name">
+                                  <Property name="property">name</Property>
+                                </DataColumn>
+                                <DataColumn name="type">
+                                  <Property name="property">type</Property>
+                                  <Property name="filterable">false</Property>
+                                </DataColumn>
+                                <DataColumn name="desc">
+                                  <Property name="property">desc</Property>
+                                  <Property name="filterable">false</Property>
+                                </DataColumn>
+                              </DataGrid>
+                            </Children>
+                            <Tools/>
+                          </Dialog>
+                          <AjaxAction id="ajaxActionAddValidators">
+                            <Property name="service">bdf2.profile.componentMaintain#insertValidators</Property>
+                          </AjaxAction>
+                          <AjaxAction id="ajaxActionDeleteValidator">
+                            <Property name="service">bdf2.profile.componentMaintain#deleteValidators</Property>
+                          </AjaxAction>
+                        </Container>
+                      </ControlTab>
+                    </TabControl>
+                  </Container>
+                </MainControl>
+                <SideControl>
+                  <DataTree id="dataTreeComponent">
+                    <ClientEvent name="onRenderNode">var data=arg.node.get(&quot;data&quot;);&#xD;
+var id=data.get(&quot;id&quot;);&#xD;
+var name=data.get(&quot;name&quot;);&#xD;
+var use=data.get(&quot;use&quot;);&#xD;
+var enabled=data.get(&quot;enabled&quot;);&#xD;
+if(id){&#xD;
+	if(use){&#xD;
+		arg.dom.innerHTML=&quot;&lt;strong>&lt;font color='green'>&quot;+id+&quot;[&quot;+name+&quot;]&lt;/font>&lt;/strong>&quot;;&#xD;
+	}else{&#xD;
+		if(enabled){&#xD;
+			arg.dom.innerHTML=&quot;&lt;font color='green'>&quot;+id+&quot;[&quot;+name+&quot;]&lt;/font>&quot;;&#xD;
+		}else{&#xD;
+			arg.dom.innerHTML=id+&quot;[&quot;+name+&quot;]&quot;;&#xD;
+		}&#xD;
+	}&#xD;
+}else{&#xD;
+	if(use){&#xD;
+		arg.dom.innerHTML=&quot;&lt;strong>&lt;font color='green'>[&quot;+name+&quot;]&lt;/font>&lt;/strong>&quot;;&#xD;
+	}else{&#xD;
+		arg.dom.innerHTML=&quot;[&quot;+name+&quot;]&quot;;&#xD;
+	}&#xD;
+}&#xD;
+</ClientEvent>
+                    <ClientEvent name="onCurrentChange">var entity=self.get(&quot;currentEntity&quot;);&#xD;
+if(!entity)return;&#xD;
+var enabled=entity.get(&quot;enabled&quot;);&#xD;
+var tabControl=view.id(&quot;tabControlConfig&quot;);&#xD;
+if(enabled){&#xD;
+	view.id(&quot;containerOverride&quot;).set(&quot;visible&quot;,true);&#xD;
+	var sortabled=entity.get(&quot;sortabled&quot;);&#xD;
+	var tab=tabControl.getTab(&quot;sortTab&quot;);&#xD;
+	if(sortabled){&#xD;
+		if(!tab.get(&quot;visible&quot;)){&#xD;
+			tab.set(&quot;visible&quot;,true);&#xD;
+		}&#xD;
+	}else{&#xD;
+		if(tab.get(&quot;visible&quot;)){&#xD;
+			tab.set(&quot;visible&quot;,false);&#xD;
+			tabControl.set(&quot;currentTab&quot;,&quot;tabProp&quot;);&#xD;
+		}&#xD;
+	}&#xD;
+	var type=entity.get(&quot;name&quot;);&#xD;
+	var vtab=tabControl.getTab(&quot;validatorTab&quot;);&#xD;
+	if(type==&quot;PropertyDef&quot;){&#xD;
+		if(!vtab.get(&quot;visible&quot;)){&#xD;
+			vtab.set(&quot;visible&quot;,true);&#xD;
+		}&#xD;
+	}else{&#xD;
+		if(vtab.get(&quot;visible&quot;)){&#xD;
+			vtab.set(&quot;visible&quot;,false);&#xD;
+			view.id(&quot;tabControlConfig&quot;).set(&quot;currentTab&quot;,&quot;tabProp&quot;);&#xD;
+		}&#xD;
+	}&#xD;
+	var dsProp=view.id(&quot;dataSetPropertyName&quot;);&#xD;
+	dsProp.set(&quot;parameter&quot;,{componentClassName:entity.get(&quot;name&quot;)});&#xD;
+	dsProp.flushAsync();&#xD;
+	var dsEvent=view.id(&quot;dataSetEventName&quot;);&#xD;
+	dsEvent.set(&quot;parameter&quot;,{componentClassName:entity.get(&quot;name&quot;)});&#xD;
+	dsEvent.flushAsync();	&#xD;
+}else{&#xD;
+	view.id(&quot;containerOverride&quot;).set(&quot;visible&quot;,false);&#xD;
+}</ClientEvent>
+                    <Property name="dataPath">!currentUrl.components</Property>
+                    <Property name="dataSet">dataSetAssignTarget</Property>
+                    <Property name="currentNodeDataPath">currentComponent</Property>
+                    <BindingConfigs>
+                      <BindingConfig>
+                        <Property name="childrenProperty">children</Property>
+                        <Property name="labelProperty">id</Property>
+                        <Property name="recursive">true</Property>
+                        <Property name="iconProperty">icon</Property>
+                        <Property name="expandLevel">10</Property>
+                      </BindingConfig>
+                    </BindingConfigs>
+                  </DataTree>
+                </SideControl>
+              </SplitPanel>
+            </Container>
+          </MainControl>
+          <SideControl>
+            <Container>
+              <DataTree>
+                <Property name="dataSet">dataSetAssignTarget</Property>
+                <Property name="dataPath">#.urls</Property>
+                <Property name="currentNodeDataPath">currentUrl</Property>
+                <BindingConfigs>
+                  <BindingConfig>
+                    <Property name="childrenProperty">children</Property>
+                    <Property name="expandLevel">2</Property>
+                    <Property name="labelProperty">name</Property>
+                    <Property name="recursive">true</Property>
+                  </BindingConfig>
+                </BindingConfigs>
+              </DataTree>
+            </Container>
+          </SideControl>
+        </SplitPanel>
+      </MainControl>
+      <SideControl>
+        <Container>
+          <ToolBar>
+            <ToolBarButton>
+              <Property name="caption">刷新缓存</Property>
+              <Property name="icon">url(skin>common/icons.gif) -40px -240px</Property>
+              <Property name="action">ajaxActionRefreshCache</Property>
+            </ToolBarButton>
+          </ToolBar>
+          <DataGrid>
+            <Property name="dataSet">dataSetAssignTarget</Property>
+            <Property name="filterMode">serverSide</Property>
+            <Property name="showFilterBar">true</Property>
+            <Property name="readOnly">true</Property>
+            <DataColumn name="desc">
+              <Property name="property">desc</Property>
+            </DataColumn>
+            <DataColumn name="name">
+              <Property name="property">name</Property>
+            </DataColumn>
+          </DataGrid>
+          <AjaxAction id="ajaxActionRefreshCache">
+            <Property name="service">bdf2.profile.componentMaintain#refreshCache</Property>
+            <Property name="successMessage">缓存刷新成功</Property>
+          </AjaxAction>
+        </Container>
+      </SideControl>
+    </SplitPanel>
+  </View>
+</ViewConfig>

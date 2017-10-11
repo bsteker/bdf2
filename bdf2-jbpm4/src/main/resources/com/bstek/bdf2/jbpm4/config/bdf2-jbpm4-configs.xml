@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+	http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-2.5.xsd">
+
+	<import resource="classpath:com/bstek/bdf2/jbpm4/config/bdf2-jbpm4-component-configs.xml"/>
+
+	<context:component-scan base-package="com.bstek.bdf2.jbpm4.view*,com.bstek.bdf2.jbpm4.listener.impl" />
+
+	<alias name="${bdf2.jbpm4.transactionManager}" alias="bdf2.jbpm4.transactionManagerBean"/>
+	
+	<bean id="bdf2.jbpm4.componentControlService" class="com.bstek.bdf2.jbpm4.service.impl.ComponentControlServiceImpl"></bean>
+	
+	<bean parent="dorado.genericObjectListenerRegister">
+		<property name="listener">
+			<bean class="com.bstek.bdf2.jbpm4.context.GenericTaskToolbarListener">
+				<property name="order" value="10" />
+				<property name="pattern" value="*" />
+				<property name="hibernateDao" ref="bdf2.jbpm4HibernateDao" />
+				<property name="bpmService" ref="bdf2.jbpm4.bpmService" />
+				<property name="viewManagerHelper" ref="bdf2.viewManagerHelper" />
+			</bean>
+		</property>
+	</bean>
+	
+	<bean parent="dorado.genericObjectListenerRegister">
+		<property name="listener">
+			<bean class="com.bstek.bdf2.jbpm4.listener.ComponentSecureListener">
+				<property name="order" value="11" />
+				<property name="pattern" value="*" />
+				<property name="bpmService" ref="bdf2.jbpm4.bpmService" />
+				<property name="componentControlService" ref="bdf2.jbpm4.componentControlService" />
+			</bean>
+		</property>
+	</bean>
+	
+	<bean id="bdf2.jbpm4HibernateDao" class="com.bstek.bdf2.jbpm4.Jbpm4HibernateDao"></bean>
+	
+	<bean id="bdf2.jbpm4.donothingTaskOverdueProcessor" class="com.bstek.bdf2.jbpm4.job.impl.DonothingTaskOverdueProcessor"></bean>
+	<bean class="com.bstek.bdf2.jbpm4.controller.Jbpm4MenuGenerator"></bean>
+	<bean id="bdf2.jbpm4.taskReminderMessageSender" class="com.bstek.bdf2.jbpm4.job.reminder.TaskReminderMessageSender">
+		<property name="bpmService" ref="bdf2.jbpm4.bpmService"></property>	
+	</bean>
+	
+	<bean id="bdf2.jbpm4.cancelReminderJobBean" class="com.bstek.bdf2.jbpm4.job.reminder.CancelReminderJobBean"></bean>
+	<bean class="com.bstek.bdf2.jbpm4.job.reminder.TaskReminderRunJobProvider"></bean>
+	
+	<bean class="com.bstek.bdf2.jbpm4.context.DefaultJbpm4MessageVariableRegister">
+		<property name="bpmService" ref="bdf2.jbpm4.bpmService"></property>
+	</bean>
+	<bean class="com.bstek.bdf2.jbpm4.job.scan.ScanTaskReminderJobProvider">
+		<property name="scanTaskReminderJobCronExpression" value="${bdf2.jbpm4.scanTaskReminderJobCronExpression}"></property>
+		<property name="jobService" ref="bdf2.job.jobService"></property>
+	</bean>
+	<bean class="com.bstek.bdf2.core.orm.AnnotationPackages">
+		<property name="scanPackages">
+			<list>
+				<value>com/bstek/bdf2/jbpm4/model</value>
+			</list>
+		</property>
+		<property name="dataSourceRegisterName" value="${bdf2.jbpm4.dataSourceName}"></property>
+	</bean>
+	<bean class="com.bstek.bdf2.core.orm.hibernate.MappingResources">
+		<property name="dataSourceRegisterName" value="${bdf2.jbpm4.dataSourceName}"></property>
+		<property name="resources">
+			<list>
+				<value>com/bstek/bdf2/jbpm4/config/jbpm.task.hbm.xml</value>
+				<value>jbpm.repository.hbm.xml</value>
+				<value>com/bstek/bdf2/jbpm4/config/jbpm.history.hbm.xml</value>
+				<value>jbpm.execution.hbm.xml</value>
+			</list>
+		</property>
+	</bean>
+	<bean id="bdf2.jbpm4.springHelper" class="com.bstek.bdf2.jbpm4.context.ProcessEngineFactory">
+		<property name="jbpmCfg" value="com/bstek/bdf2/jbpm4/config/jbpm.cfg.xml" />
+	</bean>
+	<bean id="bdf2.jbpm4.processEngine" factory-bean="bdf2.jbpm4.springHelper" factory-method="createProcessEngine" />
+
+	<bean id="bdf2.jbpm4.bpmService" class="com.bstek.bdf2.jbpm4.service.impl.BpmServiceImpl">
+		<property name="defaultProcessUsername" value="${bdf2.jbpm4.defaultProcessUsername}" />
+		<property name="processEngine" ref="bdf2.jbpm4.processEngine"></property>
+		<property name="taskService">
+			<bean factory-bean="bdf2.jbpm4.processEngine" factory-method="getTaskService" />
+		</property>
+		<property name="repositoryService">
+			<bean factory-bean="bdf2.jbpm4.processEngine" factory-method="getRepositoryService" />
+		</property>
+		<property name="executionService">
+			<bean factory-bean="bdf2.jbpm4.processEngine" factory-method="getExecutionService" />
+		</property>
+		<property name="historyService">
+			<bean factory-bean="bdf2.jbpm4.processEngine" factory-method="getHistoryService" />
+		</property>
+		<property name="managementService">
+			<bean factory-bean="bdf2.jbpm4.processEngine" factory-method="getManagementService" />
+		</property>
+	</bean>
+
+	<bean parent="dorado.dataConfigLoader">
+		<property name="configLocation"
+			value="classpath:com/bstek/bdf2/jbpm4/view/*.model.xml" />
+	</bean>
+</beans>

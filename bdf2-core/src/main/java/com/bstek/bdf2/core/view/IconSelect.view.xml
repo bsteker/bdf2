@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ViewConfig>
+  <Property name="metaData">
+    <Property name="securityTag">rapid</Property>
+  </Property>
+  <Arguments/>
+  <Context/>
+  <Model/>
+  <View>
+    <Dialog id="$dialogSelectIcon">
+      <ClientEvent name="onReady">window.$selectIcon=function(e){&#xD;
+    x=e.pageX;&#xD;
+    y=e.pageY;&#xD;
+	if(isNaN(x)){&#xD;
+		x=e.clientX;&#xD;
+	}&#xD;
+	if(isNaN(y)){&#xD;
+		y=e.clientY;&#xD;
+	}&#xD;
+	x=x-parseInt($(&quot;#image1Icons&quot;).offset().left); &#xD;
+    y=y-parseInt($(&quot;#image1Icons&quot;).offset().top);&#xD;
+	x=parseInt(x/20)*20;&#xD;
+	y=parseInt(y/20)*20;&#xD;
+	offsetStr=&quot; -&quot;+x+&quot;px -&quot;+y+&quot;px&quot;;&#xD;
+	var bgStyle = &quot;url(&quot; + $('#image1Icons').attr('src')+ &quot;)&quot;+offsetStr;&#xD;
+	$(&quot;#selectedIconUrl&quot;).css(&quot;background&quot;,bgStyle);&#xD;
+	var url = &quot;url(>skin>common/icons.gif)&quot;+offsetStr;&#xD;
+	window.$selectedIconUrl=url;&#xD;
+}</ClientEvent>
+      <Property name="center">true</Property>
+      <Property name="width">360</Property>
+      <Property name="height">435</Property>
+      <Property name="modal">true</Property>
+      <Property name="caption">图标选择</Property>
+      <Buttons>
+        <Button>
+          <ClientEvent name="onClick">var $selectedIconUrl=window.$selectedIconUrl;&#xD;
+if($selectedIconUrl){&#xD;
+	var callback=view.id(&quot;$dialogSelectIcon&quot;).callback;&#xD;
+	if(callback){&#xD;
+		var dialog=view.id(&quot;$dialogSelectIcon&quot;);&#xD;
+		callback.call(view,$selectedIconUrl);&#xD;
+		dialog.hide();&#xD;
+	}else{&#xD;
+		dorado.MessageBox.alert(&quot;调用图标选择窗口需要定义一个名为callback的回调函数！&quot;);&#xD;
+	}&#xD;
+}else{&#xD;
+	dorado.MessageBox.alert(&quot;请先选择一个图标！&quot;);&#xD;
+}&#xD;
+</ClientEvent>
+          <Property name="caption">确认</Property>
+          <Property name="icon">url(skin>common/icons.gif) -140px -20px</Property>
+        </Button>
+        <Button>
+          <ClientEvent name="onClick">this.id(&quot;$dialogSelectIcon&quot;).hide();&#xD;
+</ClientEvent>
+          <Property name="caption">关闭</Property>
+          <Property name="icon">url(skin>common/icons.gif) -40px 0px</Property>
+        </Button>
+      </Buttons>
+      <Children>
+        <HtmlContainer>
+          <Property name="content">&lt;div id=&quot;selectedIconUrl&quot; title=&quot;当前选中的图标&quot; style=&quot;border:solid gray 1px;width:20px;height:20px;align:center&quot;>&#xD;
+&lt;/div>&#xD;
+&lt;img src=&quot;dorado/client/skins/~current/common/icons.gif&quot; id=&quot;image1Icons&quot; style=&quot;position:absolute;top:20px;left:0px;&quot; onmousedown=$selectIcon(event)>&lt;/img>&#xD;
+&#xD;
+</Property>
+        </HtmlContainer>
+      </Children>
+      <Tools/>
+    </Dialog>
+  </View>
+</ViewConfig>

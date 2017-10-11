@@ -1,0 +1,33 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>创建BDF2项目帮助文档</title>
+</head>
+<body>
+	<h2>生成BDF2项目后怎么办？</h2>
+	<h4>
+		 如果你还没有下载和安装eclipse，可以从<a href="http://www.eclipse.org/downloads/" target="_blank">http://www.eclipse.org/downloads/</a>获取最新的Eclipse IDE for Java EE Developers版本。
+		<br>如何你选择创建的是Maven Project,则还需要从<a href="http://www.eclipse.org/m2e/download/" target="_blank">http://www.eclipse.org/m2e/download/</a>获取安装Maven Integration(M2E)插件。
+	</h4>
+	
+	步骤一、解压生成的BDF2项目到指定的目录。
+	<br> 步骤二、打开eclipse，选择菜单【File】-->【Import】，如下图所示。
+	<br>
+	<br>
+	<img style="margin-left: 60px" src="images/importFile.png" />
+	<br>
+	<br> 步骤三、选择 Existing Projects into WorkSpance 资源目录,点击【Next】按钮，如下图所示。
+	<br>
+	<br>
+	<img style="margin-left: 60px" src="images/importFinish.png" />
+	<br>
+	<br> 步骤四、点击【Browse...】按钮，选择解压后的BDF2项目，然后点击【Finish】按钮，这样就完成了导入工作。
+	<br>
+	步骤五、配置数据源，默认生成的BDF2项目采用HSQL数据库，不需要配置即可运行，如果采用其他数据库，可以修改/WEB-INF/dorado-home/datasource.xml文件，如下图为mysql5数据源配置。
+	<br>
+	<h5>注意: 修改数据源的时候不仅要修改url和driver,还需要将hibernate.dialect修改为对应数据库类型的方言</h5>
+	<img style="margin-left: 60px" src="images/datasource-mysql.png" />
+	
+</body>
+</html>

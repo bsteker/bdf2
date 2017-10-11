@@ -1,0 +1,55 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<artifactId>bdf2-import</artifactId>
+	<version>2.0.8</version>
+	<parent>
+		<groupId>com.bstek.bdf2</groupId>
+		<artifactId>bdf2-parent</artifactId>
+		<version>2.0.5-SNAPSHOT</version>
+	</parent>
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<addon.name>bdf2-import</addon.name>
+		<addon.depends>bdf2-orm</addon.depends>
+		<addon.contextConfigLocations>classpath:com/bstek/bdf2/importexcel/config/context.xml</addon.contextConfigLocations>
+		<addon.componentConfigLocations>classpath:com/bstek/bdf2/importexcel/config/context-component.xml</addon.componentConfigLocations>
+		<addon.servletContextConfigLocations>classpath:com/bstek/bdf2/importexcel/config/servlet-context.xml</addon.servletContextConfigLocations>
+		<addon.configurer>com.bstek.bdf2.importexcel.context.ImportExcelContextLocationConfigurer</addon.configurer>
+	</properties>
+	<dependencies>
+		<dependency>
+			<groupId>org.apache.poi</groupId>
+			<artifactId>poi</artifactId>
+			<version>3.9</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.poi</groupId>
+			<artifactId>poi-excelant</artifactId>
+			<version>3.9</version>
+		</dependency>
+		<dependency>
+			<groupId>com.bstek.bdf2</groupId>
+			<artifactId>bdf2-orm-hibernate3</artifactId>
+			<version>LATEST</version>
+		</dependency>
+		<dependency>
+			<groupId>com.bstek.dorado</groupId>
+			<artifactId>dorado-uploader</artifactId>
+			<version>LATEST</version>
+		</dependency>
+	</dependencies>
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-framework-bom</artifactId>
+				<version>4.3.0.RELEASE</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+	<description>Import excel data to database</description>
+
+</project>

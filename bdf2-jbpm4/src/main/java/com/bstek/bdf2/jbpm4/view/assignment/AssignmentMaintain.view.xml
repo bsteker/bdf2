@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ViewConfig>
+  <Arguments/>
+  <Context/>
+  <Model>
+    <DataType name="dataTypeAssignmentDef">
+      <Property name="creationType">com.bstek.bdf2.jbpm4.model.AssignmentDef</Property>
+      <PropertyDef name="id">
+        <Property name="dataType">String</Property>
+      </PropertyDef>
+      <PropertyDef name="name">
+        <Property name="dataType">String</Property>
+        <Property name="label">名称</Property>
+        <Property name="required">true</Property>
+        <Validator type="length">
+          <Property name="minLength">2</Property>
+          <Property name="maxLength">60</Property>
+          <Property name="resultMessage">长度要在2~60之间</Property>
+        </Validator>
+      </PropertyDef>
+      <PropertyDef name="desc">
+        <Property name="dataType">String</Property>
+        <Property name="label">描述</Property>
+        <Validator type="length">
+          <Property name="minLength">2</Property>
+          <Property name="maxLength">120</Property>
+          <Property name="resultMessage">长度要在2~120之间</Property>
+        </Validator>
+      </PropertyDef>
+      <PropertyDef name="type">
+        <Property name="dataType">String</Property>
+        <Property name="label">分配方式</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;bdf2.jbpm4.assignmentMaintain#loadAssignmentTypes&quot;).getResult()}</Property>
+          <Property name="keyProperty">typeId</Property>
+          <Property name="valueProperty">typeName</Property>
+        </Property>
+        <Property name="required">true</Property>
+        <Validator type="length">
+          <Property name="minLength">2</Property>
+          <Property name="maxLength">60</Property>
+          <Property name="resultMessage">长度要在2~60之间</Property>
+        </Validator>
+      </PropertyDef>
+      <PropertyDef name="companyId">
+        <Property name="dataType">String</Property>
+      </PropertyDef>
+      <Reference name="infos">
+        <ClientEvent name="beforeLoadData">var id=arg.entity.get(&quot;id&quot;);&#xD;
+var type=arg.entity.get(&quot;type&quot;);&#xD;
+self.set(&quot;parameter&quot;,{assignmentDefId:id,type:type});</ClientEvent>
+        <Property name="dataType">[dataTypeAssignmentInfo]</Property>
+        <Property name="dataProvider">bdf2.jbpm4.assignmentMaintain#loadAssignmentInfos</Property>
+        <Property name="parameter">$${this.id}</Property>
+      </Reference>
+    </DataType>
+    <DataType name="dataTypeAssignmentInfo">
+      <Property name="creationType">com.bstek.bdf2.jbpm4.model.AssignmentInfo</Property>
+      <PropertyDef name="name">
+        <Property name="dataType">String</Property>
+        <Property name="label">名称</Property>
+      </PropertyDef>
+      <PropertyDef name="value">
+        <Property name="dataType">String</Property>
+        <Property name="label">值</Property>
+      </PropertyDef>
+    </DataType>
+  </Model>
+  <View listener="spring:bdf2.jbpm4.assignmentMaintain#initAssignmentSubviewHolder">
+    <DataSet id="dataSetAssignmentDef">
+      <Property name="dataType">[dataTypeAssignmentDef]</Property>
+      <Property name="dataProvider">bdf2.jbpm4.assignmentMaintain#loadAssignmentDefs</Property>
+      <Property name="pageSize">20</Property>
+    </DataSet>
+    <SplitPanel>
+      <Property name="position">60%</Property>
+      <MainControl>
+        <Container>
+          <ToolBar>
+            <ToolBarButton>
+              <ClientEvent name="onClick">var data=view.id(&quot;dataSetAssignmentDef&quot;).getData(&quot;#&quot;);&#xD;
+if(data){&#xD;
+	var typeId=data.get(&quot;type&quot;);&#xD;
+	var dialog=view.id(&quot;dialogAssignment&quot;+typeId);&#xD;
+	if(dialog){&#xD;
+		dialog.show();&#xD;
+	}else{&#xD;
+		dorado.MessageBox.alert(&quot;当前分配定义信息不支持添加具体分配信息&quot;);&#xD;
+	}&#xD;
+}else{&#xD;
+	dorado.MessageBox.alert(&quot;请先选中一个分配定义信息!&quot;);&#xD;
+}&#xD;
+</ClientEvent>
+              <Property name="caption">添加</Property>
+              <Property name="icon">url(skin>common/icons.gif) -120px 0px</Property>
+            </ToolBarButton>
+          </ToolBar>
+          <DataGrid>
+            <Property name="dataSet">dataSetAssignmentDef</Property>
+            <Property name="dataPath">#.infos</Property>
+            <Property name="readOnly">true</Property>
+            <DataColumn name="name">
+              <Property name="property">name</Property>
+            </DataColumn>
+            <DataColumn name="value">
+              <Property name="property">value</Property>
+            </DataColumn>
+          </DataGrid>
+        </Container>
+      </MainControl>
+      <SideControl>
+        <Container>
+          <ToolBar>
+            <DataPilot>
+              <ClientEvent name="onSubControlAction">var data=view.id(&quot;dataSetAssignmentDef&quot;);&#xD;
+switch(arg.code){&#xD;
+	case &quot;+&quot;:&#xD;
+		data.insert();&#xD;
+		view.id(&quot;dialogAssignmentDef&quot;).show();&#xD;
+		arg.processDefault=false;&#xD;
+		break;&#xD;
+	case &quot;-&quot;:&#xD;
+		dorado.MessageBox.confirm(&quot;真的要删除当前记录吗？&quot;,function(){&#xD;
+			data.getData(&quot;#&quot;).remove();&#xD;
+			view.id(&quot;updateActionSaveAssignmentDef&quot;).execute();&#xD;
+		});&#xD;
+		arg.processDefault=false;&#xD;
+		break;&#xD;
+}</ClientEvent>
+              <Property name="dataSet">dataSetAssignmentDef</Property>
+              <Property name="itemCodes">pages,+,-</Property>
+            </DataPilot>
+            <ToolBarButton>
+              <ClientEvent name="onClick">var data=view.id(&quot;dataSetAssignmentDef&quot;).getData(&quot;#&quot;);&#xD;
+if(data){&#xD;
+	view.tag(&quot;assignmentType&quot;).set(&quot;readOnly&quot;,true);&#xD;
+	view.id(&quot;dialogAssignmentDef&quot;).show();&#xD;
+}else{&#xD;
+	dorado.MessageBox.alert(&quot;当前没有数据可供编辑&quot;);&#xD;
+}</ClientEvent>
+              <Property name="caption">修改</Property>
+            </ToolBarButton>
+          </ToolBar>
+          <DataGrid>
+            <Property name="filterMode">serverSide</Property>
+            <Property name="dataSet">dataSetAssignmentDef</Property>
+            <Property name="readOnly">true</Property>
+            <DataColumn name="name">
+              <Property name="property">name</Property>
+            </DataColumn>
+            <DataColumn name="type">
+              <Property name="property">type</Property>
+            </DataColumn>
+            <DataColumn name="desc">
+              <Property name="property">desc</Property>
+            </DataColumn>
+          </DataGrid>
+          <Dialog id="dialogAssignmentDef">
+            <Property name="center">true</Property>
+            <Property name="modal">true</Property>
+            <Property name="width">400</Property>
+            <Property name="height">240</Property>
+            <Property name="closeable">false</Property>
+            <Buttons>
+              <Button>
+                <ClientEvent name="onClick">view.id(&quot;updateActionSaveAssignmentDef&quot;).execute(function(){&#xD;
+	view.id(&quot;dialogAssignmentDef&quot;).hide();&#xD;
+});</ClientEvent>
+                <Property name="caption">确定</Property>
+                <Property name="icon">url(skin>common/icons.gif) -140px -20px</Property>
+              </Button>
+              <Button>
+                <ClientEvent name="onClick">view.id(&quot;dataSetAssignmentDef&quot;).getData().cancel();&#xD;
+view.id(&quot;dialogAssignmentDef&quot;).hide();</ClientEvent>
+                <Property name="caption">取消</Property>
+                <Property name="icon">url(skin>common/icons.gif) -40px 0px</Property>
+              </Button>
+            </Buttons>
+            <Children>
+              <AutoForm>
+                <Property name="dataSet">dataSetAssignmentDef</Property>
+                <Property name="cols">*</Property>
+                <AutoFormElement>
+                  <Property name="name">name</Property>
+                  <Property name="property">name</Property>
+                  <Editor/>
+                </AutoFormElement>
+                <AutoFormElement>
+                  <Property name="name">type</Property>
+                  <Property name="property">type</Property>
+                  <Property name="tags">assignmentType</Property>
+                  <Editor/>
+                </AutoFormElement>
+                <AutoFormElement>
+                  <Property name="name">desc</Property>
+                  <Property name="property">desc</Property>
+                  <Property name="editorType">TextArea</Property>
+                  <Editor/>
+                </AutoFormElement>
+              </AutoForm>
+            </Children>
+            <Tools/>
+          </Dialog>
+          <UpdateAction id="updateActionSaveAssignmentDef">
+            <Property name="dataResolver">bdf2.jbpm4.assignmentMaintain#saveAssignmentDefs</Property>
+            <Property name="successMessage">操作成功</Property>
+            <UpdateItem>
+              <Property name="dataSet">dataSetAssignmentDef</Property>
+            </UpdateItem>
+          </UpdateAction>
+        </Container>
+      </SideControl>
+    </SplitPanel>
+  </View>
+</ViewConfig>

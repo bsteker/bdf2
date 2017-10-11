@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ViewConfig>
+  <Arguments/>
+  <Context/>
+  <Model/>
+  <View>
+    <Dialog id="$dialogPositionSelect">
+      <ClientEvent name="onCreate">self.$show=function(config){&#xD;
+	if(!config.callback){&#xD;
+		dorado.MessageBox.alert(&quot;请先为当前dialog添加一个名为callback的函数&quot;);&#xD;
+		return;&#xD;
+	}&#xD;
+	self.callback=config.callback;&#xD;
+	if(config.width){&#xD;
+		self.set(&quot;width&quot;,config.width);&#xD;
+	}&#xD;
+	&#xD;
+	if(config.maxSelect){&#xD;
+		self.maxSelect=config.maxSelect;&#xD;
+	}&#xD;
+	&#xD;
+	if(config.height){&#xD;
+		self.set(&quot;height&quot;,config.height);&#xD;
+	}&#xD;
+	if(config.caption){&#xD;
+		self.set(&quot;caption&quot;,config.caption);&#xD;
+	}&#xD;
+	if(config.selected){&#xD;
+		self.selected=config.selected;&#xD;
+	}&#xD;
+	var dsLeft = view.id(&quot;$dataSetPositionForSelect&quot;);&#xD;
+	var dsRight = view.id(&quot;$dataSetPositionSelected&quot;);&#xD;
+	if (config.refresh){&#xD;
+		dsLeft.set(&quot;parameter&quot;, config.username).flushAsync();&#xD;
+		dsRight.set(&quot;parameter&quot;, config.username).flushAsync();&#xD;
+	}else{&#xD;
+		if (!dsLeft.get(&quot;dataLoaded&quot;)){&#xD;
+			dsLeft.flushAsync();&#xD;
+			dsRight.flushAsync();&#xD;
+		}&#xD;
+	}&#xD;
+	self.show();&#xD;
+}&#xD;
+</ClientEvent>
+      <Property name="center">true</Property>
+      <Property name="modal">true</Property>
+      <Property name="width">630</Property>
+      <Property name="height">460</Property>
+      <Buttons>
+        <Button>
+          <ClientEvent name="onClick">var data=view.id(&quot;$dataSetPositionSelected&quot;).getData();&#xD;
+if(data.isEmpty()){&#xD;
+	dorado.MessageBox.alert(&quot;请选择一个岗位后再进行此操作&quot;);&#xD;
+	return;&#xD;
+}&#xD;
+view.id(&quot;$dialogPositionSelect&quot;).callback(data.toJSON());&#xD;
+</ClientEvent>
+          <Property name="caption">确定</Property>
+          <Property name="icon">url(skin>common/icons.gif) -140px -20px</Property>
+        </Button>
+        <Button>
+          <ClientEvent name="onClick">view.id(&quot;$dialogPositionSelect&quot;).hide();&#xD;
+</ClientEvent>
+          <Property name="caption">取消</Property>
+          <Property name="icon">url(skin>common/icons.gif) -40px 0px</Property>
+        </Button>
+      </Buttons>
+      <Children>
+        <DataSet id="$dataSetPositionForSelect">
+          <ClientEvent name="onReady">self.move=function(){&#xD;
+	var ds=view.id(&quot;$dataSetPositionForSelect&quot;);&#xD;
+	var data=ds.getData(&quot;#&quot;);&#xD;
+	if(data){&#xD;
+		var targetData=view.id(&quot;$dataSetPositionSelected&quot;).getData();&#xD;
+		var insertAble=true;&#xD;
+		targetData.each(function(user){&#xD;
+			if(user.get(&quot;id&quot;)==data.get(&quot;id&quot;)){&#xD;
+				insertAble=false;&#xD;
+				return false;&#xD;
+			}&#xD;
+		});&#xD;
+		if(insertAble){&#xD;
+			var max=view.id(&quot;$dialogPositionSelect&quot;).maxSelect;&#xD;
+			if(max &amp;&amp; targetData.toArray().length>=max){&#xD;
+				dorado.MessageBox.alert(&quot;当前最多只允许选择[&quot;+max+&quot;]个岗位！&quot;);&#xD;
+				return;&#xD;
+			}&#xD;
+			targetData.insert(data.toJSON());&#xD;
+			data.remove();&#xD;
+		}else{&#xD;
+			dorado.MessageBox.alert(&quot;当前岗位已存在！&quot;)&#xD;
+		}&#xD;
+	}else{&#xD;
+		dorado.MessageBox.alert(&quot;当前没有选中的岗位信息！&quot;)&#xD;
+	}	&#xD;
+}</ClientEvent>
+          <Property name="dataType">[$dataTypePosition]</Property>
+          <Property name="dataProvider">bdf2.positionSelect#loadPositions</Property>
+          <Property name="pageSize">15</Property>
+          <Property name="loadMode">manual</Property>
+        </DataSet>
+        <DataSet id="$dataSetPositionSelected">
+          <ClientEvent name="onReady">self.remove=function(){&#xD;
+	var data=view.id(&quot;$dataSetPositionSelected&quot;).getData(&quot;#&quot;);&#xD;
+	if(data){&#xD;
+		data.remove();&#xD;
+		view.id(&quot;$dataSetPositionForSelect&quot;).flushAsync();&#xD;
+	}else{&#xD;
+		dorado.MessageBox.alert(&quot;当前没有选中的岗位信息！&quot;)&#xD;
+	}	&#xD;
+}</ClientEvent>
+          <Property name="dataType">[$dataTypePosition]</Property>
+          <Property name="dataProvider">bdf2.positionSelect#loadPositionByUsername</Property>
+          <Property name="loadMode">manual</Property>
+        </DataSet>
+        <ToolBar>
+          <DataPilot>
+            <Property name="dataSet">$dataSetPositionForSelect</Property>
+            <Property name="itemCodes">pages</Property>
+          </DataPilot>
+        </ToolBar>
+        <Container>
+          <DataGrid id="$dataGridPositionForSelect" layoutConstraint="left">
+            <ClientEvent name="onDoubleClick">view.id(&quot;$dataSetPositionForSelect&quot;).move();&#xD;
+</ClientEvent>
+            <Property name="dataSet">$dataSetPositionForSelect</Property>
+            <Property name="readOnly">true</Property>
+            <Property name="width">46%</Property>
+            <Property name="filterMode">serverSide</Property>
+            <Property name="showFilterBar">true</Property>
+            <DataColumn>
+              <Property name="property">name</Property>
+              <Property name="name">name</Property>
+            </DataColumn>
+          </DataGrid>
+          <Container layout="vbox padding:5" layoutConstraint="center">
+            <Button layoutConstraint="align:center">
+              <ClientEvent name="onClick">view.id(&quot;$dataSetPositionForSelect&quot;).move();&#xD;
+</ClientEvent>
+              <Property name="caption">添加</Property>
+            </Button>
+            <Button layoutConstraint="align:center">
+              <ClientEvent name="onClick">view.id(&quot;$dataSetPositionSelected&quot;).remove();&#xD;
+</ClientEvent>
+              <Property name="caption">删除</Property>
+            </Button>
+          </Container>
+          <DataGrid id="$dataGridPositionSelected" layoutConstraint="right">
+            <ClientEvent name="onDoubleClick">view.id(&quot;$dataSetPositionSelected&quot;).remove();&#xD;
+</ClientEvent>
+            <Property name="readOnly">true</Property>
+            <Property name="width">46%</Property>
+            <Property name="dataSet">$dataSetPositionSelected</Property>
+            <DataColumn>
+              <Property name="property">name</Property>
+              <Property name="name">name</Property>
+            </DataColumn>
+          </DataGrid>
+        </Container>
+      </Children>
+      <Tools/>
+    </Dialog>
+  </View>
+</ViewConfig>

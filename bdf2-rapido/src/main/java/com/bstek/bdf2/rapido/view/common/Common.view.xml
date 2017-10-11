@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ViewConfig>
+  <Arguments/>
+  <Context/>
+  <Model/>
+  <View>
+    <Dialog id="dialogCodeEditor">
+      <ClientEvent name="onCreate">self.$show=function(code,theme,mode,callback){&#xD;
+	self.theme=theme;&#xD;
+	if(!self.theme){&#xD;
+		self.theme=&quot;eclipse&quot;;&#xD;
+	}&#xD;
+	self.mode=mode;&#xD;
+	if(!self.mode){&#xD;
+		self.mode=&quot;velocity&quot;;&#xD;
+	}&#xD;
+	self.show();&#xD;
+	if(!code)code=&quot;&quot;;&#xD;
+	self.codeEditor.setValue(code);&#xD;
+	self.callback=callback;&#xD;
+};&#xD;
+self.$setHelpClass=function(className){&#xD;
+	self.className=className;&#xD;
+}&#xD;
+</ClientEvent>
+      <ClientEvent name="onReady">self.codeEditor= CodeMirror.fromTextArea(document.getElementById(&quot;textAreaForCodeMirror&quot;), {&#xD;
+	lineNumbers: true,&#xD;
+	tabSize: 4,&#xD;
+	indentUnit: 4,&#xD;
+	indentWithTabs: true,&#xD;
+	mode: self.mode,&#xD;
+	theme: self.theme&#xD;
+});</ClientEvent>
+      <Property name="modal">true</Property>
+      <Property name="width">750</Property>
+      <Property name="height">500</Property>
+      <Property name="center">true</Property>
+      <Property name="maximizeable">true</Property>
+      <Buttons>
+        <Button>
+          <ClientEvent name="onClick">var dialog=this.id(&quot;dialogCodeEditor&quot;);&#xD;
+var value=dialog.codeEditor.getValue();&#xD;
+dialog.callback.call(this,value);&#xD;
+dialog.hide();&#xD;
+</ClientEvent>
+          <Property name="caption">确定</Property>
+          <Property name="icon">url(skin>common/icons.gif) -140px -20px</Property>
+        </Button>
+        <Button>
+          <ClientEvent name="onClick">view.id(&quot;dialogSelectVariable&quot;).show();</ClientEvent>
+          <Property name="caption">BeanShell变量</Property>
+          <Property name="icon">url(skin>common/icons.gif) -220px -120px</Property>
+          <Property name="tags">beanShell</Property>
+        </Button>
+        <Button>
+          <ClientEvent name="onClick">view.id(&quot;dialogBeanshellSample&quot;).show();</ClientEvent>
+          <Property name="icon">url(skin>common/icons.gif) -260px -60px</Property>
+          <Property name="caption">BeanShell示例</Property>
+          <Property name="tags">beanShell</Property>
+        </Button>
+        <Button>
+          <ClientEvent name="onClick">var jsdocUrlPrefix=&quot;${bdfProperties.getProperty(&quot;bdf.rapido.jsdocURLPrefix&quot;)}&quot;;&#xD;
+var className=view.id(&quot;dialogCodeEditor&quot;).className;&#xD;
+if(jsdocUrlPrefix &amp;&amp; className){&#xD;
+	var path=jsdocUrlPrefix+&quot;/&quot;+className;&#xD;
+	open(path,&quot;_blank&quot;);&#xD;
+}else{&#xD;
+	dorado.MessageBox.alert(&quot;信息不完整，无法查看事件帮助信息！&quot;);&#xD;
+}&#xD;
+</ClientEvent>
+          <Property name="caption">查看事件帮助</Property>
+          <Property name="icon">>dorado/res/icons/find.png</Property>
+          <Property name="tags">eventHelp</Property>
+          <Property name="ignored">true</Property>
+        </Button>
+        <Button>
+          <ClientEvent name="onClick">view.id(&quot;dialogSqlDemo&quot;).show();&#xD;
+</ClientEvent>
+          <Property name="caption">如何编写动态SQL?</Property>
+          <Property name="icon">url(skin>common/icons.gif) -160px -100px</Property>
+          <Property name="tags">sqlHelp</Property>
+        </Button>
+        <Button>
+          <ClientEvent name="onClick">view.id(&quot;dialogVelocityVariableList&quot;).show();</ClientEvent>
+          <Property name="caption">可用的Velocity变量</Property>
+          <Property name="icon">>dorado/res/icons/sum.png</Property>
+          <Property name="tags">sqlHelp</Property>
+        </Button>
+        <Button>
+          <ClientEvent name="onClick">this.id(&quot;dialogCodeEditor&quot;).hide();&#xD;
+</ClientEvent>
+          <Property name="caption">取消</Property>
+          <Property name="icon">url(skin>common/icons.gif) -40px 0px</Property>
+        </Button>
+      </Buttons>
+      <Children>
+        <HtmlContainer>
+          <ClientEvent name="onKeyDown">if(event.keyCode==13 || event.keyCode==9){&#xD;
+	return;&#xD;
+}&#xD;
+</ClientEvent>
+          <Property name="content">&lt;textarea id=&quot;textAreaForCodeMirror&quot; name=&quot;textAreaForCodeMirror&quot;>&lt;/textarea></Property>
+        </HtmlContainer>
+      </Children>
+      <Tools/>
+    </Dialog>
+  </View>
+</ViewConfig>

@@ -1,0 +1,38 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<artifactId>bdf2-authoritydelegation</artifactId>
+	<packaging>jar</packaging>
+	<parent>
+		<groupId>com.bstek.bdf2</groupId>
+		<artifactId>bdf2-parent</artifactId>
+		<version>2.0.5-SNAPSHOT</version>
+	</parent>
+	<version>2.0.5-SNAPSHOT</version>
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<addon.name>bdf2-authoritydelegation</addon.name>
+		<addon.depends>bdf2-core</addon.depends>
+		<addon.contextConfigLocations>classpath:com/bstek/bdf2/authoritydelegation/config/bdf2-authoritydelegation-configs.xml</addon.contextConfigLocations>
+		<addon.propertiesConfigLocations>classpath:com/bstek/bdf2/authoritydelegation/config/bdf2.authoritydelegation.properties</addon.propertiesConfigLocations>
+	</properties>
+	<dependencies>
+		<dependency>
+			<groupId>com.bstek.bdf2</groupId>
+			<artifactId>bdf2-core</artifactId>
+			<version>LATEST</version>
+		</dependency>
+	</dependencies>
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-framework-bom</artifactId>
+				<version>4.3.0.RELEASE</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+	<description>Authority management delegation</description>
+</project>

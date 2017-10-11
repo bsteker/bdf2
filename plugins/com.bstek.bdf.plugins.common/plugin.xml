@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.eclipse.ui.views">
+      <category
+            id="com.bstek.bdf.plugins.common.BdfViewCategory"
+            name="BDF">
+      </category>
+   </extension>
+   <extension
+         point="org.eclipse.ui.newWizards">
+      <category
+            id="com.bstek.bdf.plugins.common.BdfWizardCategory"
+            name="BDF">
+      </category>
+   </extension>
+   <extension
+         point="org.eclipse.ui.preferencePages">
+      <page
+            class="com.bstek.bdf.plugins.common.preference.BbfPreferencePage"
+            id="com.bstek.bdf.plugins.common.BDFPreferencePage"
+            name="BDF">
+      </page>
+   </extension>
+
+</plugin>

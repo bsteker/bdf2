@@ -1,0 +1,16 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: PropEditor
+Bundle-SymbolicName: com.bstek.bdf.plugins.propeditor; singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Bundle-Activator: com.bstek.bdf.plugins.propeditor.Activator
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ org.eclipse.jface.text,
+ org.eclipse.core.resources,
+ org.eclipse.ui.editors,
+ org.eclipse.ui.ide,
+ com.bstek.bdf.plugins.common
+Bundle-ActivationPolicy: lazy
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Import-Package: org.eclipse.ui.views.contentoutline

@@ -1,0 +1,601 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ViewConfig>
+  <Arguments/>
+  <Context/>
+  <Model>
+    <DataType name="dataTypeUser">
+      <Property name="creationType">com.bstek.bdf2.core.model.DefaultUser</Property>
+      <PropertyDef name="password">
+        <Property name="dataType">String</Property>
+        <Property name="label">密码</Property>
+        <Property name="required">true</Property>
+        <Validator type="length">
+          <Property name="minLength">6</Property>
+        </Validator>
+        <Validator type="custom">
+          <ClientEvent name="onValidate">if (arg.entity.get(&quot;confirmPassword&quot;)){
+	arg.entity.validate(&quot;confirmPassword&quot;);
+}</ClientEvent>
+        </Validator>
+      </PropertyDef>
+      <PropertyDef name="confirmPassword">
+        <Property name="dataType">String</Property>
+        <Property name="label">确认密码</Property>
+        <Property name="required">true</Property>
+        <Validator type="custom">
+          <ClientEvent name="onValidate">var confirm = arg.data;&#xD;
+var password = arg.entity.get(&quot;password&quot;);&#xD;
+if (confirm ==password) {&#xD;
+	arg.result = { state:&quot;ok&quot;}&#xD;
+} else {&#xD;
+	arg.result = { state:&quot;error&quot;, text: &quot;两次密码不一致&quot;};	&#xD;
+}</ClientEvent>
+        </Validator>
+      </PropertyDef>
+      <PropertyDef name="salt">
+        <Property name="dataType">String</Property>
+      </PropertyDef>
+      <PropertyDef name="male">
+        <Property name="dataType">boolean</Property>
+        <Property name="label">性别</Property>
+        <Property name="mapping">
+          <Property name="mapValues">
+            <Collection>
+              <Entity>
+                <Property name="key">true</Property>
+                <Property name="value">男</Property>
+              </Entity>
+              <Entity>
+                <Property name="key">false</Property>
+                <Property name="value">女</Property>
+              </Entity>
+            </Collection>
+          </Property>
+        </Property>
+        <Property name="defaultValue">true</Property>
+      </PropertyDef>
+      <PropertyDef name="enabled">
+        <Property name="dataType">boolean</Property>
+        <Property name="label">是否可用</Property>
+        <Property name="defaultValue">true</Property>
+      </PropertyDef>
+      <PropertyDef name="birthday">
+        <Property name="dataType">Date</Property>
+        <Property name="label">出生日期</Property>
+      </PropertyDef>
+      <PropertyDef name="address">
+        <Property name="dataType">String</Property>
+        <Property name="label">地址</Property>
+        <Validator type="length">
+          <Property name="maxLength">120</Property>
+        </Validator>
+      </PropertyDef>
+      <PropertyDef name="username">
+        <Property name="dataType">String</Property>
+        <Property name="label">用户名</Property>
+        <Property name="required">true</Property>
+        <Validator type="ajax">
+          <Property name="service">bdf2.userMaintain#userIsExists</Property>
+        </Validator>
+        <Validator type="length">
+          <Property name="maxLength">60</Property>
+        </Validator>
+      </PropertyDef>
+      <PropertyDef name="cname">
+        <Property name="dataType">String</Property>
+        <Property name="label">中文名</Property>
+        <Property name="required">true</Property>
+        <Validator type="length">
+          <Property name="minLength">2</Property>
+          <Property name="maxLength">60</Property>
+        </Validator>
+      </PropertyDef>
+      <PropertyDef name="ename">
+        <Property name="dataType">String</Property>
+        <Property name="label">英文名</Property>
+        <Property name="required">true</Property>
+        <Validator type="length">
+          <Property name="maxLength">60</Property>
+        </Validator>
+      </PropertyDef>
+      <PropertyDef name="administrator">
+        <Property name="dataType">boolean</Property>
+        <Property name="label">是否为管理员</Property>
+      </PropertyDef>
+      <PropertyDef name="mobile">
+        <Property name="dataType">String</Property>
+        <Property name="label">手机</Property>
+        <Property name="required">true</Property>
+        <Validator type="length">
+          <Property name="maxLength">11</Property>
+          <Property name="minLength">11</Property>
+          <Property name="resultMessage">请输入11位手机号码</Property>
+        </Validator>
+      </PropertyDef>
+      <PropertyDef name="email">
+        <Property name="dataType">String</Property>
+        <Property name="label">邮箱</Property>
+        <Property name="required">true</Property>
+        <Validator type="regExp">
+          <Property name="resultMessage">邮箱格式输入错误</Property>
+          <Property name="whiteRegExp">^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$</Property>
+          <Property name="validateMode">whiteBlack</Property>
+        </Validator>
+        <Validator type="length">
+          <Property name="maxLength">120</Property>
+        </Validator>
+      </PropertyDef>
+      <PropertyDef name="companyId">
+        <Property name="dataType">String</Property>
+      </PropertyDef>
+      <Reference name="positions">
+        <Property name="dataType">[$dataTypePosition]</Property>
+        <Property name="dataProvider">bdf2.positionMaintain#loadPositionByUsername</Property>
+        <Property name="parameter">$${this.username}</Property>
+        <Property name="label">岗位</Property>
+      </Reference>
+      <Reference name="depts">
+        <Property name="dataType">[$dataTypeDept]</Property>
+        <Property name="parameter">$${this.username}</Property>
+        <Property name="label">部门</Property>
+        <Property name="dataProvider">bdf2.userMaintain#loadUserDepts</Property>
+      </Reference>
+    </DataType>
+    <DataType name="dataTypeResetPassword">
+      <PropertyDef name="oldPassword">
+        <Property name="dataType">String</Property>
+        <Property name="label">原始密码</Property>
+        <Property name="required">true</Property>
+        <Validator type="ajax">
+          <ClientEvent name="beforeExecute">var user=view.id(&quot;dataSetUser&quot;).getData(&quot;#&quot;)&#xD;
+var username=user.get(&quot;username&quot;);&#xD;
+var para={&#xD;
+	&quot;username&quot;:username,&#xD;
+	&quot;inputOldPassword&quot;:arg.data&#xD;
+};&#xD;
+arg.parameter=para;&#xD;
+&#xD;
+</ClientEvent>
+          <Property name="service">bdf2.userMaintain#oldPasswordIsRight</Property>
+        </Validator>
+        <Validator type="length">
+          <Property name="minLength">6</Property>
+        </Validator>
+      </PropertyDef>
+      <PropertyDef name="newPassword">
+        <Property name="dataType">String</Property>
+        <Property name="label">新密码</Property>
+        <Property name="required">true</Property>
+        <Validator type="length">
+          <Property name="minLength">6</Property>
+        </Validator>
+      </PropertyDef>
+      <PropertyDef name="confirmNewPassword">
+        <Property name="dataType">String</Property>
+        <Property name="label">确认新密码</Property>
+        <Property name="required">true</Property>
+        <Validator type="length">
+          <Property name="minLength">6</Property>
+        </Validator>
+      </PropertyDef>
+    </DataType>
+  </Model>
+  <View>
+    <DataSet id="dataSetUser">
+      <Property name="dataType">[dataTypeUser]</Property>
+      <Property name="pageSize">20</Property>
+      <Property name="dataProvider">bdf2.userMaintain#loadUsers</Property>
+    </DataSet>
+    <ToolBar layoutConstraint="top">
+      <DataPilot>
+        <ClientEvent name="onSubControlAction">var dataSetUser = view.id(&quot;dataSetUser&quot;);&#xD;
+var entityList = dataSetUser.getData();&#xD;
+var userDialog=view.id(&quot;dialogUser&quot;);&#xD;
+switch(arg.code){&#xD;
+	case '+':&#xD;
+		entityList.insert();&#xD;
+		view.get(&quot;^create&quot;).set(&quot;readOnly&quot;,false);&#xD;
+		userDialog.set(&quot;userData&quot;,&quot;insert&quot;);&#xD;
+		userDialog.set(&quot;caption&quot;,&quot;添加用户信息&quot;);&#xD;
+		userDialog.show();&#xD;
+		arg.processDefault = false;&#xD;
+	break;&#xD;
+	case '-':&#xD;
+	var user=view.id(&quot;dataSetUser&quot;).getData(&quot;#&quot;);&#xD;
+	if(user==null)&#xD;
+	{&#xD;
+		dorado.MessageBox.alert(&quot;请首先选择用户信息!&quot;);	&#xD;
+	}else{&#xD;
+		dorado.MessageBox.confirm(&quot;是否确定删除此用户信息?&quot;,function(){&#xD;
+				user.remove();&#xD;
+				view.id(&quot;updateActionUser&quot;).execute();&#xD;
+		});&#xD;
+	}&#xD;
+	arg.processDefault = false;&#xD;
+	break;&#xD;
+	default:&#xD;
+	//arg.processDefault = false;&#xD;
+}&#xD;
+</ClientEvent>
+        <Property name="itemCodes">pages,+,-</Property>
+        <Property name="dataSet">dataSetUser</Property>
+      </DataPilot>
+      <ToolBarButton>
+        <ClientEvent name="onClick">var user=view.id(&quot;dataSetUser&quot;).getData(&quot;#&quot;);&#xD;
+if(user)&#xD;
+{&#xD;
+	view.get(&quot;^create&quot;).set(&quot;readOnly&quot;,true);&#xD;
+	user.set(&quot;confirmPassword&quot;, user.get(&quot;password&quot;));&#xD;
+	user.setState(dorado.Entity.STATE_NONE);&#xD;
+	var userDialog=view.id(&quot;dialogUser&quot;);&#xD;
+	userDialog.set(&quot;userData&quot;,&quot;modify&quot;);&#xD;
+	userDialog.set(&quot;caption&quot;,&quot;修改用户信息&quot;);&#xD;
+	userDialog.show();&#xD;
+}else{&#xD;
+	dorado.MessageBox.alert(&quot;请首先选择用户信息！&quot;);&#xD;
+}</ClientEvent>
+        <Property name="caption">修改</Property>
+        <Property name="icon"> url(>skin>common/icons.gif) -200px -0px</Property>
+      </ToolBarButton>
+      <ToolBarButton>
+        <ClientEvent name="onClick">var user=view.id(&quot;dataSetUser&quot;).getData(&quot;#&quot;);&#xD;
+if(user){&#xD;
+	var username = user.get(&quot;username&quot;);&#xD;
+	dorado.MessageBox.confirm(&quot;确认要重置用户&quot; +username + &quot;密码么?&quot;,function(){&#xD;
+		view.id(&quot;ajaxActionResetPassword&quot;).set(&quot;parameter&quot;, username).execute(function(password){&#xD;
+			dorado.MessageBox.alert(username +&quot;密码已重置,新密码为:&quot; + password);&#xD;
+		});&#xD;
+	});&#xD;
+}else{&#xD;
+	dorado.MessageBox.alert(&quot;请首先选择用户信息！&quot;);&#xD;
+}&#xD;
+&#xD;
+&#xD;
+&#xD;
+</ClientEvent>
+        <Property name="caption">重置密码</Property>
+        <Property name="icon"> url(>skin>common/icons.gif) -180px -180px</Property>
+      </ToolBarButton>
+      <ToolBarButton>
+        <ClientEvent name="onClick">var dialog=view.id(&quot;$dialogPositionSelect&quot;);	&#xD;
+var data=view.id(&quot;dataSetUser&quot;).getData(&quot;#&quot;);&#xD;
+dialog.$show({&#xD;
+	caption:&quot;选择岗位&quot;,&#xD;
+	width:700,&#xD;
+	refresh: true,&#xD;
+	username:data.get(&quot;username&quot;),&#xD;
+	callback:function(positions){&#xD;
+		var ids=&quot;&quot;;&#xD;
+		for(var i=0;i&lt;positions.length;i++){&#xD;
+			var position=positions[i];&#xD;
+			if(i==0){&#xD;
+				ids=position[&quot;id&quot;];&#xD;
+			}else{&#xD;
+				ids+=&quot;,&quot;+position[&quot;id&quot;];						&#xD;
+			}&#xD;
+		}			&#xD;
+		var action=view.id(&quot;ajaxActionInsertUserPosition&quot;);&#xD;
+		action.set(&quot;parameter&quot;,{ids:ids,username:data.get(&quot;username&quot;)});&#xD;
+		action.execute(function(error){&#xD;
+			if(error){&#xD;
+				for(var i=0;i&lt;positions.length;i++){&#xD;
+					var position=positions[i];&#xD;
+					if(position[&quot;id&quot;]==error){&#xD;
+						error=position[&quot;name&quot;];&#xD;
+						break;				&#xD;
+					}&#xD;
+				}&#xD;
+				dorado.MessageBox.alert(&quot;当前选择的[&quot;+error+&quot;]已添加，请重新选择&quot;);&#xD;
+			}else{&#xD;
+				dialog.hide();&#xD;
+				data.reset(&quot;positions&quot;);&#xD;
+			}&#xD;
+		});&#xD;
+	}&#xD;
+});</ClientEvent>
+        <Property name="caption">岗位</Property>
+        <Property name="icon"> url(>skin>common/icons.gif) -0px -100px</Property>
+      </ToolBarButton>
+      <ToolBarButton>
+        <ClientEvent name="onClick">var dialog=view.id(&quot;$dialogDeptSelect&quot;);&#xD;
+var data=view.id(&quot;dataSetUser&quot;).getData(&quot;#&quot;);&#xD;
+dialog.$show({&#xD;
+	width:500,&#xD;
+	height:500,&#xD;
+	caption:'选择部门',&#xD;
+	callback:function(deptArray){&#xD;
+			var ids=&quot;&quot;;&#xD;
+			for(var i=0;i&lt;deptArray.length;i++){&#xD;
+				if(i==0){&#xD;
+					ids=deptArray[i][&quot;id&quot;];&#xD;
+				}else{&#xD;
+					ids+=&quot;,&quot;+deptArray[i][&quot;id&quot;];&#xD;
+				}&#xD;
+			}&#xD;
+			var action=view.id(&quot;ajaxActionInsertUserDept&quot;);&#xD;
+			action.set(&quot;parameter&quot;,{ids:ids,username:data.get(&quot;username&quot;)});&#xD;
+			action.execute(function(error){&#xD;
+				if(error){&#xD;
+					for(var i=0;i&lt;deptArray.length;i++){&#xD;
+						if(error==deptArray[i][&quot;id&quot;]){&#xD;
+							error=deptArray[i][&quot;name&quot;];&#xD;
+							break;&#xD;
+						}&#xD;
+					}&#xD;
+					dorado.MessageBox.alert(&quot;部门[&quot;+error+&quot;]已添加，请重新选择&quot;);&#xD;
+				}else{&#xD;
+					dialog.hide();&#xD;
+					data.reset(&quot;depts&quot;);&#xD;
+				}&#xD;
+			});&#xD;
+	}&#xD;
+});&#xD;
+var deptTree = view.get(&quot;#$dataTreeDeptForSelect&quot;);&#xD;
+deptTree.set('currentNode',deptTree.get('root.firstNode'));&#xD;
+	deptTree.removeListener(&quot;onDataNodeCreate&quot;);&#xD;
+	deptTree.addListener(&quot;onDataNodeCreate&quot;,function(self,arg){&#xD;
+		autoSelectNode(arg.node,getUserDeptIds());&#xD;
+	});&#xD;
+	var nodes = deptTree.get(&quot;nodes&quot;);&#xD;
+var deptIds = getUserDeptIds();&#xD;
+	autoSelectDeptTree(nodes,deptIds);&#xD;
+function autoSelectDeptTree(nodes,deptIds){&#xD;
+	nodes.each(function(node){&#xD;
+		autoSelectNode(node,deptIds);&#xD;
+		var children = node.get(&quot;nodes&quot;);&#xD;
+		if(children){&#xD;
+			autoSelectDeptTree(children,deptIds);&#xD;
+		}&#xD;
+	});&#xD;
+}&#xD;
+&#xD;
+function autoSelectNode(node,deptIds){&#xD;
+		if (deptIds.length>0){&#xD;
+			var dId1 = node.get(&quot;data&quot;).get(&quot;id&quot;);&#xD;
+			if(deptIds.indexOf(dId1)&lt;0){&#xD;
+				node.set(&quot;checked&quot;,false);&#xD;
+			}else{&#xD;
+				node.set(&quot;checked&quot;,true);&#xD;
+			}&#xD;
+		}else{&#xD;
+			node.set(&quot;checked&quot;,false);&#xD;
+		}&#xD;
+}&#xD;
+function getUserDeptIds(){&#xD;
+	var deptList = view.get(&quot;#dataSetUser&quot;).queryData(&quot;#.depts&quot;);&#xD;
+	var depts=[];&#xD;
+	deptList.each(function(d){&#xD;
+		depts.push(d.get('id'))&#xD;
+	});&#xD;
+	return depts;&#xD;
+}&#xD;
+</ClientEvent>
+        <Property name="caption">部门</Property>
+        <Property name="icon"> url(>skin>common/icons.gif) -140px -100px</Property>
+      </ToolBarButton>
+      <ToolBarButton>
+        <ClientEvent name="onClick">var data=view.get(&quot;#dataSetUser&quot;).getData(&quot;#&quot;);&#xD;
+if(data){&#xD;
+	var action=view.get(&quot;#ajaxActionInsertUserPosition&quot;);&#xD;
+	action.set(&quot;parameter&quot;,{ids:'',username:data.get(&quot;username&quot;)});&#xD;
+	action.execute(function(){&#xD;
+		data.reset(&quot;positions&quot;);&#xD;
+	});&#xD;
+}</ClientEvent>
+        <Property name="icon">url(>skin>common/icons.gif) -40px -0px</Property>
+        <Property name="caption">清空岗位</Property>
+      </ToolBarButton>
+    </ToolBar>
+    <DataGrid layoutConstraint="center">
+      <Property name="dataSet">dataSetUser</Property>
+      <Property name="dataType">dataTypeUser</Property>
+      <Property name="readOnly">true</Property>
+      <Property name="showFilterBar">true</Property>
+      <Property name="filterMode">serverSide</Property>
+      <Property name="stretchColumnsMode">off</Property>
+      <Property name="selectionMode">none</Property>
+      <Property name="showFooter">false</Property>
+      <Property name="fixedColumnCount">1</Property>
+      <DataColumn name="username">
+        <Property name="property">username</Property>
+        <Property name="width">120</Property>
+      </DataColumn>
+      <DataColumn name="cname">
+        <Property name="property">cname</Property>
+        <Property name="width">120</Property>
+      </DataColumn>
+      <DataColumn name="ename">
+        <Property name="property">ename</Property>
+        <Property name="width">120</Property>
+      </DataColumn>
+      <DataColumn name="male">
+        <Property name="property">male</Property>
+        <Property name="width">60</Property>
+        <Property name="filterable">false</Property>
+      </DataColumn>
+      <DataColumn name="administrator">
+        <Property name="property">administrator</Property>
+        <Property name="width">90</Property>
+        <Property name="filterable">false</Property>
+      </DataColumn>
+      <DataColumn name="mobile">
+        <Property name="property">mobile</Property>
+        <Property name="filterable">false</Property>
+        <Property name="width">90</Property>
+      </DataColumn>
+      <DataColumn name="email">
+        <Property name="property">email</Property>
+        <Property name="filterable">false</Property>
+        <Property name="width">140</Property>
+      </DataColumn>
+      <DataColumn name="enabled">
+        <Property name="property">enabled</Property>
+        <Property name="filterable">false</Property>
+        <Property name="width">60</Property>
+      </DataColumn>
+      <DataColumn>
+        <ClientEvent name="onRenderCell">var entitylist = arg.data.get(&quot;positions&quot;);&#xD;
+var name = [];&#xD;
+if (entitylist) {&#xD;
+	entitylist.each(function(item){&#xD;
+		name.push(item.get(&quot;name&quot;));&#xD;
+	});&#xD;
+}&#xD;
+arg.dom.innerHTML = name.join(&quot;,&quot;);</ClientEvent>
+        <Property name="name">positions</Property>
+        <Property name="property">positions</Property>
+        <Property name="width">120</Property>
+        <Property name="filterable">false</Property>
+        <Editor/>
+      </DataColumn>
+      <DataColumn>
+        <ClientEvent name="onRenderCell">var entitylist = arg.data.get(&quot;depts&quot;);&#xD;
+var name = [];&#xD;
+if (entitylist) {&#xD;
+	entitylist.each(function(item){&#xD;
+		name.push(item.get(&quot;name&quot;));&#xD;
+	});&#xD;
+}&#xD;
+arg.dom.innerHTML = name.join(&quot;,&quot;);</ClientEvent>
+        <Property name="name">depts</Property>
+        <Property name="property">depts</Property>
+        <Property name="width">120</Property>
+        <Property name="filterable">false</Property>
+        <Editor/>
+      </DataColumn>
+      <DataColumn name="birthday">
+        <Property name="property">birthday</Property>
+        <Property name="filterable">false</Property>
+        <Property name="width">90</Property>
+      </DataColumn>
+      <DataColumn name="address">
+        <Property name="property">address</Property>
+        <Property name="filterable">false</Property>
+        <Property name="width">200</Property>
+      </DataColumn>
+    </DataGrid>
+    <Dialog id="dialogUser">
+      <ClientEvent name="onClose">view.id(&quot;dataSetUser&quot;).getData(&quot;#&quot;).cancel();</ClientEvent>
+      <Property name="center">true</Property>
+      <Property name="height">420</Property>
+      <Property name="width">420</Property>
+      <Property name="modal">true</Property>
+      <Property name="caption">用户信息</Property>
+      <Buttons>
+        <Button>
+          <ClientEvent name="onClick">view.id(&quot;updateActionUser&quot;).execute(function(){&#xD;
+	view.id(&quot;dialogUser&quot;).hide();&#xD;
+});&#xD;
+</ClientEvent>
+          <Property name="caption">保存</Property>
+          <Property name="icon"> url(>skin>common/icons.gif) -140px -20px</Property>
+        </Button>
+        <Button>
+          <ClientEvent name="onClick">dorado.MessageBox.confirm(&quot;是否确定取消此操作？&quot;,function(){&#xD;
+	view.id(&quot;dataSetUser&quot;).getData(&quot;#&quot;).cancel();&#xD;
+	view.id(&quot;dialogUser&quot;).hide();&#xD;
+});&#xD;
+&#xD;
+</ClientEvent>
+          <Property name="caption">取消</Property>
+          <Property name="icon"> url(>skin>common/icons.gif) -40px -0px</Property>
+        </Button>
+      </Buttons>
+      <Children>
+        <AutoForm>
+          <Property name="dataSet">dataSetUser</Property>
+          <Property name="dataType">dataTypeUser</Property>
+          <Property name="cols">*,*</Property>
+          <AutoFormElement layoutConstraint="colSpan:2">
+            <Property name="name">username</Property>
+            <Property name="property">username</Property>
+            <Property name="tags">create</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement layoutConstraint="colSpan:2">
+            <Property name="name">password</Property>
+            <Property name="property">password</Property>
+            <Property name="editorType">PasswordEditor</Property>
+            <Property name="tags">create</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement layoutConstraint="colSpan:2">
+            <Property name="name">confirmPassword</Property>
+            <Property name="property">confirmPassword</Property>
+            <Property name="editorType">PasswordEditor</Property>
+            <Property name="tags">create</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement layoutConstraint="colSpan:2">
+            <Property name="name">male</Property>
+            <Property name="property">male</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">enabled</Property>
+            <Property name="property">enabled</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">administrator</Property>
+            <Property name="property">administrator</Property>
+            <Property name="labelWidth">100</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement layoutConstraint="colSpan:2">
+            <Property name="name">birthday</Property>
+            <Property name="property">birthday</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement layoutConstraint="colSpan:2">
+            <Property name="name">address</Property>
+            <Property name="property">address</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement layoutConstraint="colSpan:2">
+            <Property name="name">cname</Property>
+            <Property name="property">cname</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement layoutConstraint="colSpan:2">
+            <Property name="name">ename</Property>
+            <Property name="property">ename</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement layoutConstraint="colSpan:2">
+            <Property name="name">mobile</Property>
+            <Property name="property">mobile</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement layoutConstraint="colSpan:2">
+            <Property name="name">email</Property>
+            <Property name="property">email</Property>
+            <Editor/>
+          </AutoFormElement>
+        </AutoForm>
+      </Children>
+      <Tools/>
+    </Dialog>
+    <UpdateAction id="updateActionUser">
+      <Property name="dataResolver">bdf2.userMaintain#saveUsers</Property>
+      <Property name="successMessage">数据保存成功!</Property>
+      <UpdateItem>
+        <Property name="dataSet">dataSetUser</Property>
+      </UpdateItem>
+    </UpdateAction>
+    <AjaxAction id="ajaxActionResetPassword">
+      <Property name="service">bdf2.userMaintain#resetPassword</Property>
+    </AjaxAction>
+    <AjaxAction id="ajaxActionCheckUserIsExists">
+      <Property name="service">bdf2.userMaintain#userIsExists</Property>
+    </AjaxAction>
+    <Import id="positionSelect" src="bdf2.core.view.global.PositionSelect#$dialogPositionSelect"/>
+    <AjaxAction id="ajaxActionInsertUserPosition">
+      <Property name="service">bdf2.userMaintain#insertUserPosition</Property>
+    </AjaxAction>
+    <Import id="deptSelect" src="bdf2.core.view.global.DeptSelect#$dialogDeptSelect"/>
+    <AjaxAction id="ajaxActionInsertUserDept">
+      <Property name="service">bdf2.userMaintain#insertUserDept</Property>
+    </AjaxAction>
+  </View>
+</ViewConfig>

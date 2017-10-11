@@ -1,0 +1,52 @@
+
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" href="lib/codemirror.css">
+<script src="lib/codemirror.js"></script>
+<script src="mode/plsql/plsql.js"></script>
+<link rel="stylesheet" href="theme/default.css">
+<link rel="stylesheet" href="css/docs.css">
+<style>
+.CodeMirror {
+	border: 2px inset #dee;
+	display: block;
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	margin: 0;
+	padding: 0;
+	top: 0;
+	left: 0;
+	width: 100%;
+	margin: 0;
+	left: 0;
+	width: 100%;
+	margin: 0;
+}
+</style>
+</head>
+<body>
+	<form>
+		<textarea id="code" name="code"></textarea>
+	</form>
+
+	<script>
+		var editor = CodeMirror.fromTextArea(document.getElementById("code"), {
+			lineNumbers : true,
+			matchBrackets : true,
+			indentUnit : 4,
+			mode : "text/x-plsql"
+		});
+		function getCodeValue() {
+			return editor.getValue();
+		};
+		function setCodeValue(sql) {
+			editor.setValue(sql);
+		}
+		function selectedValue() {
+			return editor.getSelection();
+		}
+	</script>
+</html>

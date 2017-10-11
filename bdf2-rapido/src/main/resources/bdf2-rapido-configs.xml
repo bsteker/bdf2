@@ -1,0 +1,384 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+	<bean class="com.bstek.bdf2.core.orm.AnnotationPackages">
+		<property name="scanPackages">
+			<list>
+				<value>com/bstek/bdf2/rapido/model</value>
+			</list>
+		</property>
+		<property name="dataSourceRegisterName" value="${bdf2.rapido.dataSourceName}"></property>
+	</bean>
+	<bean class="com.bstek.bdf2.rapido.controlller.RapidoMenuGenerator"></bean>
+	<bean id="bdf.rapido.velocityHelper" class="com.bstek.bdf2.rapido.common.VelocityHelper"></bean>
+	<bean id="bdf.rapido.layoutPropertyManager" class="com.bstek.bdf2.rapido.manager.LayoutPropertyManager"></bean>
+	<bean class="com.bstek.bdf2.rapido.key.impl.UUIDGenerator"></bean>
+	<bean id="bdf.rapido.validatorManager" class="com.bstek.bdf2.rapido.manager.ValidatorManager"></bean>
+	<bean id="bdf.rapido.actionPR" class="com.bstek.bdf2.rapido.view.action.ActionPR">
+		<property name="actionDefManager" ref="bdf.rapido.actionDefManager"></property>
+		<property name="packageManager" ref="bdf.rapido.packageManager"></property>
+		<property name="entityManager" ref="bdf.rapido.entityManager"></property>
+	</bean>
+	<bean id="bdf.rapido.actionManager" class="com.bstek.bdf2.rapido.manager.ActionManager">
+		<property name="parameterManager" ref="bdf.rapido.parameterManager"></property>
+	</bean>
+	<bean id="bdf.rapido.actionDefManager" class="com.bstek.bdf2.rapido.manager.ActionDefManager">
+		<property name="actionManager" ref="bdf.rapido.actionManager"></property>
+		<property name="parameterManager" ref="bdf.rapido.parameterManager"></property>
+		<property name="entityManager" ref="bdf.rapido.entityManager"></property>
+	</bean>
+	<bean id="bdf.rapido.metadataPR" class="com.bstek.bdf2.rapido.view.metadata.MetadataPR">
+		<property name="metadataManager" ref="bdf.rapido.metadataManager"></property>
+		<property name="packageManager" ref="bdf.rapido.packageManager"></property>
+		<property name="validatorManager" ref="bdf.rapido.validatorManager"></property>
+	</bean>
+	<bean id="bdf.rapido.mappingPR" class="com.bstek.bdf2.rapido.view.mapping.MappingPR">
+		<property name="mappingManager" ref="bdf.rapido.mappingManager"></property>
+	</bean>
+	<bean id="bdf.rapido.queryWizardPR" class="com.bstek.bdf2.rapido.view.wizard.QueryWizardPR"></bean>
+	<bean id="bdf.rapido.entityPR" class="com.bstek.bdf2.rapido.view.entity.EntityPR">
+		<property name="entityManager" ref="bdf.rapido.entityManager"></property>
+		<property name="entityFieldManager" ref="bdf.rapido.entityFieldManager"></property>
+		<property name="parameterManager" ref="bdf.rapido.parameterManager"></property>
+		<property name="mappingManager" ref="bdf.rapido.mappingManager"></property>
+		<property name="validatorManager" ref="bdf.rapido.validatorManager"></property>
+		<property name="ruleSetHelper" ref="bdf.rapido.ruleSetHelper"></property>
+		<property name="velocityHelper" ref="bdf.rapido.velocityHelper"></property>
+		<property name="metadataManager" ref="bdf.rapido.metadataManager"></property>
+	</bean>
+	<bean id="bdf.rapido.ruleSetHelper" class="com.bstek.bdf2.rapido.common.RuleSetHelper">
+		<property name="ruleSetBuilder" ref="dorado.idesupport.ruleSetBuilder"></property>
+	</bean>
+	<bean id="bdf.rapido.componentPR" class="com.bstek.bdf2.rapido.view.component.ComponentPR">
+		<property name="componentManager" ref="bdf.rapido.componentManager"></property>
+		<property name="packageManager" ref="bdf.rapido.packageManager"></property>
+		<property name="entityManager" ref="bdf.rapido.entityManager"></property>
+		<property name="actionDefManager" ref="bdf.rapido.actionDefManager"></property>
+		<property name="ruleSetHelper" ref="bdf.rapido.ruleSetHelper"></property>
+		<property name="pageManager" ref="bdf.rapido.pageManager"></property>
+		<property name="layoutPropertyManager" ref="bdf.rapido.layoutPropertyManager"></property>
+	</bean>
+	<bean id="bdf.rapido.pagePR" class="com.bstek.bdf2.rapido.view.page.PagePR">
+		<property name="pageManager" ref="bdf.rapido.pageManager"></property>
+		<property name="pageOutputer" ref="bdf.rapido.pageOutputer"></property>
+		<property name="packageManager" ref="bdf.rapido.packageManager"></property>
+		<property name="layoutPropertyManager" ref="bdf.rapido.layoutPropertyManager"></property>
+	</bean>
+	<bean id="bdf.rapido.pageOutputer" class="com.bstek.bdf2.rapido.output.PageOutputer">
+		<property name="pageManager" ref="bdf.rapido.pageManager"></property>
+		<property name="packageManager" ref="bdf.rapido.packageManager"></property>
+		<property name="ruleSetHelper" ref="bdf.rapido.ruleSetHelper"></property>
+		<property name="outputDir" value="${bdf2.rapido.outputDir}"></property>
+		<property name="urlPrefix" value="${bdf2.rapido.urlPrefix}"></property>
+	</bean>
+	<bean id="bdf.rapido.commonPR" class="com.bstek.bdf2.rapido.common.CommonPR">
+		<property name="velocityHelper" ref="bdf.rapido.velocityHelper"></property>
+	</bean>
+	<bean id="bdf.rapido.workspacePR" class="com.bstek.bdf2.rapido.view.WorkspacePR">
+		<property name="packageManager" ref="bdf.rapido.packageManager"></property>
+	</bean>
+	<bean id="bdf.rapido.autoFormElementSupport" class="com.bstek.bdf2.rapido.component.impl.AutoFormElementSupport">
+		<property name="children">
+			<list>
+				<ref bean="bdf.rapido.editorSupport" />
+			</list>
+		</property>
+	</bean>
+	<bean id="bdf.rapido.autoFormSupport" class="com.bstek.bdf2.rapido.component.impl.AutoFormSupport">
+		<property name="children">
+			<list>
+				<ref bean="bdf.rapido.autoFormElementSupport" />
+			</list>
+		</property>
+	</bean>
+	<bean id="bdf.rapido.htmlEditorSupport" class="com.bstek.bdf2.rapido.component.impl.HtmlEditorSupport"></bean>
+	<bean id="bdf.rapido.buttonSupport" class="com.bstek.bdf2.rapido.component.impl.ButtonSupport"></bean>
+	<bean id="bdf.rapido.listDropDownSupport" class="com.bstek.bdf2.rapido.component.impl.ListDropDownSupport"></bean>
+	<bean id="bdf.rapido.controlTabSupport" class="com.bstek.bdf2.rapido.component.impl.ControlTabSupport">
+		<property name="children">
+			<list>
+				<ref bean="bdf.rapido.containerSupport" />
+			</list>
+		</property>
+	</bean>
+	<bean id="bdf.rapido.menuSupport" class="com.bstek.bdf2.rapido.component.impl.MenuSupport">
+		<property name="children">
+			<list>
+				<ref bean="bdf.rapido.menuItemSupport" />
+			</list>
+		</property>
+	</bean>
+	<bean id="bdf.rapido.menuItemSupport" class="com.bstek.bdf2.rapido.component.impl.MenuItemSupport">
+		<property name="children">
+			<list>
+				<ref bean="bdf.rapido.menuItemSupport" />
+			</list>
+		</property>
+	</bean>
+	<bean id="bdf.rapido.customDropDownSupport" class="com.bstek.bdf2.rapido.component.impl.CustomDropDownSupport">
+		<property name="children">
+			<list>
+				<ref bean="bdf.rapido.containerSupport" />
+			</list>
+		</property>
+	</bean>
+	<bean id="bdf.rapido.dataColumnSupport" class="com.bstek.bdf2.rapido.component.impl.DataColumnSupport"></bean>
+	<bean id="bdf.rapido.dataGridSupport" class="com.bstek.bdf2.rapido.component.impl.DataGridSupport">
+		<property name="children">
+			<list>
+				<ref bean="bdf.rapido.dataColumnSupport" />
+				<ref bean="bdf.rapido.rowSelectorColumnSupport" />
+				<ref bean="bdf.rapido.rowNumColumnSupport" />
+				<ref bean="bdf.rapido.indicatorColumnSupport" />
+				<ref bean="bdf.rapido.columnGroupSupport" />
+			</list>
+		</property>
+	</bean>
+	<bean id="bdf.rapido.panelSupport" class="com.bstek.bdf2.rapido.component.impl.PanelSupport">
+		<property name="children">
+			<list>
+				<ref bean="bdf.rapido.childrenSupport" />
+				<ref bean="bdf.rapido.buttonsSupport" />
+				<ref bean="bdf.rapido.simpleIconButtonSupport" />
+			</list>
+		</property>
+	</bean>
+	<bean id="bdf.rapido.tabControlSupport" class="com.bstek.bdf2.rapido.component.impl.TabControlSupport">
+		<property name="children">
+			<list>
+				<ref bean="bdf.rapido.controlTabSupport" />
+			</list>
+		</property>
+	</bean>
+	<bean id="bdf.rapido.toolBarButtonSupport" class="com.bstek.bdf2.rapido.component.impl.ToolBarButtonSupport"></bean>
+	<bean id="bdf.rapido.toolBarSupport" class="com.bstek.bdf2.rapido.component.impl.ToolBarSupport">
+		<property name="children">
+			<list>
+				<ref bean="bdf.rapido.toolBarButtonSupport" />
+				<ref bean="bdf.rapido.dataPilotSupport" />
+			</list>
+		</property>
+	</bean>
+	<bean id="bdf.rapido.simpleIconButtonSupport" class="com.bstek.bdf2.rapido.component.impl.SimpleIconButtonSupport"></bean>
+	<bean id="bdf.rapido.toolsSupport" class="com.bstek.bdf2.rapido.component.impl.ToolsSupport">
+		<property name="children">
+			<list>
+				<ref bean="bdf.rapido.simpleIconButtonSupport" />
+			</list>
+		</property>
+	</bean>
+	<bean id="bdf.rapido.buttonsSupport" class="com.bstek.bdf2.rapido.component.impl.ButtonsSupport">
+		<property name="children">
+			<list>
+				<ref bean="bdf.rapido.buttonSupport" />
+			</list>
+		</property>
+	</bean>
+	<bean id="bdf.rapido.childrenSupport" class="com.bstek.bdf2.rapido.component.impl.ChildrenSupport"></bean>
+	<bean id="bdf.rapido.dialogSupport" class="com.bstek.bdf2.rapido.component.impl.DialogSupport">
+		<property name="children">
+			<list>
+				<ref bean="bdf.rapido.childrenSupport" />
+				<ref bean="bdf.rapido.buttonsSupport" />
+				<ref bean="bdf.rapido.simpleIconButtonSupport" />
+			</list>
+		</property>
+	</bean>
+	<bean id="bdf.rapido.splitPanelSupport" class="com.bstek.bdf2.rapido.component.impl.SplitPanelSupport">
+		<property name="children">
+			<list>
+				<ref bean="bdf.rapido.sideControlSupport" />
+				<ref bean="bdf.rapido.mainControlSupport" />
+			</list>
+		</property>
+	</bean>
+	<bean id="bdf.rapido.mainControlSupport" class="com.bstek.bdf2.rapido.component.impl.MainControlSupport">
+		<property name="children">
+			<list>
+				<ref bean="bdf.rapido.containerSupport" />
+			</list>
+		</property>
+	</bean>
+	<bean id="bdf.rapido.sideControlSupport" class="com.bstek.bdf2.rapido.component.impl.SideControlSupport">
+		<property name="children">
+			<list>
+				<ref bean="bdf.rapido.containerSupport" />
+			</list>
+		</property>
+	</bean>
+	<bean id="bdf.rapido.accordionSupport" class="com.bstek.bdf2.rapido.component.impl.AccordionSupport">
+		<property name="children">
+			<list>
+				<ref bean="bdf.rapido.sectionSupport" />
+			</list>
+		</property>
+	</bean>
+	<bean id="bdf.rapido.sectionSupport" class="com.bstek.bdf2.rapido.component.impl.SectionSupport">
+		<property name="children">
+			<list>
+				<ref bean="bdf.rapido.containerSupport" />
+			</list>
+		</property>
+	</bean>
+	<bean id="bdf.rapido.rowSelectorColumnSupport" class="com.bstek.bdf2.rapido.component.impl.RowSelectorColumnSupport"></bean>
+	<bean id="bdf.rapido.rowNumColumnSupport" class="com.bstek.bdf2.rapido.component.impl.RowNumColumnSupport"></bean>
+	<bean id="bdf.rapido.indicatorColumnSupport" class="com.bstek.bdf2.rapido.component.impl.IndicatorColumnSupport"></bean>
+	<bean id="bdf.rapido.columnGroupSupport" class="com.bstek.bdf2.rapido.component.impl.ColumnGroupSupport">
+		<property name="children">
+			<list>
+				<ref bean="bdf.rapido.rowSelectorColumnSupport" />
+				<ref bean="bdf.rapido.rowNumColumnSupport" />
+				<ref bean="bdf.rapido.indicatorColumnSupport" />
+				<ref bean="bdf.rapido.columnGroupSupport" />
+			</list>
+		</property>
+	</bean>
+	<bean id="bdf.rapido.importSupport" class="com.bstek.bdf2.rapido.component.impl.ImportSupport"></bean>
+	<bean id="bdf.rapido.groupStartSupport" class="com.bstek.bdf2.rapido.component.impl.GroupStartSupport"></bean>
+	<bean id="bdf.rapido.groupEndSupport" class="com.bstek.bdf2.rapido.component.impl.GroupEndSupport"></bean>
+	<bean id="bdf.rapido.checkBoxSupport" class="com.bstek.bdf2.rapido.component.impl.CheckBoxSupport"></bean>
+	<bean id="bdf.rapido.containerSupport" class="com.bstek.bdf2.rapido.component.impl.ContainerSupport"></bean>
+	<bean id="bdf.rapido.dataPilotSupport" class="com.bstek.bdf2.rapido.component.impl.DataPilotSupport"></bean>
+	<bean id="bdf.rapido.dataSetDropDownSupport" class="com.bstek.bdf2.rapido.component.impl.DataSetDropDownSupport"></bean>
+	<bean id="bdf.rapido.radioButtonSupport" class="com.bstek.bdf2.rapido.component.impl.RadioButtonSupport"></bean>
+	<bean id="bdf.rapido.textAreaSupport" class="com.bstek.bdf2.rapido.component.impl.TextAreaSupport"></bean>
+	<bean id="bdf.rapido.textEditorSupport" class="com.bstek.bdf2.rapido.component.impl.TextEditorSupport"></bean>
+	<bean id="bdf.rapido.triggerSupport" class="com.bstek.bdf2.rapido.component.impl.TriggerSupport"></bean>
+	<bean id="bdf.rapido.radioGroupSupport" class="com.bstek.bdf2.rapido.component.impl.RadioGroupSupport">
+		<property name="children">
+			<list>
+				<ref bean="bdf.rapido.radioButtonSupport" />
+			</list>
+		</property>
+	</bean>
+	<bean id="bdf.rapido.bindingConfigsSupport" class="com.bstek.bdf2.rapido.component.impl.BindingConfigsSupport">
+		<property name="children">
+			<list>
+				<ref bean="bdf.rapido.bindingConfigSupport" />
+			</list>
+		</property>
+	</bean>
+	<bean id="bdf.rapido.bindingConfigSupport" class="com.bstek.bdf2.rapido.component.impl.BindingConfigSupport">
+		<property name="children">
+			<list>
+				<ref bean="bdf.rapido.bindingConfigSupport" />
+			</list>
+		</property>
+	</bean>
+	<bean id="bdf.rapido.dataTreeSupport" class="com.bstek.bdf2.rapido.component.impl.DataTreeSupport">
+		<property name="children">
+			<list>
+				<ref bean="bdf.rapido.bindingConfigsSupport" />
+			</list>
+		</property>
+	</bean>
+	<bean id="bdf.rapido.editorSupport" class="com.bstek.bdf2.rapido.component.impl.EditorSupport">
+		<property name="children">
+			<list>
+				<ref bean="bdf.rapido.containerSupport" />
+			</list>
+		</property>
+	</bean>
+	<bean id="bdf.rapido.htmlContainerSupport" class="com.bstek.bdf2.rapido.component.impl.HtmlContainerSupport"></bean>
+	<bean id="bdf.rapido.labelSupport" class="com.bstek.bdf2.rapido.component.impl.LabelSupport"></bean>
+	<bean id="bdf.rapido.dataLabelSupport" class="com.bstek.bdf2.rapido.component.impl.DataLabelSupport"></bean>
+	<bean class="com.bstek.bdf2.rapido.builder.impl.ModelBuilder">
+		<property name="entityManager" ref="bdf.rapido.entityManager"></property>
+	</bean>
+	<bean class="com.bstek.bdf2.rapido.builder.impl.ArgumentsBuilder"></bean>
+	<bean class="com.bstek.bdf2.rapido.builder.impl.ViewBuilder"></bean>
+	<bean class="com.bstek.bdf2.rapido.builder.impl.ContextBuilder"></bean>
+	<bean class="com.bstek.bdf2.rapido.builder.impl.ViewConfigMetaDataBuilder"></bean>
+	<bean id="bdf.rapido.parameterManager" class="com.bstek.bdf2.rapido.manager.ParameterManager"></bean>
+	<bean id="bdf.rapido.mappingManager" class="com.bstek.bdf2.rapido.manager.MappingManager"></bean>
+	<bean id="bdf.rapido.metadataManager" class="com.bstek.bdf2.rapido.manager.MetadataManager">
+		<property name="mappingManager" ref="bdf.rapido.mappingManager"></property>
+		<property name="validatorManager" ref="bdf.rapido.validatorManager"></property>
+	</bean>
+	<bean id="bdf.rapido.entityFieldManager" class="com.bstek.bdf2.rapido.manager.EntityFieldManager">
+		<property name="metadataManager" ref="bdf.rapido.metadataManager"></property>
+		<property name="mappingManager" ref="bdf.rapido.mappingManager"></property>
+		<property name="validatorManager" ref="bdf.rapido.validatorManager"></property>
+	</bean>
+	<bean id="bdf.rapido.entityManager" class="com.bstek.bdf2.rapido.manager.EntityManager">
+		<property name="entityFieldManager" ref="bdf.rapido.entityFieldManager"></property>
+		<property name="parameterManager" ref="bdf.rapido.parameterManager"></property>
+	</bean>
+	<bean id="bdf.rapido.componentManager" class="com.bstek.bdf2.rapido.manager.ComponentManager">
+		<property name="entityManager" ref="bdf.rapido.entityManager"></property>
+		<property name="actionDefManager" ref="bdf.rapido.actionDefManager"></property>
+		<property name="layoutPropertyManager" ref="bdf.rapido.layoutPropertyManager"></property>
+	</bean>
+	<bean id="bdf.rapido.pageManager" class="com.bstek.bdf2.rapido.manager.PageManager">
+		<property name="componentManager" ref="bdf.rapido.componentManager"></property>
+		<property name="validatorManager" ref="bdf.rapido.validatorManager"></property>
+		<property name="layoutPropertyManager" ref="bdf.rapido.layoutPropertyManager"></property>
+		<property name="actionDefManager" ref="bdf.rapido.actionDefManager"></property>
+	</bean>
+	<bean id="bdf.rapido.packageManager" class="com.bstek.bdf2.rapido.manager.PackageManager">
+		<property name="componentManager" ref="bdf.rapido.componentManager"></property>
+		<property name="pageManager" ref="bdf.rapido.pageManager"></property>
+		<property name="entityManager" ref="bdf.rapido.entityManager"></property>
+		<property name="actionDefManager" ref="bdf.rapido.actionDefManager"></property>
+		<property name="mappingManager" ref="bdf.rapido.mappingManager"></property>
+		<property name="metadataManager" ref="bdf.rapido.metadataManager"></property>
+	</bean>
+	<bean class="com.bstek.bdf2.rapido.xml.impl.ImportConverter" parent="bdf.rapido.abstractConverter"></bean>
+	<bean class="com.bstek.bdf2.rapido.xml.impl.GroupStartConverter" parent="bdf.rapido.abstractConverter"></bean>
+	<bean class="com.bstek.bdf2.rapido.xml.impl.GroupEndConverter" parent="bdf.rapido.abstractConverter"></bean>
+	<bean class="com.bstek.bdf2.rapido.xml.impl.ColumnGroupConverter" parent="bdf.rapido.abstractConverter"></bean>
+	<bean class="com.bstek.bdf2.rapido.xml.impl.IndicatorColumnConverter" parent="bdf.rapido.abstractConverter"></bean>
+	<bean class="com.bstek.bdf2.rapido.xml.impl.RowNumColumnConverter" parent="bdf.rapido.abstractConverter"></bean>
+	<bean class="com.bstek.bdf2.rapido.xml.impl.RowSelectorColumnConverter" parent="bdf.rapido.abstractConverter"></bean>
+	<bean class="com.bstek.bdf2.rapido.xml.impl.MenuItemConverter" parent="bdf.rapido.abstractConverter"></bean>
+	<bean class="com.bstek.bdf2.rapido.xml.impl.MenuConverter" parent="bdf.rapido.abstractConverter"></bean>
+	<bean class="com.bstek.bdf2.rapido.xml.impl.DataLabelConverter" parent="bdf.rapido.abstractConverter"></bean>
+	<bean class="com.bstek.bdf2.rapido.xml.impl.LabelConverter" parent="bdf.rapido.abstractConverter"></bean>
+	<bean class="com.bstek.bdf2.rapido.xml.impl.HtmlContainerConverter" parent="bdf.rapido.abstractConverter"></bean>
+	<bean class="com.bstek.bdf2.rapido.xml.impl.CheckBoxConverter" parent="bdf.rapido.abstractConverter"></bean>
+	<bean class="com.bstek.bdf2.rapido.xml.impl.ContainerConverter" parent="bdf.rapido.abstractConverter"></bean>
+	<bean class="com.bstek.bdf2.rapido.xml.impl.DataPilotConverter" parent="bdf.rapido.abstractConverter"></bean>
+	<bean class="com.bstek.bdf2.rapido.xml.impl.DataTreeConverter" parent="bdf.rapido.abstractConverter"></bean>
+	<bean class="com.bstek.bdf2.rapido.xml.impl.BindingConfigConverter" parent="bdf.rapido.abstractConverter"></bean>
+	<bean class="com.bstek.bdf2.rapido.xml.impl.BindingConfigsConverter" parent="bdf.rapido.abstractConverter"></bean>
+	<bean class="com.bstek.bdf2.rapido.xml.impl.EditorConverter" parent="bdf.rapido.abstractConverter"></bean>
+	<bean class="com.bstek.bdf2.rapido.xml.impl.RadioButtonConverter" parent="bdf.rapido.abstractConverter"></bean>
+	<bean class="com.bstek.bdf2.rapido.xml.impl.RadioGroupConverter" parent="bdf.rapido.abstractConverter"></bean>
+	<bean class="com.bstek.bdf2.rapido.xml.impl.TextAreaConverter" parent="bdf.rapido.abstractConverter"></bean>
+	<bean class="com.bstek.bdf2.rapido.xml.impl.TextEditorConverter" parent="bdf.rapido.abstractConverter"></bean>
+	<bean class="com.bstek.bdf2.rapido.xml.impl.TriggerConverter" parent="bdf.rapido.abstractConverter"></bean>
+	<bean class="com.bstek.bdf2.rapido.xml.impl.DataSetDropDownConverter" parent="bdf.rapido.abstractConverter"></bean>
+	<bean class="com.bstek.bdf2.rapido.xml.impl.MainControlConverter" parent="bdf.rapido.abstractConverter"></bean>
+	<bean class="com.bstek.bdf2.rapido.xml.impl.SideControlConverter" parent="bdf.rapido.abstractConverter"></bean>
+	<bean class="com.bstek.bdf2.rapido.xml.impl.SplitPanelConverter" parent="bdf.rapido.abstractConverter"></bean>
+	<bean class="com.bstek.bdf2.rapido.xml.impl.SectionConverter" parent="bdf.rapido.abstractConverter"></bean>
+	<bean class="com.bstek.bdf2.rapido.xml.impl.AccordionConverter" parent="bdf.rapido.abstractConverter"></bean>
+	<bean class="com.bstek.bdf2.rapido.xml.impl.CustomDropDownConverter" parent="bdf.rapido.abstractConverter"></bean>
+	<bean class="com.bstek.bdf2.rapido.xml.impl.AutoFormConverter" parent="bdf.rapido.abstractConverter"></bean>
+	<bean class="com.bstek.bdf2.rapido.xml.impl.AutoFormElementConverter" parent="bdf.rapido.abstractConverter"></bean>
+	<bean class="com.bstek.bdf2.rapido.xml.impl.ButtonConverter" parent="bdf.rapido.abstractConverter"></bean>
+	<bean class="com.bstek.bdf2.rapido.xml.impl.ButtonsConverter" parent="bdf.rapido.abstractConverter"></bean>
+	<bean class="com.bstek.bdf2.rapido.xml.impl.ChildrenConverter" parent="bdf.rapido.abstractConverter"></bean>
+	<bean class="com.bstek.bdf2.rapido.xml.impl.ControlTabConverter" parent="bdf.rapido.abstractConverter"></bean>
+	<bean class="com.bstek.bdf2.rapido.xml.impl.DataColumnConverter" parent="bdf.rapido.abstractConverter"></bean>
+	<bean class="com.bstek.bdf2.rapido.xml.impl.DataGridConverter" parent="bdf.rapido.abstractConverter"></bean>
+	<bean class="com.bstek.bdf2.rapido.xml.impl.DialogConverter" parent="bdf.rapido.abstractConverter"></bean>
+	<bean class="com.bstek.bdf2.rapido.xml.impl.PanelConverter" parent="bdf.rapido.abstractConverter"></bean>
+	<bean class="com.bstek.bdf2.rapido.xml.impl.SimpleIconButtonConverter" parent="bdf.rapido.abstractConverter"></bean>
+	<bean class="com.bstek.bdf2.rapido.xml.impl.TabControlConverter" parent="bdf.rapido.abstractConverter"></bean>
+	<bean class="com.bstek.bdf2.rapido.xml.impl.ToolBarButtonConverter" parent="bdf.rapido.abstractConverter"></bean>
+	<bean class="com.bstek.bdf2.rapido.xml.impl.ToolBarConverter" parent="bdf.rapido.abstractConverter"></bean>
+	<bean class="com.bstek.bdf2.rapido.xml.impl.ToolsConverter" parent="bdf.rapido.abstractConverter"></bean>
+	<bean class="com.bstek.bdf2.rapido.xml.impl.ListDropDownConverter" parent="bdf.rapido.abstractConverter"></bean>
+	<bean class="com.bstek.bdf2.rapido.xml.impl.HtmlEditorConverter" parent="bdf.rapido.abstractConverter"></bean>
+	<bean id="bdf.rapido.abstractConverter" class="com.bstek.bdf2.rapido.xml.AbstractConverter" abstract="true">
+		<property name="entityManager" ref="bdf.rapido.entityManager"></property>
+	</bean>
+	<bean class="com.bstek.bdf2.rapido.bsh.HibernateVariableRegister"></bean>
+	<bean class="com.bstek.bdf2.rapido.bsh.JdbcVariableRegister"></bean>
+	<bean parent="dorado.packagesConfigLoader">
+		<property name="configLocation" value="com/bstek/bdf2/rapido/config/packages-config.xml" />
+	</bean>
+</beans>

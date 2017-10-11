@@ -1,0 +1,195 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=IE8">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta http-equiv="Pragma" content="no-cache" />
+<meta http-equiv="Cache-Control" content="no-cache, no-store" />
+<meta http-equiv="Expires" content="0" />
+<script language="javascript" type="text/javascript" charset="UTF-8" src="/bdf2-test/dorado/client/boot.dpkg?cacheBuster=1364538399273"></script>
+<script language="javascript" type="text/javascript">
+window.$setting={
+"common.debugEnabled":true,
+"common.showExceptionStackTrace":false,
+"common.enterAsTab":false,
+"common.contextPath":"\/bdf2-test",
+"common.abortAsyncLoadingOnSyncLoading":false,
+"widget.skinRoot":">dorado\/client\/skins\/"
+};
+$import("widget");
+</script>
+<script language="javascript" type="text/javascript">
+dorado.onInit(function(){
+AUTO_APPEND_TO_TOPVIEW=false;
+var view=new dorado.widget.View({
+	"id":"viewMain",
+	"layout":{
+		"$type":"Anchor"
+	},
+	"name":"bdf2.core.view.frame.Login",
+	"listener":{
+		"onReady":function(self,arg){
+var errorMsg=""
+var labelErrorInfo=view.id("labelErrorInfo");
+var useRemember="true";
+if(errorMsg){
+	labelErrorInfo.set("text","登录失败�?+errorMsg);
+	labelErrorInfo.set("visible",true);
+	if(useRemember=="false"){
+		view.id("panelForLogin").set("height",250);
+	}else{
+		view.id("panelForLogin").set("height",270);
+	}
+}else{
+	labelErrorInfo.set("visible",false);	
+}
+
+}
+	}
+});
+function f(view){view.set("children",[
+	{
+		"$type":"FormSubmitAction",
+		"hotkey":"return",
+		"id":"loginSubmitAction",
+		"action":"\/bdf2-test\/security_check_",
+		"listener":{
+			"beforeExecute":function(self,arg){
+var form=view.id("autoFormLogin").get("entity");
+if(!form.username_){
+	dorado.MessageBox.alert("用户名不能为空！");
+	arg.processDefault=false;
+	return;
+}
+if(!form.password_){
+	dorado.MessageBox.alert("密码不能为空�?);
+	arg.processDefault=false;
+	return;
+}
+var useCaptcha="true";
+if(!form.captcha_ && useCaptcha=="true"){
+	dorado.MessageBox.alert("验证码不能为空！");
+	arg.processDefault=false;
+	return;
+}
+self.set("parameter",form);
+
+}
+		}
+	},
+	{
+		"$type":"Panel",
+		"children":[
+			{
+				"$type":"Label",
+				"id":"labelErrorInfo",
+				"style":"color:red",
+				"hideMode":"display",
+				"layoutConstraint":{
+					"padding":"10"
+				}
+			},
+			{
+				"$type":"AutoForm",
+				"cols":"*",
+				"elements":[
+					{
+						"label":"\u7528\u6237\u540D",
+						"name":"username_"
+					},
+					{
+						"editorType":"PasswordEditor",
+						"label":"\u5BC6\u7801",
+						"name":"password_"
+					},
+					{
+						"label":"\u9A8C\u8BC1\u7801",
+						"name":"captcha_",
+						"tags":"captcha"
+					},
+					{
+						"editor":{
+							"$type":"HtmlContainer",
+							"tip":"\u5355\u51FB\u6539\u6362\u9A8C\u8BC1\u7801",
+							"content":"<img id=\'captchaImg\' src=\"\/bdf2-test\/generate.captcha.action?width=175&height=60\">",
+							"listener":{
+								"onClick":function(self,arg){
+document.getElementById("captchaImg").src="/bdf2-test/generate.captcha.action?width=175&height=60&random="+Math.random();
+}
+							}
+						},
+						"id":"autoFormElementCode",
+						"tags":"captcha",
+						"showLabel":false
+					},
+					{
+						"editorType":"CheckBox",
+						"label":"\u81EA\u52A8\u767B\u5F55",
+						"name":"remember_me_",
+						"tags":"remember_me_"
+					}
+				],
+				"id":"autoFormLogin",
+				"listener":{
+					"onReady":function(self,arg){
+self.set("entity",{});
+var useRemember="true";
+var useCaptcha="true";
+if(useCaptcha=="false"){
+	view.tag("captcha").set("visible",false);
+	if(useRemember=="false"){
+		view.id("panelForLogin").set("height",160);
+		view.tag("remember_me_").set("visible",false);
+	}else{
+		view.id("panelForLogin").set("height",180);
+	}
+}else{
+	if(useRemember=="false"){
+		view.tag("remember_me_").set("visible",false);
+	}
+}
+
+}
+				}
+			}
+		],
+		"id":"panelForLogin",
+		"height":"250",
+		"width":"300",
+		"caption":"\u7528\u6237\u767B\u5F55",
+		"buttons":[
+			{
+				"$type":"Button",
+				"action":view.getComponentReference("loginSubmitAction"),
+				"icon":"url(skin>common\/icons.gif) -220px -20px",
+				"caption":"\u767B\u5F55"
+			},
+			{
+				"$type":"Button",
+				"icon":"url(skin>common\/icons.gif) -40px 0px",
+				"caption":"\u91CD\u7F6E",
+				"listener":{
+					"onClick":function(self,arg){
+view.id("autoFormLogin").set("entity",{});
+}
+				}
+			}
+		],
+		"layoutConstraint":{
+			"left":"45%",
+			"top":"40%"
+		}
+	}
+]);}
+f(view);
+AUTO_APPEND_TO_TOPVIEW=true;
+var doradoView = document.getElementById("doradoView");
+if (doradoView) view.replace(doradoView);
+});
+$import("widget,common,base-widget,debugger");
+</script>
+</head>
+<body scroll="no" style="margin:0px; overflow:hidden">
+	<label id="doradoView" style="display:none" />
+</body>
+</html>

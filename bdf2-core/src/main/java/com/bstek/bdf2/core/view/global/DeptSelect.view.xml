@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ViewConfig>
+  <Arguments/>
+  <Context/>
+  <Model/>
+  <View>
+    <Dialog id="$dialogDeptSelect">
+      <ClientEvent name="onCreate">self.$show=function(config){&#xD;
+	if(!config.callback){&#xD;
+		dorado.MessageBox.alert(&quot;当前方法需要定义一个callback函数&quot;);&#xD;
+		return;&#xD;
+	}else{&#xD;
+		self.callback=config.callback;&#xD;
+	}&#xD;
+	if(config.caption){&#xD;
+		self.set(&quot;caption&quot;,config.caption);&#xD;
+	}&#xD;
+	if(config.width){&#xD;
+		self.set(&quot;width&quot;,config.width);&#xD;
+	}&#xD;
+	if(config.height){&#xD;
+		self.set(&quot;height&quot;,config.height);&#xD;
+	}&#xD;
+	if(config.selected){&#xD;
+		self.selected=config.selected;&#xD;
+	}&#xD;
+	self.show();&#xD;
+}</ClientEvent>
+      <Property name="modal">true</Property>
+      <Property name="width">600</Property>
+      <Property name="height">600</Property>
+      <Property name="center">true</Property>
+      <Buttons>
+        <Button>
+          <ClientEvent name="onClick">var tree=view.id(&quot;$dataTreeDeptForSelect&quot;);&#xD;
+var nodes=tree.get(&quot;nodes&quot;);&#xD;
+var result=[];&#xD;
+buildNodes(tree.get(&quot;root&quot;),result);&#xD;
+if(result.length==0){&#xD;
+	dorado.MessageBox.confirm(&quot;您没有选择部门，您真的要保存吗？&quot;,function(){&#xD;
+		view.id(&quot;$dialogDeptSelect&quot;).callback(result);&#xD;
+	});	&#xD;
+} else {&#xD;
+	view.id(&quot;$dialogDeptSelect&quot;).callback(result);&#xD;
+}&#xD;
+/*if(result.length>0){&#xD;
+	view.id(&quot;$dialogDeptSelect&quot;).callback(result);&#xD;
+}else{&#xD;
+	dorado.MessageBox.alert(&quot;请先勾选一个部门节点后再进行此操作&quot;);&#xD;
+}*/&#xD;
+&#xD;
+function buildNodes(parentNode,resultArray){&#xD;
+	var nodes=parentNode.get(&quot;nodes&quot;);&#xD;
+	nodes.each(function(node){&#xD;
+		if(node.get(&quot;checked&quot;)){&#xD;
+			var data=node.get(&quot;data&quot;);&#xD;
+			resultArray.push(data.toJSON());		&#xD;
+		}&#xD;
+		buildNodes(node,resultArray);&#xD;
+	});	&#xD;
+}</ClientEvent>
+          <Property name="caption">确认</Property>
+          <Property name="icon">url(skin>common/icons.gif) -140px -20px</Property>
+        </Button>
+        <Button>
+          <ClientEvent name="onClick">view.id(&quot;$dialogDeptSelect&quot;).hide();</ClientEvent>
+          <Property name="caption">取消</Property>
+          <Property name="icon">url(skin>common/icons.gif) -40px 0px</Property>
+        </Button>
+      </Buttons>
+      <Children>
+        <DataSet id="$dataSetDeptForSelect">
+          <Property name="dataType">[$dataTypeDept]</Property>
+          <Property name="dataProvider">bdf2.deptSelect#loadDepts</Property>
+        </DataSet>
+        <DataTree id="$dataTreeDeptForSelect">
+          <ClientEvent name="onDataNodeCreate">var dialog=view.id(&quot;$dialogDeptSelect&quot;);&#xD;
+var selected=dialog.selected;&#xD;
+if(selected){&#xD;
+	var data=arg.data;&#xD;
+	for(var i=0;i&lt;selected.length;i++){&#xD;
+		if(data.get(&quot;id&quot;)==selected[i]){&#xD;
+			arg.node.set(&quot;checkable&quot;,false);&#xD;
+			break;&#xD;
+		}&#xD;
+	}&#xD;
+}</ClientEvent>
+          <Property name="dataSet">$dataSetDeptForSelect</Property>
+          <BindingConfigs>
+            <BindingConfig>
+              <Property name="expandLevel">1</Property>
+              <Property name="labelProperty">name</Property>
+              <Property name="recursive">true</Property>
+              <Property name="childrenProperty">children</Property>
+              <Property name="checkable">true</Property>
+              <Property name="autoCheckChildren">false</Property>
+            </BindingConfig>
+          </BindingConfigs>
+        </DataTree>
+      </Children>
+      <Tools/>
+    </Dialog>
+  </View>
+</ViewConfig>

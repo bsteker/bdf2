@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+
+	<import
+		resource="classpath:com/bstek/bdf2/componentprofile/config/bdf2-componentprofile-component-configs.xml" />
+
+	<bean id="bdf2.componentConfigManager"
+		class="com.bstek.bdf2.componentprofile.manager.impl.HibernateComponentConfigManager"></bean>
+
+	<bean parent="dorado.dataConfigLoader">
+		<property name="configLocation"
+			value="com/bstek/bdf2/componentprofile/model.model.xml" />
+	</bean>
+
+	<bean id="bdf2.componentProfileService"
+		class="com.bstek.bdf2.componentprofile.service.ComponentProfileService">
+		<property name="componentConfigManager" ref="bdf2.componentConfigManager"></property>
+		<property name="applicationCache" ref="bdf2.applicationCache"></property>
+	</bean>
+
+
+	<bean id="bdf2.componentProfileMaintain"
+		class="com.bstek.bdf2.componentprofile.ComponentProfileMaintain">
+		<property name="componentProfileService" ref="bdf2.componentProfileService"></property>
+	</bean>
+
+	<bean class="com.bstek.bdf2.core.orm.AnnotationPackages">
+		<property name="scanPackages">
+			<list>
+				<value>com/bstek/bdf2/componentprofile/model</value>
+			</list>
+		</property>
+		<property name="dataSourceRegisterName" value="${bdf2.componentprofileSourceName}"></property>
+	</bean>
+
+	<bean parent="dorado.genericObjectListenerRegister">
+		<property name="listener">
+			<bean class="com.bstek.bdf2.componentprofile.listener.ViewListener">
+				<property name="order" value="1" />
+				<property name="pattern" value="*" />
+				<property name="componentProfileService" ref="bdf2.componentProfileService"></property>
+			</bean>
+		</property>
+	</bean>
+</beans>

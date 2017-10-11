@@ -1,0 +1,444 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ViewConfig>
+  <Arguments/>
+  <Context/>
+  <Model>
+    <DataType name="dataTypeGroup" parent="$dataTypeGroup">
+      <Reference name="users">
+        <Property name="dataType">[dataTypeGroupMember]</Property>
+        <Property name="dataProvider">bdf2.groupMaintain#loadGroupMembers</Property>
+        <Property name="pageSize">10</Property>
+        <Property name="parameter">
+          <Entity>
+            <Property name="groupId">$${this.id}</Property>
+            <Property name="type">user</Property>
+          </Entity>
+        </Property>
+      </Reference>
+      <Reference name="depts">
+        <Property name="dataType">[dataTypeGroupMember]</Property>
+        <Property name="dataProvider">bdf2.groupMaintain#loadGroupMembers</Property>
+        <Property name="pageSize">10</Property>
+        <Property name="parameter">
+          <Entity>
+            <Property name="groupId">$${this.id}</Property>
+            <Property name="type">dept</Property>
+          </Entity>
+        </Property>
+      </Reference>
+      <Reference name="positions">
+        <Property name="dataType">[dataTypeGroupMember]</Property>
+        <Property name="dataProvider">bdf2.groupMaintain#loadGroupMembers</Property>
+        <Property name="pageSize">10</Property>
+        <Property name="parameter">
+          <Entity>
+            <Property name="groupId">$${this.id}</Property>
+            <Property name="type">position</Property>
+          </Entity>
+        </Property>
+      </Reference>
+    </DataType>
+    <DataType name="dataTypeGroupMember" parent="$dataTypeGroupMember">
+      <PropertyDef name="user">
+        <Property name="dataType">$dataTypeUser</Property>
+        <Property name="label">用户</Property>
+      </PropertyDef>
+      <PropertyDef name="dept">
+        <Property name="dataType">$dataTypeDept</Property>
+        <Property name="label">部门</Property>
+      </PropertyDef>
+      <PropertyDef name="position">
+        <Property name="dataType">$dataTypePosition</Property>
+        <Property name="label">岗位</Property>
+      </PropertyDef>
+    </DataType>
+  </Model>
+  <View>
+    <DataSet id="dataSetGroup">
+      <Property name="dataType">[dataTypeGroup]</Property>
+      <Property name="dataProvider">bdf2.groupMaintain#loadGroups</Property>
+      <Property name="pageSize">10</Property>
+    </DataSet>
+    <SplitPanel>
+      <Property name="position">450</Property>
+      <MainControl>
+        <TabControl>
+          <ControlTab>
+            <Property name="caption">用户</Property>
+            <Container>
+              <ToolBar>
+                <DataPilot>
+                  <ClientEvent name="onSubControlAction">var data=view.id(&quot;dataSetGroup&quot;).getData(&quot;#&quot;);&#xD;
+if(!data){&#xD;
+	dorado.MessageBox.alert(&quot;请先选中一个群组!&quot;);&#xD;
+	arg.processDefault=false;&#xD;
+	return;&#xD;
+}&#xD;
+var members = &quot;users&quot;;&#xD;
+switch(arg.code){&#xD;
+	case &quot;+&quot;:&#xD;
+		function initGroupCriterion(dataset, groupId){&#xD;
+			var sysParameter = dataset._sysParameter;&#xD;
+			if (!sysParameter) dataset._sysParameter = sysParameter = new dorado.util.Map();&#xD;
+			var criteria = sysParameter.get(&quot;criteria&quot;) || {};&#xD;
+			var criterions = criteria.criterions;&#xD;
+			if (!criterions){&#xD;
+				criteria.criterions = [{&#xD;
+					property:&quot;groupId&quot;, &#xD;
+					dataType:&quot;String&quot;, &#xD;
+					expression:groupId&#xD;
+				}];&#xD;
+			}else{&#xD;
+				var groupCriterion = null;&#xD;
+				for (var i = 0; i &lt; criterions.length; i++) {&#xD;
+					var criterion = criterions[i];&#xD;
+					if (criterion.property==&quot;groupId&quot;){&#xD;
+						groupCriterion = criterion;&#xD;
+						break;&#xD;
+					}&#xD;
+				}&#xD;
+				if (groupCriterion==null){&#xD;
+					groupCriterion = {&#xD;
+						property:&quot;groupId&quot;, &#xD;
+						dataType:&quot;String&quot;&#xD;
+					}&#xD;
+					criterions.push(groupCriterion);&#xD;
+				}	&#xD;
+				groupCriterion.expression = groupId;&#xD;
+			}&#xD;
+			sysParameter.put(&quot;criteria&quot;, criteria);&#xD;
+		}&#xD;
+		var dialog=view.id(&quot;$dialogUserSelect&quot;);	&#xD;
+		var groupId = data.get(&quot;id&quot;);&#xD;
+		if (self.currentGroupId != groupId){&#xD;
+			self.currentGroupId = groupId;&#xD;
+			var dataSetUserForSelect = view.id(&quot;$dataSetUserForSelect&quot;);&#xD;
+			var dataSetUserSelected = view.id(&quot;$dataSetUserSelected&quot;);&#xD;
+			initGroupCriterion(dataSetUserForSelect, &quot;!&quot;+groupId);&#xD;
+			initGroupCriterion(dataSetUserSelected, groupId);&#xD;
+			dataSetUserForSelect.flushAsync();&#xD;
+			dataSetUserSelected.flushAsync();&#xD;
+		}&#xD;
+		dialog.$show({&#xD;
+			caption:&quot;选择用户&quot;,&#xD;
+			width:700,&#xD;
+			callback:function(users){&#xD;
+				var ids=[];&#xD;
+				for(var i=0;i&lt;users.length;i++){&#xD;
+					ids.push(users[i][&quot;username&quot;]);&#xD;
+				}			&#xD;
+				var action=view.id(&quot;ajaxActionInsertMember&quot;);&#xD;
+				action.set(&quot;parameter&quot;,{ids:ids,type:&quot;user&quot;,groupId:data.get(&quot;id&quot;)});&#xD;
+				action.execute(function(error){&#xD;
+					if(error){&#xD;
+						for(var i=0;i&lt;users.length;i++){&#xD;
+							var user=users[i];&#xD;
+							if(user[&quot;username&quot;]==error){&#xD;
+								if(user[&quot;cname&quot;]){&#xD;
+									error=user[&quot;cname&quot;];&#xD;
+								}&#xD;
+								break;				&#xD;
+							}&#xD;
+						}&#xD;
+						dorado.MessageBox.alert(&quot;当前选择的[&quot;+error+&quot;]已添加，请重新选择&quot;);&#xD;
+					}else{&#xD;
+						dialog.hide();&#xD;
+						data.reset(&quot;users&quot;);&#xD;
+					}&#xD;
+				});&#xD;
+			}&#xD;
+		});&#xD;
+		arg.processDefault=false;&#xD;
+		break;&#xD;
+	case &quot;-&quot;:&#xD;
+		dorado.MessageBox.confirm(&quot;真的要删除当前成员吗？&quot;,function(){&#xD;
+			var action=view.id(&quot;ajaxActionDeleteMember&quot;);&#xD;
+			action.set(&quot;parameter&quot;,view.id(&quot;dataSetGroup&quot;).getData(&quot;#.#&quot; + members+ &quot;.id&quot;));&#xD;
+			action.execute(function(){&#xD;
+				data.reset(members);&#xD;
+			});	&#xD;
+		});&#xD;
+		arg.processDefault=false;&#xD;
+		break;&#xD;
+}&#xD;
+</ClientEvent>
+                  <Property name="dataSet">dataSetGroup</Property>
+                  <Property name="itemCodes">pages,+,-</Property>
+                  <Property name="dataPath">#.users</Property>
+                </DataPilot>
+              </ToolBar>
+              <DataGrid>
+                <Property name="dataSet">dataSetGroup</Property>
+                <Property name="dataPath">#.users</Property>
+                <Property name="dataType">$dataTypeUser</Property>
+                <Property name="readOnly">true</Property>
+                <DataColumn name="username">
+                  <Property name="property">username</Property>
+                </DataColumn>
+                <DataColumn name="cname">
+                  <Property name="property">user.cname</Property>
+                </DataColumn>
+                <DataColumn name="ename">
+                  <Property name="property">user.ename</Property>
+                </DataColumn>
+              </DataGrid>
+              <Import src="bdf2.core.view.global.UserSelect#$dialogUserSelect"/>
+            </Container>
+          </ControlTab>
+          <ControlTab>
+            <Property name="caption">部门</Property>
+            <Container>
+              <ToolBar>
+                <DataPilot>
+                  <ClientEvent name="onSubControlAction">var data=view.id(&quot;dataSetGroup&quot;).getData(&quot;#&quot;);&#xD;
+if(!data){&#xD;
+	dorado.MessageBox.alert(&quot;请先选中一个群组!&quot;);&#xD;
+	arg.processDefault=false;&#xD;
+	return;&#xD;
+}&#xD;
+var members = &quot;depts&quot;;&#xD;
+switch(arg.code){&#xD;
+	case &quot;+&quot;:&#xD;
+		var dialog=view.id(&quot;$dialogDeptSelect&quot;);	&#xD;
+		dialog.$show({&#xD;
+			caption:&quot;选择部门&quot;,&#xD;
+			width:700,&#xD;
+			callback:function(deptArray){&#xD;
+				var ids=[];&#xD;
+					for(var i=0;i&lt;deptArray.length;i++){&#xD;
+						ids.push(deptArray[i][&quot;id&quot;]);&#xD;
+					}		&#xD;
+				var action=view.id(&quot;ajaxActionInsertMember&quot;);&#xD;
+				action.set(&quot;parameter&quot;,{ids:ids,type:&quot;dept&quot;,groupId:data.get(&quot;id&quot;)});&#xD;
+				action.execute(function(error){&#xD;
+					if(error){&#xD;
+							for(var i=0;i&lt;deptArray.length;i++){&#xD;
+								if(error==deptArray[i][&quot;id&quot;]){&#xD;
+									error=deptArray[i][&quot;name&quot;];&#xD;
+									break;&#xD;
+								}&#xD;
+							}&#xD;
+							dorado.MessageBox.alert(&quot;部门[&quot;+error+&quot;]已添加，请重新选择&quot;);&#xD;
+					}else{&#xD;
+						dialog.hide();&#xD;
+						data.reset(members);&#xD;
+					}&#xD;
+				});&#xD;
+			}&#xD;
+		});&#xD;
+		arg.processDefault=false;&#xD;
+		break;&#xD;
+	case &quot;-&quot;:&#xD;
+		dorado.MessageBox.confirm(&quot;真的要删除当前成员吗？&quot;,function(){&#xD;
+			var action=view.id(&quot;ajaxActionDeleteMember&quot;);&#xD;
+			action.set(&quot;parameter&quot;,view.id(&quot;dataSetGroup&quot;).getData(&quot;#.#&quot; + members+ &quot;.id&quot;));&#xD;
+			action.execute(function(){&#xD;
+				data.reset(members);&#xD;
+			});	&#xD;
+		});&#xD;
+		arg.processDefault=false;&#xD;
+		break;&#xD;
+}&#xD;
+</ClientEvent>
+                  <Property name="dataSet">dataSetGroup</Property>
+                  <Property name="itemCodes">pages,+,-</Property>
+                  <Property name="dataPath">#.depts</Property>
+                </DataPilot>
+              </ToolBar>
+              <DataGrid>
+                <Property name="dataSet">dataSetGroup</Property>
+                <Property name="dataPath">#.depts</Property>
+                <Property name="readOnly">true</Property>
+                <Property name="dataType">dataTypeGroupMember</Property>
+                <DataColumn>
+                  <Property name="property">dept.name</Property>
+                  <Editor/>
+                </DataColumn>
+              </DataGrid>
+              <Import src="bdf2.core.view.global.DeptSelect#$dialogDeptSelect"/>
+            </Container>
+          </ControlTab>
+          <ControlTab>
+            <Property name="caption">岗位</Property>
+            <Container>
+              <ToolBar>
+                <DataPilot>
+                  <ClientEvent name="onSubControlAction">var data=view.id(&quot;dataSetGroup&quot;).getData(&quot;#&quot;);&#xD;
+if(!data){&#xD;
+	dorado.MessageBox.alert(&quot;请先选中一个群组!&quot;);&#xD;
+	arg.processDefault=false;&#xD;
+	return;&#xD;
+}&#xD;
+var members = &quot;positions&quot;;&#xD;
+switch(arg.code){&#xD;
+	case &quot;+&quot;:&#xD;
+		var dialog=view.id(&quot;$dialogPositionSelect&quot;);	&#xD;
+		dialog.$show({&#xD;
+			caption:&quot;选择岗位&quot;,&#xD;
+			width:700,&#xD;
+			callback:function(chosenArray){&#xD;
+				var ids=[];&#xD;
+					for(var i=0;i&lt;chosenArray.length;i++){&#xD;
+						ids.push(chosenArray[i][&quot;id&quot;]);&#xD;
+					}		&#xD;
+				var action=view.id(&quot;ajaxActionInsertMember&quot;);&#xD;
+				action.set(&quot;parameter&quot;,{ids:ids,type:&quot;position&quot;,groupId:data.get(&quot;id&quot;)});&#xD;
+				action.execute(function(error){&#xD;
+					if(error){&#xD;
+							for(var i=0;i&lt;chosenArray.length;i++){&#xD;
+								if(error==chosenArray[i][&quot;id&quot;]){&#xD;
+									error=chosenArray[i][&quot;name&quot;];&#xD;
+									break;&#xD;
+								}&#xD;
+							}&#xD;
+							dorado.MessageBox.alert(&quot;岗位[&quot;+error+&quot;]已添加，请重新选择&quot;);&#xD;
+					}else{&#xD;
+						dialog.hide();&#xD;
+						data.reset(members);&#xD;
+					}&#xD;
+				});&#xD;
+			}&#xD;
+		});&#xD;
+		arg.processDefault=false;&#xD;
+		break;&#xD;
+	case &quot;-&quot;:&#xD;
+		dorado.MessageBox.confirm(&quot;真的要删除当前成员吗？&quot;,function(){&#xD;
+			var action=view.id(&quot;ajaxActionDeleteMember&quot;);&#xD;
+			action.set(&quot;parameter&quot;,view.id(&quot;dataSetGroup&quot;).getData(&quot;#.#&quot; + members+ &quot;.id&quot;));&#xD;
+			action.execute(function(){&#xD;
+				data.reset(members);&#xD;
+			});	&#xD;
+		});&#xD;
+		arg.processDefault=false;&#xD;
+		break;&#xD;
+}&#xD;
+</ClientEvent>
+                  <Property name="dataSet">dataSetGroup</Property>
+                  <Property name="itemCodes">pages,+,-</Property>
+                  <Property name="dataPath">#.positions</Property>
+                </DataPilot>
+              </ToolBar>
+              <DataGrid>
+                <Property name="dataSet">dataSetGroup</Property>
+                <Property name="dataPath">#.positions</Property>
+                <Property name="readOnly">true</Property>
+                <Property name="dataType">dataTypeGroupMember</Property>
+                <DataColumn>
+                  <Property name="property">position.name</Property>
+                  <Editor/>
+                </DataColumn>
+              </DataGrid>
+              <Import src="bdf2.core.view.global.PositionSelect#$dialogPositionSelect"/>
+            </Container>
+          </ControlTab>
+        </TabControl>
+      </MainControl>
+      <SideControl>
+        <Container>
+          <ToolBar>
+            <DataPilot>
+              <ClientEvent name="onSubControlAction">var ds = view.id(&quot;dataSetGroup&quot;);
+switch(arg.code) {
+	case '+':
+	    ds.insert();
+		view.id(&quot;dialogGroup&quot;).show();
+		arg.processDefault = false;
+		break;
+	case '-':
+		dorado.MessageBox.confirm(&quot;确认要删除当前数据?&quot;, function(){
+			ds.getData(&quot;#&quot;).remove();
+			view.id(&quot;updateActionGroup&quot;).execute();
+		});
+		arg.processDefault = false;
+		break;
+}
+
+</ClientEvent>
+              <Property name="dataSet">dataSetGroup</Property>
+              <Property name="itemCodes">pages,+,-</Property>
+            </DataPilot>
+            <ToolBarButton>
+              <ClientEvent name="onClick">view.id(&quot;dialogGroup&quot;).show();&#xD;
+</ClientEvent>
+              <Property name="caption">编辑</Property>
+              <Property name="icon"> url(>skin>common/icons.gif) -200px -0px</Property>
+            </ToolBarButton>
+          </ToolBar>
+          <DataGrid>
+            <Property name="dataSet">dataSetGroup</Property>
+            <Property name="dataType">dataTypeGroup</Property>
+            <Property name="readOnly">true</Property>
+            <Property name="filterMode">serverSide</Property>
+            <Property name="showFilterBar">true</Property>
+            <DataColumn name="name">
+              <Property name="property">name</Property>
+            </DataColumn>
+            <DataColumn name="desc">
+              <Property name="property">desc</Property>
+              <Property name="filterable">false</Property>
+            </DataColumn>
+          </DataGrid>
+        </Container>
+      </SideControl>
+    </SplitPanel>
+    <Dialog id="dialogGroup">
+      <ClientEvent name="beforeClose">view.id(&quot;dataSetGroup&quot;).getData(&quot;#&quot;).cancel();&#xD;
+</ClientEvent>
+      <Property name="modal">true</Property>
+      <Property name="center">true</Property>
+      <Property name="width">300</Property>
+      <Property name="height">260</Property>
+      <Property name="caption">群组信息编辑</Property>
+      <Property name="icon"> url(>skin>common/icons.gif) -200px -0px</Property>
+      <Buttons>
+        <Button>
+          <ClientEvent name="onClick">view.id(&quot;updateActionGroup&quot;).execute(function(){&#xD;
+	view.id(&quot;dialogGroup&quot;).hide();&#xD;
+});&#xD;
+</ClientEvent>
+          <Property name="caption">保存</Property>
+          <Property name="icon"> url(>skin>common/icons.gif) -140px -20px</Property>
+        </Button>
+        <Button>
+          <ClientEvent name="onClick">view.id(&quot;dialogGroup&quot;).close();</ClientEvent>
+          <Property name="caption">取消</Property>
+          <Property name="icon"> url(>skin>common/icons.gif) -40px -0px</Property>
+        </Button>
+      </Buttons>
+      <Children>
+        <AutoForm>
+          <Property name="dataSet">dataSetGroup</Property>
+          <Property name="dataType">dataTypeGroup</Property>
+          <Property name="cols">*</Property>
+          <AutoFormElement>
+            <Property name="name">name</Property>
+            <Property name="property">name</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">desc</Property>
+            <Property name="property">desc</Property>
+            <Property name="editorType">TextArea</Property>
+            <Editor/>
+          </AutoFormElement>
+        </AutoForm>
+      </Children>
+      <Tools/>
+    </Dialog>
+    <UpdateAction id="updateActionGroup">
+      <Property name="dataResolver">bdf2.groupMaintain#saveGroups</Property>
+      <Property name="successMessage">操作成功</Property>
+      <UpdateItem>
+        <Property name="dataSet">dataSetGroup</Property>
+      </UpdateItem>
+    </UpdateAction>
+    <AjaxAction id="ajaxActionInsertMember">
+      <Property name="service">bdf2.groupMaintain#insertGroupMembers</Property>
+      <Property name="successMessage">操作成功</Property>
+    </AjaxAction>
+    <AjaxAction id="ajaxActionDeleteMember">
+      <Property name="service">bdf2.groupMaintain#deleteMember</Property>
+      <Property name="successMessage">成功删除成员!</Property>
+    </AjaxAction>
+  </View>
+</ViewConfig>

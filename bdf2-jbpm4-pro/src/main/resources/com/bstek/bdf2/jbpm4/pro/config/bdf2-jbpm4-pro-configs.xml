@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+	http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-2.5.xsd">
+
+	<context:component-scan base-package="com.bstek.bdf2.jbpm4.pro.view*" />
+
+
+	<bean id="bdf2.jbpm4.pro.securityCheck" class="com.bstek.bdf2.jbpm4.pro.security.SecurityCheck"></bean>
+
+	<bean id="bdf2.jbpm4.pro.componentFilter" class="com.bstek.bdf2.jbpm4.pro.security.component.ComponentFilter">
+		<property name="securityCheck" ref="bdf2.jbpm4.pro.securityCheck"></property>
+	</bean>
+
+	<bean id="bdf2.jbpm4.pro.autoFormFilter" class="com.bstek.bdf2.jbpm4.pro.security.component.AutoFormFilter">
+		<property name="componentFilter" ref="bdf2.jbpm4.pro.componentFilter"></property>
+	</bean>
+	<bean id="bdf2.jbpm4.pro.gridFilter" class="com.bstek.bdf2.jbpm4.pro.security.component.GridFilter">
+		<property name="securityCheck" ref="bdf2.jbpm4.pro.securityCheck"></property>
+	</bean>
+	<bean id="bdf2.jbpm4.pro.tabControlFilter" class="com.bstek.bdf2.jbpm4.pro.security.component.TabControlFilter">
+		<property name="securityCheck" ref="bdf2.jbpm4.pro.securityCheck"></property>
+	</bean>
+
+	<bean class="com.bstek.bdf2.core.orm.AnnotationPackages">
+		<property name="scanPackages">
+			<list>
+				<value>com/bstek/bdf2/jbpm4/pro/model</value>
+			</list>
+		</property>
+	</bean>
+
+	<bean parent="dorado.dataConfigLoader">
+		<property name="configLocation" value="classpath:com/bstek/bdf2/jbpm4/pro/view/*.model.xml" />
+	</bean>
+
+	<bean parent="dorado.genericObjectListenerRegister">
+		<property name="listener">
+			<bean class="com.bstek.bdf2.jbpm4.pro.security.interceptor.WorkflowComponentListener">
+				<property name="order" value="1" /> <!-- 拦截优先级 -->
+				<property name="pattern" value="*" /> <!-- 要拦截哪一类View -->
+				<property name="excludePattern" value="com.bstek.*" /> <!-- 不拦截哪一类View -->
+				<property name="bpmService" ref="bdf2.jbpm4.bpmService"></property>
+				<property name="componentFilter" ref="bdf2.jbpm4.pro.componentFilter"></property>
+			</bean>
+		</property>
+	</bean>
+	<!-- <bean parent="dorado.packagesConfigLoader"> -->
+	<!-- <property name="configLocation" value="dorado/resources/packages-config.xml" /> -->
+	<!-- </bean> -->
+</beans>

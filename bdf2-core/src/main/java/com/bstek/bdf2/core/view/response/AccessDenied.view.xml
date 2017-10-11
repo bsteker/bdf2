@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ViewConfig>
+  <Arguments/>
+  <Context/>
+  <Model/>
+  <View>
+    <HtmlContainer layout="padding:10">
+      <Property name="content">权限不足，访问被拒绝</Property>
+      <Property name="style">
+        <Property name="font-size">12pt</Property>
+        <Property name="margin">10px</Property>
+      </Property>
+    </HtmlContainer>
+  </View>
+</ViewConfig>

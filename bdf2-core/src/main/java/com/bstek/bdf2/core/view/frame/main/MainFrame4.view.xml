@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ViewConfig template="bdf2.core.view.frame.main.MainFrameTemplate">
+  <Arguments/>
+  <Context/>
+  <Model/>
+  <View>
+    <Property name="packages">tree</Property>
+    <GroupStart id="workspace"/>
+    <DataSet id="dataSetUrl">
+      <ClientEvent name="onReady">String.prototype.replaceAll = function(reallyDo, replaceWith, ignoreCase) {&#xD;
+	if (!RegExp.prototype.isPrototypeOf(reallyDo)) {&#xD;
+	    return this.replace(new RegExp(reallyDo, (ignoreCase ? &quot;gi&quot;: &quot;g&quot;)), replaceWith);&#xD;
+	} else {&#xD;
+	    return this.replace(reallyDo, replaceWith);&#xD;
+	}&#xD;
+}&#xD;
+var expanded=&quot;${configure.getBoolean(&quot;bdf2.mainFrameMenuExpanded&quot;)}&quot;;&#xD;
+var toolBarNav=view.id(&quot;toolBarNav&quot;);&#xD;
+var listArray = [];&#xD;
+var data=self.getData();&#xD;
+if(!data){&#xD;
+	return;&#xD;
+}&#xD;
+data.each(function(url){&#xD;
+	var button=new dorado.widget.toolbar.Button();&#xD;
+	button.set(&quot;caption&quot;,url.get(&quot;name&quot;));&#xD;
+	if(url.get(&quot;desc&quot;)){&#xD;
+		button.set(&quot;tip&quot;,url.get(&quot;desc&quot;));	&#xD;
+	}&#xD;
+	if(url.get(&quot;icon&quot;)){&#xD;
+		button.set(&quot;icon&quot;,url.get(&quot;icon&quot;));	&#xD;
+	}&#xD;
+	var menu=new dorado.widget.Menu();&#xD;
+	button.set(&quot;menu&quot;, menu);&#xD;
+	toolBarNav.addItem(button);&#xD;
+	var cdata=url.get(&quot;children&quot;);&#xD;
+	if(cdata){&#xD;
+		cdata.each(function(childUrl){&#xD;
+			buildMenu(menu, null, childUrl);&#xD;
+		});	&#xD;
+	}&#xD;
+});&#xD;
+&#xD;
+function buildMenu(menu, parentItem, url){&#xD;
+	var item = new dorado.widget.menu.MenuItem({&#xD;
+		caption: url.get(&quot;name&quot;),&#xD;
+		userData: url,&#xD;
+		onClick: function(self, arg){&#xD;
+			if(url.get(&quot;url&quot;)){&#xD;
+				window.openUrlInFrameTab(url.get(&quot;url&quot;), url.get(&quot;name&quot;),url.get(&quot;icon&quot;));&#xD;
+			}&#xD;
+		}&#xD;
+	});&#xD;
+	if(url.get(&quot;desc&quot;)){&#xD;
+		item.set(&quot;tip&quot;, url.get(&quot;desc&quot;));&#xD;
+	}&#xD;
+	if(url.get(&quot;icon&quot;)){&#xD;
+		item.set(&quot;icon&quot;, url.get(&quot;icon&quot;));&#xD;
+	}&#xD;
+	if (parentItem == null) {&#xD;
+		menu.addItem(item);&#xD;
+		item._parent = menu;&#xD;
+	}else{&#xD;
+		parentItem.addItem(item);&#xD;
+		item._parent = parentItem.get(&quot;submenu&quot;);&#xD;
+	}&#xD;
+	var cdata = url.get(&quot;children&quot;);&#xD;
+	if(!cdata){&#xD;
+		return;&#xD;
+	}&#xD;
+	cdata.each(function(d){&#xD;
+		buildMenu(menu, item, d);&#xD;
+	});&#xD;
+}</ClientEvent>
+      <Property name="dataProvider">bdf2.mainFrame#loadMeunUrls</Property>
+      <Property name="dataType">[dataTypeUrl]</Property>
+      <Property name="loadMode">onReady</Property>
+    </DataSet>
+    <ToolBar id="toolBarNav"/>
+    <Panel id="panelWorkarea">
+      <Property name="border">none</Property>
+      <Property name="maximizeable">true</Property>
+      <Buttons/>
+      <Children>
+        <TabControl id="tabControlWorkarea">
+          <ClientEvent name="onTabContextMenu">view.id(&quot;menuForTab&quot;).show({&#xD;
+	position:{&#xD;
+		left:arg.event.pageX,&#xD;
+		top:arg.event.pageY&#xD;
+	}&#xD;
+});&#xD;
+</ClientEvent>
+          <Property name="showMenuButton">true</Property>
+        </TabControl>
+      </Children>
+      <Tools/>
+    </Panel>
+    <GroupEnd/>
+  </View>
+</ViewConfig>

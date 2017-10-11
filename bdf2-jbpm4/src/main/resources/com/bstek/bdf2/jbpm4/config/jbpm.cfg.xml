@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<jbpm-configuration spring="enabled">
+
+	<!--import resource="jbpm.default.scriptmanager.xml" /-->
+	<!--import resource="jbpm.default.cfg.xml" /-->
+	<!--import resource="jbpm.identity.cfg.xml" /-->
+
+	<import resource="jbpm.jpdl.cfg.xml" />
+	<!--import resource="jbpm.bpmn.cfg.xml" />
+	<import resource="jbpm.businesscalendar.cfg.xml" />
+	<import resource="jbpm.console.cfg.xml" />
+	<import resource="jbpm.jobexecutor.cfg.xml" /-->
+
+	<!-- Spring specific configuration -->
+	<process-engine-context>
+	    <script-manager default-expression-language="bsh" default-script-language="bsh">
+	      <script-language name="juel" factory="org.jbpm.pvm.internal.script.JuelScriptEngineFactory" />
+	      <script-language name="bsh" factory="org.jbpm.pvm.internal.script.BshScriptEngineFactory" />
+	      <script-language name="groovy" factory="org.jbpm.pvm.internal.script.GroovyScriptEngineFactory" />
+	    </script-manager>	
+	    
+		<repository-service />
+		<repository-cache />
+		<execution-service />
+		<history-service />
+		<management-service />
+		<identity-service />
+		<task-service />
+		<object class="org.jbpm.pvm.internal.id.DatabaseDbidGenerator">
+			<field name="commandService">
+				<ref object="newTxRequiredCommandService" />
+			</field>
+		</object>
+		<object class="org.jbpm.pvm.internal.id.DatabaseIdComposer" init="eager" />
+		<object class="org.jbpm.pvm.internal.el.JbpmElFactoryImpl" />
+		<types resource="jbpm.variable.types.xml" />
+		<address-resolver />
+
+		<command-service name="newTxRequiredCommandService">
+			<retry-interceptor />
+			<environment-interceptor policy="requiresNew" />
+			<spring-transaction-interceptor transaction-manager="bdf2.jbpm4.transactionManagerBean" policy="requiresNew" />
+		</command-service>
+
+		<command-service name="txRequiredCommandService">
+			<retry-interceptor />
+			<environment-interceptor />
+			<spring-transaction-interceptor transaction-manager="bdf2.jbpm4.transactionManagerBean" />
+		</command-service>
+	</process-engine-context>
+
+	<transaction-context>
+	    <repository-session />
+	    <db-session />	    
+	    <message-session />
+	    <timer-session />	    
+	
+	    <history-sessions>
+	      <object class="org.jbpm.pvm.internal.history.HistorySessionImpl" />
+	    </history-sessions>	
+		<object class="com.bstek.bdf2.jbpm4.service.impl.IdentitySessionImpl" />
+		<transaction type="spring" />
+		<hibernate-session current="true" />
+		<mail-session>
+		</mail-session>
+	</transaction-context>
+
+</jbpm-configuration>

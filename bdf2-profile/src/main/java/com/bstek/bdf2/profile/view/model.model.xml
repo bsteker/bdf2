@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Model>
+  <DataType name="$dataTypeAssignTarget">
+    <Property name="creationType">com.bstek.bdf2.profile.model.AssignTarget</Property>
+    <PropertyDef name="id">
+      <Property name="dataType">String</Property>
+    </PropertyDef>
+    <PropertyDef name="desc">
+      <Property name="dataType">String</Property>
+      <Property name="label">描述</Property>
+    </PropertyDef>
+    <PropertyDef name="name">
+      <Property name="dataType">String</Property>
+      <Property name="label">名称</Property>
+    </PropertyDef>
+  </DataType>
+  <DataType name="$dataTypeComponentEvent">
+    <Property name="creationType">com.bstek.bdf2.profile.model.ComponentEvent</Property>
+    <PropertyDef name="content">
+      <Property name="dataType">String</Property>
+      <Property name="label">事件内容</Property>
+    </PropertyDef>
+    <PropertyDef name="id">
+      <Property name="dataType">String</Property>
+    </PropertyDef>
+    <PropertyDef name="name">
+      <Property name="dataType">String</Property>
+      <Property name="label">事件名称</Property>
+    </PropertyDef>
+    <PropertyDef name="componentId">
+      <Property name="dataType">String</Property>
+    </PropertyDef>
+  </DataType>
+  <DataType name="$dataTypeComponentInfo">
+    <Property name="creationType">com.bstek.bdf2.profile.model.ComponentInfo</Property>
+    <PropertyDef name="id">
+      <Property name="dataType">String</Property>
+    </PropertyDef>
+    <PropertyDef name="assignTargetId">
+      <Property name="dataType">String</Property>
+    </PropertyDef>
+    <PropertyDef name="type"/>
+    <PropertyDef name="controlId">
+      <Property name="dataType">String</Property>
+    </PropertyDef>
+    <PropertyDef name="url">
+      <Property name="dataType">String</Property>
+    </PropertyDef>
+  </DataType>
+  <DataType name="$dataTypeComponentProperty">
+    <Property name="creationType">com.bstek.bdf2.profile.model.ComponentProperty</Property>
+    <PropertyDef name="id">
+      <Property name="dataType">String</Property>
+    </PropertyDef>
+    <PropertyDef name="name">
+      <Property name="dataType">String</Property>
+      <Property name="label">属性名</Property>
+    </PropertyDef>
+    <PropertyDef name="value">
+      <Property name="dataType">String</Property>
+      <Property name="label">属性值</Property>
+    </PropertyDef>
+    <PropertyDef name="componentId">
+      <Property name="dataType">String</Property>
+    </PropertyDef>
+  </DataType>
+  <DataType name="$dataTypeComponentSort">
+    <Property name="creationType">com.bstek.bdf2.profile.model.ComponentSort</Property>
+    <PropertyDef name="id">
+      <Property name="dataType">String</Property>
+    </PropertyDef>
+    <PropertyDef name="parentComponentId">
+      <Property name="dataType">String</Property>
+    </PropertyDef>
+    <PropertyDef name="order">
+      <Property name="dataType">int</Property>
+    </PropertyDef>
+    <PropertyDef name="controlId">
+      <Property name="dataType">String</Property>
+      <Property name="label">组件名称</Property>
+    </PropertyDef>
+    <PropertyDef name="icon">
+      <Property name="dataType">String</Property>
+      <Property name="label">图标</Property>
+    </PropertyDef>
+  </DataType>
+  <DataType name="$dataTypeUrlDefinition">
+    <Property name="creationType">com.bstek.bdf2.profile.model.UrlDefinition</Property>
+    <PropertyDef name="id">
+      <Property name="dataType">String</Property>
+    </PropertyDef>
+    <PropertyDef name="parentId">
+      <Property name="dataType">String</Property>
+    </PropertyDef>
+    <PropertyDef name="name">
+      <Property name="dataType">String</Property>
+    </PropertyDef>
+    <PropertyDef name="url">
+      <Property name="dataType">String</Property>
+    </PropertyDef>
+  </DataType>
+  <DataType name="$dataTypeValidatorDef">
+    <Property name="creationType">com.bstek.bdf2.profile.model.ValidatorDef</Property>
+    <PropertyDef name="id">
+      <Property name="dataType">String</Property>
+    </PropertyDef>
+    <PropertyDef name="desc">
+      <Property name="dataType">String</Property>
+      <Property name="label">描述</Property>
+    </PropertyDef>
+    <PropertyDef name="name">
+      <Property name="dataType">String</Property>
+      <Property name="label">名称</Property>
+    </PropertyDef>
+    <PropertyDef name="type">
+      <Property name="dataType">String</Property>
+      <Property name="label">类型</Property>
+    </PropertyDef>
+  </DataType>
+  <DataType name="$dataTypeValidatorEvent">
+    <Property name="creationType">com.bstek.bdf2.profile.model.ValidatorEvent</Property>
+    <PropertyDef name="content">
+      <Property name="dataType">String</Property>
+      <Property name="label">内容</Property>
+    </PropertyDef>
+    <PropertyDef name="id">
+      <Property name="dataType">String</Property>
+    </PropertyDef>
+    <PropertyDef name="validatorId">
+      <Property name="dataType">String</Property>
+    </PropertyDef>
+    <PropertyDef name="name">
+      <Property name="dataType">String</Property>
+      <Property name="label">名称</Property>
+    </PropertyDef>
+  </DataType>
+  <DataType name="$dataTypeValidatorProperty">
+    <Property name="creationType">com.bstek.bdf2.profile.model.ValidatorProperty</Property>
+    <PropertyDef name="id">
+      <Property name="dataType">String</Property>
+    </PropertyDef>
+    <PropertyDef name="validatorId">
+      <Property name="dataType">String</Property>
+    </PropertyDef>
+    <PropertyDef name="name">
+      <Property name="dataType">String</Property>
+      <Property name="label">名称</Property>
+    </PropertyDef>
+    <PropertyDef name="value">
+      <Property name="dataType">String</Property>
+      <Property name="label">值</Property>
+    </PropertyDef>
+  </DataType>
+</Model>

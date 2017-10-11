@@ -1,0 +1,547 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ViewConfig>
+  <Arguments/>
+  <Context/>
+  <Model>
+    <DataType name="dataTypeRole" parent="$dataTypeRole">
+      <Reference name="users">
+        <Property name="dataType">[dataTypeRoleMember]</Property>
+        <Property name="dataProvider">bdf2.roleMemberMaintainAd#loadMembers</Property>
+        <Property name="parameter">
+          <Entity>
+            <Property name="type">user</Property>
+            <Property name="roleId">$${this.id}</Property>
+          </Entity>
+        </Property>
+        <Property name="pageSize">20</Property>
+      </Reference>
+      <Reference name="depts">
+        <Property name="dataType">[dataTypeRoleMember]</Property>
+        <Property name="dataProvider">bdf2.roleMemberMaintainAd#loadMembers</Property>
+        <Property name="pageSize">20</Property>
+        <Property name="parameter">
+          <Entity>
+            <Property name="type">dept</Property>
+            <Property name="roleId">$${this.id}</Property>
+          </Entity>
+        </Property>
+      </Reference>
+      <Reference name="positions">
+        <Property name="dataType">[dataTypeRoleMember]</Property>
+        <Property name="dataProvider">bdf2.roleMemberMaintainAd#loadMembers</Property>
+        <Property name="pageSize">20</Property>
+        <Property name="parameter">
+          <Entity>
+            <Property name="type">position</Property>
+            <Property name="roleId">$${this.id}</Property>
+          </Entity>
+        </Property>
+      </Reference>
+      <Reference name="groups">
+        <Property name="dataType">[dataTypeRoleMember]</Property>
+        <Property name="dataProvider">bdf2.roleMemberMaintainAd#loadMembers</Property>
+        <Property name="pageSize">20</Property>
+        <Property name="parameter">
+          <Entity>
+            <Property name="type">group</Property>
+            <Property name="roleId">$${this.id}</Property>
+          </Entity>
+        </Property>
+      </Reference>
+    </DataType>
+    <DataType name="dataTypeRoleMember" parent="$dataTypeRoleMember">
+      <PropertyDef name="user">
+        <Property name="dataType">$dataTypeUser</Property>
+        <Property name="label">用户</Property>
+      </PropertyDef>
+      <PropertyDef name="dept">
+        <Property name="dataType">$dataTypeDept</Property>
+        <Property name="label">部门</Property>
+      </PropertyDef>
+      <PropertyDef name="position">
+        <Property name="dataType">$dataTypePosition</Property>
+        <Property name="label">岗位</Property>
+      </PropertyDef>
+      <PropertyDef name="group">
+        <Property name="dataType">$dataTypeGroup</Property>
+        <Property name="label">群组</Property>
+      </PropertyDef>
+    </DataType>
+  </Model>
+  <View>
+    <DataSet id="dataSetRole">
+      <Property name="pageSize">20</Property>
+      <Property name="dataProvider">bdf2.roleMemberMaintainAd#loadRoles</Property>
+      <Property name="dataType">[dataTypeRole]</Property>
+    </DataSet>
+    <Container layoutConstraint="left">
+      <Property name="width">400</Property>
+      <ToolBar>
+        <DataPilot>
+          <Property name="dataSet">dataSetRole</Property>
+          <Property name="itemCodes">pages</Property>
+        </DataPilot>
+        <ToolBarButton>
+          <Property name="icon">url(skin>common/icons.gif) -40px -240px</Property>
+          <Property name="caption">刷新缓存</Property>
+          <Property name="action">ajaxActionRefreshCache</Property>
+        </ToolBarButton>
+      </ToolBar>
+      <DataGrid>
+        <Property name="dataSet">dataSetRole</Property>
+        <Property name="filterMode">serverSide</Property>
+        <Property name="showFilterBar">true</Property>
+        <Property name="readOnly">true</Property>
+        <DataColumn name="name">
+          <Property name="property">name</Property>
+        </DataColumn>
+        <DataColumn name="desc">
+          <Property name="property">desc</Property>
+          <Property name="filterable">false</Property>
+        </DataColumn>
+      </DataGrid>
+      <AjaxAction id="ajaxActionRefreshCache">
+        <Property name="confirmMessage">真的要刷新权限缓存信息吗？</Property>
+        <Property name="successMessage">操作成功</Property>
+        <Property name="service">bdf2.roleMemberMaintainAd#refreshAllSecurityMetadata</Property>
+      </AjaxAction>
+    </Container>
+    <TabControl layoutConstraint="center">
+      <ControlTab>
+        <Property name="caption">用户</Property>
+        <Container>
+          <ToolBar>
+            <DataPilot>
+              <ClientEvent name="onSubControlAction">var data=view.id(&quot;dataSetRole&quot;).getData(&quot;#&quot;);&#xD;
+if(!data){&#xD;
+	dorado.MessageBox.alert(&quot;请先选中一个角色!&quot;);&#xD;
+	arg.processDefault=false;&#xD;
+	return;&#xD;
+}&#xD;
+switch(arg.code){&#xD;
+	case &quot;+&quot;:&#xD;
+		var dialog=view.id(&quot;$dialogUserSelect&quot;);	&#xD;
+		dialog.$show({&#xD;
+			caption:&quot;选择用户&quot;,&#xD;
+			width:700,&#xD;
+			callback:function(users){&#xD;
+				var ids=[];&#xD;
+				for(var i=0;i&lt;users.length;i++){&#xD;
+					var user=users[i];&#xD;
+					ids.push(user[&quot;username&quot;]);&#xD;
+				}			&#xD;
+				var action=view.id(&quot;ajaxActionInsertMember&quot;);&#xD;
+				action.set(&quot;parameter&quot;,{ids:ids,type:&quot;user&quot;,authorityType:&quot;read&quot;,roleId:data.get(&quot;id&quot;)});&#xD;
+				action.execute(function(error){&#xD;
+					if(error){&#xD;
+						for(var i=0;i&lt;users.length;i++){&#xD;
+							var user=users[i];&#xD;
+							if(user[&quot;username&quot;]==error){&#xD;
+								if(user[&quot;cname&quot;]){&#xD;
+									error=user[&quot;cname&quot;];&#xD;
+								}&#xD;
+								break;				&#xD;
+							}&#xD;
+						}&#xD;
+						dorado.MessageBox.alert(&quot;当前选择的[&quot;+error+&quot;]已添加，请重新选择&quot;);&#xD;
+					}else{&#xD;
+						dialog.hide();&#xD;
+						data.reset(&quot;users&quot;);&#xD;
+					}&#xD;
+				});&#xD;
+			}&#xD;
+		});&#xD;
+		arg.processDefault=false;&#xD;
+		break;&#xD;
+	case &quot;-&quot;:&#xD;
+		dorado.MessageBox.confirm(&quot;真的要删除当前成员吗？&quot;,function(){&#xD;
+			var action=view.id(&quot;ajaxActionDeleteMember&quot;);&#xD;
+			action.set(&quot;parameter&quot;,view.id(&quot;dataSetRole&quot;).getData(&quot;#.#users.id&quot;));&#xD;
+			action.execute(function(){&#xD;
+				data.reset(&quot;users&quot;);&#xD;
+			});		&#xD;
+		});&#xD;
+		arg.processDefault=false;&#xD;
+		break;&#xD;
+}&#xD;
+</ClientEvent>
+              <Property name="dataSet">dataSetRole</Property>
+              <Property name="itemCodes">pages,+,-</Property>
+              <Property name="dataPath">#.users</Property>
+            </DataPilot>
+            <ToolBarButton>
+              <ClientEvent name="onClick">var data=view.id(&quot;dataSetRole&quot;).getData(&quot;#.users&quot;);&#xD;
+var members=[];&#xD;
+data.each(function(d){&#xD;
+	if(d.state==dorado.Entity.STATE_MODIFIED){&#xD;
+		d.state=dorado.Entity.STATE_NONE;&#xD;
+		members.push({memberId:d.get(&quot;id&quot;),granted:d.get(&quot;granted&quot;)});&#xD;
+	}&#xD;
+});&#xD;
+&#xD;
+if(members.length>0){&#xD;
+	var action=view.id(&quot;ajaxActionChangeGranted&quot;);&#xD;
+	action.set(&quot;parameter&quot;,{members:members});&#xD;
+	action.execute();&#xD;
+}else{&#xD;
+	dorado.MessageBox.alert(&quot;当前没有可供保存的数据&quot;);&#xD;
+}</ClientEvent>
+              <Property name="caption">保存授权信息</Property>
+              <Property name="icon">url(skin>common/icons.gif) -140px -20px</Property>
+            </ToolBarButton>
+          </ToolBar>
+          <DataGrid>
+            <Property name="dataSet">dataSetRole</Property>
+            <Property name="dataPath">#.users</Property>
+            <Property name="filterMode">serverSide</Property>
+            <DataColumn>
+              <Property name="property">user</Property>
+              <Property name="name">user</Property>
+              <Property name="readOnly">true</Property>
+            </DataColumn>
+            <DataColumn>
+              <ClientEvent name="onRenderCell">var granted=arg.data.get(&quot;granted&quot;);&#xD;
+if(granted){&#xD;
+	arg.dom.innerHTML=&quot;&lt;font color='green'>授权&lt;/font>&quot;;&#xD;
+}else{&#xD;
+	arg.dom.innerHTML=&quot;&lt;font color='red'>不授权&lt;/font>&quot;;&#xD;
+}</ClientEvent>
+              <Property name="property">granted</Property>
+              <Property name="name">granted</Property>
+              <Property name="width">120</Property>
+              <Editor/>
+            </DataColumn>
+          </DataGrid>
+          <Import src="bdf2.authoritydelegation.view.select.UserSelect#$dialogUserSelect"/>
+        </Container>
+      </ControlTab>
+      <ControlTab>
+        <Property name="caption">岗位</Property>
+        <Container>
+          <ToolBar>
+            <DataPilot>
+              <ClientEvent name="onSubControlAction">var data=view.id(&quot;dataSetRole&quot;).getData(&quot;#&quot;);&#xD;
+if(!data){&#xD;
+	dorado.MessageBox.alert(&quot;请先选中一个角色!&quot;);&#xD;
+	arg.processDefault=false;&#xD;
+	return;&#xD;
+}&#xD;
+switch(arg.code){&#xD;
+	case &quot;+&quot;:&#xD;
+		var dialog=view.id(&quot;$dialogPositionSelect&quot;);	&#xD;
+		dialog.$show({&#xD;
+			caption:&quot;选择岗位&quot;,&#xD;
+			width:700,&#xD;
+			callback:function(positions){&#xD;
+				var ids=[];&#xD;
+				for(var i=0;i&lt;positions.length;i++){&#xD;
+					var position=positions[i];&#xD;
+					ids.push(position[&quot;id&quot;]);&#xD;
+				}			&#xD;
+				var action=view.id(&quot;ajaxActionInsertMember&quot;);&#xD;
+				action.set(&quot;parameter&quot;,{ids:ids,type:&quot;position&quot;,authorityType:&quot;read&quot;,roleId:data.get(&quot;id&quot;)});&#xD;
+				action.execute(function(error){&#xD;
+					if(error){&#xD;
+						for(var i=0;i&lt;positions.length;i++){&#xD;
+							var position=positions[i];&#xD;
+							if(position[&quot;id&quot;]==error){&#xD;
+								error=position[&quot;name&quot;];&#xD;
+								break;				&#xD;
+							}&#xD;
+						}&#xD;
+						dorado.MessageBox.alert(&quot;当前选择的[&quot;+error+&quot;]已添加，请重新选择&quot;);&#xD;
+					}else{&#xD;
+						dialog.hide();&#xD;
+						data.reset(&quot;positions&quot;);&#xD;
+					}&#xD;
+				});&#xD;
+			}&#xD;
+		});&#xD;
+		arg.processDefault=false;&#xD;
+		break;&#xD;
+	case &quot;-&quot;:&#xD;
+		dorado.MessageBox.confirm(&quot;真的要删除当前成员吗？&quot;,function(){&#xD;
+			var action=view.id(&quot;ajaxActionDeleteMember&quot;);&#xD;
+			action.set(&quot;parameter&quot;,view.id(&quot;dataSetRole&quot;).getData(&quot;#.#positions.id&quot;));&#xD;
+			action.execute(function(){&#xD;
+				data.reset(&quot;positions&quot;);&#xD;
+			});		&#xD;
+		});&#xD;
+		arg.processDefault=false;&#xD;
+		break;&#xD;
+}&#xD;
+</ClientEvent>
+              <Property name="dataSet">dataSetRole</Property>
+              <Property name="itemCodes">pages,+,-</Property>
+              <Property name="dataPath">#.positions</Property>
+            </DataPilot>
+            <ToolBarButton>
+              <ClientEvent name="onClick">var data=view.id(&quot;dataSetRole&quot;).getData(&quot;#.positions&quot;);&#xD;
+var members=[];&#xD;
+data.each(function(d){&#xD;
+	if(d.state==dorado.Entity.STATE_MODIFIED){&#xD;
+		d.state=dorado.Entity.STATE_NONE;&#xD;
+		members.push({memberId:d.get(&quot;id&quot;),granted:d.get(&quot;granted&quot;)});&#xD;
+	}&#xD;
+});&#xD;
+&#xD;
+if(members.length>0){&#xD;
+	var action=view.id(&quot;ajaxActionChangeGranted&quot;);&#xD;
+	action.set(&quot;parameter&quot;,{members:members});&#xD;
+	action.execute();&#xD;
+}else{&#xD;
+	dorado.MessageBox.alert(&quot;当前没有可供保存的数据&quot;);&#xD;
+}</ClientEvent>
+              <Property name="caption">保存授权信息</Property>
+              <Property name="icon">url(skin>common/icons.gif) -140px -20px</Property>
+            </ToolBarButton>
+          </ToolBar>
+          <DataGrid>
+            <Property name="dataSet">dataSetRole</Property>
+            <Property name="dataPath">#.positions</Property>
+            <Property name="filterMode">serverSide</Property>
+            <DataColumn>
+              <Property name="property">position</Property>
+              <Property name="name">position</Property>
+              <Property name="readOnly">true</Property>
+            </DataColumn>
+            <DataColumn>
+              <ClientEvent name="onRenderCell">var granted=arg.data.get(&quot;granted&quot;);&#xD;
+if(granted){&#xD;
+	arg.dom.innerHTML=&quot;&lt;font color='green'>授权&lt;/font>&quot;;&#xD;
+}else{&#xD;
+	arg.dom.innerHTML=&quot;&lt;font color='red'>不授权&lt;/font>&quot;;&#xD;
+}</ClientEvent>
+              <Property name="property">granted</Property>
+              <Property name="name">granted</Property>
+              <Property name="width">120</Property>
+              <Editor/>
+            </DataColumn>
+          </DataGrid>
+          <Import src="bdf2.authoritydelegation.view.select.PositionSelect#$dialogPositionSelect"/>
+        </Container>
+      </ControlTab>
+      <ControlTab>
+        <Property name="caption">部门</Property>
+        <Container>
+          <ToolBar>
+            <DataPilot>
+              <ClientEvent name="onSubControlAction">var data=view.id(&quot;dataSetRole&quot;).getData(&quot;#&quot;);&#xD;
+if(!data){&#xD;
+	dorado.MessageBox.alert(&quot;请先选中一个角色!&quot;);&#xD;
+	arg.processDefault=false;&#xD;
+	return;&#xD;
+}&#xD;
+switch(arg.code){&#xD;
+	case &quot;+&quot;:&#xD;
+		var dialog=view.id(&quot;$dialogDeptSelect&quot;);&#xD;
+		dialog.$show({&#xD;
+			width:500,&#xD;
+			height:500,&#xD;
+			callback:function(deptArray){&#xD;
+					var ids=[];&#xD;
+					for(var i=0;i&lt;deptArray.length;i++){&#xD;
+						ids.push(deptArray[i][&quot;id&quot;]);&#xD;
+					}&#xD;
+					var action=view.id(&quot;ajaxActionInsertMember&quot;);&#xD;
+					action.set(&quot;parameter&quot;,{ids:ids,type:&quot;dept&quot;,authorityType:&quot;read&quot;,roleId:data.get(&quot;id&quot;)});&#xD;
+					action.execute(function(error){&#xD;
+						if(error){&#xD;
+							for(var i=0;i&lt;deptArray.length;i++){&#xD;
+								if(error==deptArray[i][&quot;id&quot;]){&#xD;
+									error=deptArray[i][&quot;name&quot;];&#xD;
+									break;&#xD;
+								}&#xD;
+							}&#xD;
+							dorado.MessageBox.alert(&quot;部门[&quot;+error+&quot;]已添加，请重新选择&quot;);&#xD;
+						}else{&#xD;
+							dialog.hide();&#xD;
+							data.reset(&quot;depts&quot;);&#xD;
+						}&#xD;
+						&#xD;
+					});&#xD;
+			}&#xD;
+		});&#xD;
+		arg.processDefault=false;&#xD;
+		break;&#xD;
+	case &quot;-&quot;:&#xD;
+		dorado.MessageBox.confirm(&quot;真的要删除当前成员吗？&quot;,function(){&#xD;
+			var action=view.id(&quot;ajaxActionDeleteMember&quot;);&#xD;
+			action.set(&quot;parameter&quot;,view.id(&quot;dataSetRole&quot;).getData(&quot;#.#depts.id&quot;));&#xD;
+			action.execute(function(){&#xD;
+				data.reset(&quot;depts&quot;);&#xD;
+			});		&#xD;
+		});&#xD;
+		arg.processDefault=false;&#xD;
+		break;	&#xD;
+}</ClientEvent>
+              <Property name="dataSet">dataSetRole</Property>
+              <Property name="itemCodes">pages,+,-</Property>
+              <Property name="dataPath">#.depts</Property>
+            </DataPilot>
+            <ToolBarButton>
+              <ClientEvent name="onClick">var data=view.id(&quot;dataSetRole&quot;).getData(&quot;#.depts&quot;);&#xD;
+var members=[];&#xD;
+data.each(function(d){&#xD;
+	if(d.state==dorado.Entity.STATE_MODIFIED){&#xD;
+		d.state=dorado.Entity.STATE_NONE;&#xD;
+		members.push({memberId:d.get(&quot;id&quot;),granted:d.get(&quot;granted&quot;)});&#xD;
+	}&#xD;
+});&#xD;
+&#xD;
+if(members.length>0){&#xD;
+	var action=view.id(&quot;ajaxActionChangeGranted&quot;);&#xD;
+	action.set(&quot;parameter&quot;,{members:members});&#xD;
+	action.execute();&#xD;
+}else{&#xD;
+	dorado.MessageBox.alert(&quot;当前没有可供保存的数据&quot;);&#xD;
+}</ClientEvent>
+              <Property name="caption">保存授权信息</Property>
+              <Property name="icon">url(skin>common/icons.gif) -140px -20px</Property>
+            </ToolBarButton>
+          </ToolBar>
+          <DataGrid>
+            <Property name="dataSet">dataSetRole</Property>
+            <Property name="dataPath">#.depts</Property>
+            <Property name="filterMode">clientSide</Property>
+            <DataColumn>
+              <Property name="property">dept</Property>
+              <Property name="name">dept</Property>
+              <Property name="filterable">true</Property>
+              <Property name="readOnly">true</Property>
+            </DataColumn>
+            <DataColumn>
+              <ClientEvent name="onRenderCell">var granted=arg.data.get(&quot;granted&quot;);&#xD;
+if(granted){&#xD;
+	arg.dom.innerHTML=&quot;&lt;font color='green'>授权&lt;/font>&quot;;&#xD;
+}else{&#xD;
+	arg.dom.innerHTML=&quot;&lt;font color='red'>不授权&lt;/font>&quot;;&#xD;
+}</ClientEvent>
+              <Property name="property">granted</Property>
+              <Property name="name">granted</Property>
+              <Property name="width">120</Property>
+              <Editor/>
+            </DataColumn>
+          </DataGrid>
+          <Import src="bdf2.authoritydelegation.view.select.DeptSelect#$dialogDeptSelect"/>
+        </Container>
+      </ControlTab>
+      <ControlTab>
+        <Property name="caption">群组</Property>
+        <Container>
+          <ToolBar>
+            <DataPilot>
+              <ClientEvent name="onSubControlAction">var data=view.id(&quot;dataSetRole&quot;).getData(&quot;#&quot;);&#xD;
+if(!data){&#xD;
+	dorado.MessageBox.alert(&quot;请先选中一个角色!&quot;);&#xD;
+	arg.processDefault=false;&#xD;
+	return;&#xD;
+}&#xD;
+switch(arg.code){&#xD;
+	case &quot;+&quot;:&#xD;
+		var dialog=view.id(&quot;$dialogGroupSelect&quot;);	&#xD;
+		dialog.$show({&#xD;
+			caption:&quot;选择群组&quot;,&#xD;
+			width:700,&#xD;
+			callback:function(groups){&#xD;
+				var ids=[];&#xD;
+				for(var i=0;i&lt;groups.length;i++){&#xD;
+					var group=groups[i];&#xD;
+					ids.push(group[&quot;id&quot;]);&#xD;
+				}			&#xD;
+				var action=view.id(&quot;ajaxActionInsertMember&quot;);&#xD;
+				action.set(&quot;parameter&quot;,{ids:ids,type:&quot;group&quot;,authorityType:&quot;read&quot;,roleId:data.get(&quot;id&quot;)});&#xD;
+				action.execute(function(error){&#xD;
+					if(error){&#xD;
+						for(var i=0;i&lt;groups.length;i++){&#xD;
+							var group=groups[i];&#xD;
+							if(group[&quot;id&quot;]==error){&#xD;
+								error=group[&quot;name&quot;];&#xD;
+								break;				&#xD;
+							}&#xD;
+						}&#xD;
+						dorado.MessageBox.alert(&quot;当前选择的[&quot;+error+&quot;]已添加，请重新选择&quot;);&#xD;
+					}else{&#xD;
+						dialog.hide();&#xD;
+						data.reset(&quot;groups&quot;);&#xD;
+					}&#xD;
+				});&#xD;
+			}&#xD;
+		});&#xD;
+		arg.processDefault=false;&#xD;
+		break;&#xD;
+	case &quot;-&quot;:&#xD;
+		dorado.MessageBox.confirm(&quot;真的要删除当前成员吗？&quot;,function(){&#xD;
+			var action=view.id(&quot;ajaxActionDeleteMember&quot;);&#xD;
+			action.set(&quot;parameter&quot;,view.id(&quot;dataSetRole&quot;).getData(&quot;#.#groups.id&quot;));&#xD;
+			action.execute(function(){&#xD;
+				data.reset(&quot;groups&quot;);&#xD;
+			});		&#xD;
+		});&#xD;
+		arg.processDefault=false;&#xD;
+		break;&#xD;
+}&#xD;
+</ClientEvent>
+              <Property name="dataSet">dataSetRole</Property>
+              <Property name="itemCodes">pages,+,-</Property>
+              <Property name="dataPath">#.groups</Property>
+            </DataPilot>
+            <ToolBarButton>
+              <ClientEvent name="onClick">var data=view.id(&quot;dataSetRole&quot;).getData(&quot;#.groups&quot;);&#xD;
+var members=[];&#xD;
+data.each(function(d){&#xD;
+	if(d.state==dorado.Entity.STATE_MODIFIED){&#xD;
+		d.state=dorado.Entity.STATE_NONE;&#xD;
+		members.push({memberId:d.get(&quot;id&quot;),granted:d.get(&quot;granted&quot;)});&#xD;
+	}&#xD;
+});&#xD;
+&#xD;
+if(members.length>0){&#xD;
+	var action=view.id(&quot;ajaxActionChangeGranted&quot;);&#xD;
+	action.set(&quot;parameter&quot;,{members:members});&#xD;
+	action.execute();&#xD;
+}else{&#xD;
+	dorado.MessageBox.alert(&quot;当前没有可供保存的数据&quot;);&#xD;
+}</ClientEvent>
+              <Property name="caption">保存授权信息</Property>
+              <Property name="icon">url(skin>common/icons.gif) -140px -20px</Property>
+            </ToolBarButton>
+          </ToolBar>
+          <DataGrid>
+            <Property name="dataSet">dataSetRole</Property>
+            <Property name="dataPath">#.groups</Property>
+            <DataColumn name="group">
+              <Property name="property">group</Property>
+              <Property name="readOnly">true</Property>
+            </DataColumn>
+            <DataColumn>
+              <ClientEvent name="onRenderCell">var granted=arg.data.get(&quot;granted&quot;);&#xD;
+if(granted){&#xD;
+	arg.dom.innerHTML=&quot;&lt;font color='green'>授权&lt;/font>&quot;;&#xD;
+}else{&#xD;
+	arg.dom.innerHTML=&quot;&lt;font color='red'>不授权&lt;/font>&quot;;&#xD;
+}</ClientEvent>
+              <Property name="property">granted</Property>
+              <Property name="name">granted</Property>
+              <Property name="width">120</Property>
+              <Editor/>
+            </DataColumn>
+          </DataGrid>
+          <Import src="bdf2.authoritydelegation.view.select.GroupSelect#$dialogGroupSelect"/>
+        </Container>
+      </ControlTab>
+    </TabControl>
+    <AjaxAction id="ajaxActionInsertMember">
+      <Property name="service">bdf2.roleMemberMaintainAd#insertRoleMember</Property>
+      <Property name="successMessage">操作成功</Property>
+    </AjaxAction>
+    <AjaxAction id="ajaxActionDeleteMember">
+      <Property name="service">bdf2.roleMemberMaintainAd#deleteRoleMember</Property>
+      <Property name="successMessage">操作成功</Property>
+    </AjaxAction>
+    <AjaxAction id="ajaxActionChangeGranted">
+      <Property name="service">bdf2.roleMemberMaintainAd#changeGranted</Property>
+      <Property name="successMessage">操作成功</Property>
+    </AjaxAction>
+  </View>
+</ViewConfig>

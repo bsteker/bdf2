@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+
+   <extension
+         point="org.eclipse.ui.editors">
+      <editor
+            class="com.bstek.bdf.plugins.propeditor.editors.PropEditor"
+            contributorClass="com.bstek.bdf.plugins.propeditor.editors.PropEditorContributor"
+            default="true"
+            extensions="properties"
+            icon="icons/text_page.png"
+            id="com.bstek.bdf.plugins.propeditor.editors.PropEditor"
+            name="Property Editor">
+      </editor>
+   </extension>
+   <extension
+         point="org.eclipse.ui.preferencePages">
+      <page
+            category="com.bstek.bdf.plugins.common.BDFPreferencePage"
+            class="com.bstek.bdf.plugins.propeditor.preferences.PreferencePage"
+            id="com.bstek.bdf.plugins.propeditor.preferences.PreferencePage"
+            name="PropEditor Preferences">
+      </page>
+   </extension>
+   <extension
+         point="org.eclipse.core.runtime.preferences">
+      <initializer
+            class="com.bstek.bdf.plugins.propeditor.preferences.PreferenceInitializer">
+      </initializer>
+   </extension>
+
+</plugin>

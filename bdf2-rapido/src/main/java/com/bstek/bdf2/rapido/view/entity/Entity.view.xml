@@ -1,0 +1,1364 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ViewConfig>
+  <Property name="metaData">
+    <Property name="securityTag">rapid</Property>
+  </Property>
+  <Arguments/>
+  <Context>
+    <Attribute name="packageId">
+      <Property name="value">${request.getParameter(&quot;packageId&quot;)}</Property>
+    </Attribute>
+  </Context>
+  <Model>
+    <DataType name="dataTypeEntity">
+      <Property name="creationType">com.bstek.bdf2.rapido.domain.Entity</Property>
+      <PropertyDef name="id">
+        <Property name="dataType">String</Property>
+      </PropertyDef>
+      <PropertyDef name="name">
+        <Property name="dataType">String</Property>
+        <Property name="label">实体名称</Property>
+      </PropertyDef>
+      <PropertyDef name="recursive">
+        <Property name="dataType">boolean</Property>
+        <Property name="label">是否递归</Property>
+        <Property name="mapping">
+          <Property name="mapValues">
+            <Collection>
+              <Entity>
+                <Property name="key">true</Property>
+                <Property name="value">是</Property>
+              </Entity>
+              <Entity>
+                <Property name="key">false</Property>
+                <Property name="value">否</Property>
+              </Entity>
+            </Collection>
+          </Property>
+        </Property>
+        <Property name="defaultValue">false</Property>
+      </PropertyDef>
+      <PropertyDef name="tableName">
+        <Property name="dataType">String</Property>
+        <Property name="label">主体表名</Property>
+        <Validator type="range"/>
+      </PropertyDef>
+      <PropertyDef name="desc">
+        <Property name="dataType">String</Property>
+        <Property name="label">描述</Property>
+      </PropertyDef>
+      <PropertyDef name="parentId">
+        <Property name="dataType">String</Property>
+      </PropertyDef>
+      <PropertyDef name="querySql">
+        <Property name="dataType">String</Property>
+        <Property name="label">查询的SQL</Property>
+        <Validator type="range"/>
+      </PropertyDef>
+      <PropertyDef name="pageSize">
+        <Property name="dataType">int</Property>
+        <Property name="label">每页记录数</Property>
+      </PropertyDef>
+      <PropertyDef name="packageId">
+        <Property name="dataType">String</Property>
+      </PropertyDef>
+      <PropertyDef name="entityFields">
+        <Property name="dataType">[dataTypeEntityField]</Property>
+      </PropertyDef>
+      <PropertyDef name="parameters">
+        <Property name="dataType">[dataTypeParameter]</Property>
+      </PropertyDef>
+      <Reference name="children">
+        <Property name="parameter">
+          <Entity>
+            <Property name="parentId">$${this.id}</Property>
+          </Entity>
+        </Property>
+        <Property name="dataType">[SELF]</Property>
+        <Property name="dataProvider">bdf.rapido.entityPR#loadEntitys</Property>
+      </Reference>
+    </DataType>
+    <DataType name="dataTypeEntityField">
+      <Property name="creationType">com.bstek.bdf2.rapido.domain.EntityField</Property>
+      <PropertyDef name="id">
+        <Property name="dataType">String</Property>
+      </PropertyDef>
+      <PropertyDef name="name">
+        <Property name="dataType">String</Property>
+        <Property name="label">列名</Property>
+      </PropertyDef>
+      <PropertyDef name="readOnly">
+        <Property name="dataType">boolean</Property>
+        <Property name="label">是否为只读</Property>
+      </PropertyDef>
+      <PropertyDef name="submittable">
+        <Property name="dataType">boolean</Property>
+        <Property name="label">是否可提交</Property>
+        <Property name="defaultValue">true</Property>
+      </PropertyDef>
+      <PropertyDef name="entityId">
+        <Property name="dataType">String</Property>
+      </PropertyDef>
+      <PropertyDef name="desc">
+        <Property name="dataType">String</Property>
+        <Property name="label">描述</Property>
+      </PropertyDef>
+      <PropertyDef name="mapping">
+        <Property name="dataType">dataTypeMapping</Property>
+        <Property name="label">采用的Mapping</Property>
+      </PropertyDef>
+      <PropertyDef name="tableName">
+        <Property name="dataType">String</Property>
+        <Property name="label">隶属表名</Property>
+      </PropertyDef>
+      <PropertyDef name="primaryKey">
+        <Property name="dataType">boolean</Property>
+        <Property name="label">是否为主键</Property>
+      </PropertyDef>
+      <PropertyDef name="metaData">
+        <Property name="dataType">dataTypeMetadata</Property>
+        <Property name="label">采用的元数据</Property>
+      </PropertyDef>
+      <PropertyDef name="dataType">
+        <Property name="dataType">String</Property>
+        <Property name="label">数据类型</Property>
+      </PropertyDef>
+      <PropertyDef name="label">
+        <Property name="dataType">String</Property>
+        <Property name="label">字段标题</Property>
+      </PropertyDef>
+      <PropertyDef name="required">
+        <Property name="dataType">boolean</Property>
+        <Property name="label">是否必填</Property>
+      </PropertyDef>
+      <PropertyDef name="defaultValue">
+        <Property name="dataType">String</Property>
+        <Property name="label">默认值</Property>
+      </PropertyDef>
+      <PropertyDef name="displayFormat">
+        <Property name="dataType">String</Property>
+        <Property name="label">显示格式</Property>
+      </PropertyDef>
+      <PropertyDef name="keyGenerateType">
+        <Property name="label">主键生成方式</Property>
+        <Property name="mapping">
+          <Property name="mapValues">
+            <Collection>
+              <Entity>
+                <Property name="key">custom</Property>
+                <Property name="value">自定义</Property>
+              </Entity>
+              <Entity>
+                <Property name="key">autoincrement</Property>
+                <Property name="value">自增长</Property>
+              </Entity>
+            </Collection>
+          </Property>
+        </Property>
+        <Property name="defaultValue">custom</Property>
+      </PropertyDef>
+      <PropertyDef name="keyGenerator">
+        <Property name="dataType">String</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;bdf.rapido.entityPR#loadKeyGenerators&quot;).getResult()}</Property>
+        </Property>
+        <Property name="label">主键生成器</Property>
+      </PropertyDef>
+      <Reference name="validators">
+        <Property name="dataType">[dataTypeValidator]</Property>
+        <Property name="dataProvider">bdf.rapido.entityPR#loadValidators</Property>
+        <Property name="parameter">$${this.id}</Property>
+      </Reference>
+    </DataType>
+    <DataType name="dataTypeMetadata">
+      <Property name="creationType">com.bstek.bdf2.rapido.domain.MetaData</Property>
+      <Property name="defaultDisplayProperty">name</Property>
+      <PropertyDef name="id">
+        <Property name="dataType">String</Property>
+      </PropertyDef>
+      <PropertyDef name="name">
+        <Property name="dataType">String</Property>
+        <Property name="label">元数据名称</Property>
+      </PropertyDef>
+      <PropertyDef name="desc">
+        <Property name="dataType">String</Property>
+        <Property name="label">描述</Property>
+      </PropertyDef>
+      <PropertyDef name="label">
+        <Property name="dataType">String</Property>
+        <Property name="label">显示标题</Property>
+      </PropertyDef>
+      <PropertyDef name="defaultValue">
+        <Property name="dataType">String</Property>
+        <Property name="label">默认值</Property>
+      </PropertyDef>
+      <PropertyDef name="displayFormat">
+        <Property name="dataType">String</Property>
+        <Property name="label">显示格式</Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="dataTypeParameter">
+      <Property name="creationType">com.bstek.bdf2.rapido.domain.Parameter</Property>
+      <PropertyDef name="id">
+        <Property name="dataType">String</Property>
+      </PropertyDef>
+      <PropertyDef name="name">
+        <Property name="dataType">String</Property>
+        <Property name="label">参数名称</Property>
+      </PropertyDef>
+      <PropertyDef name="desc">
+        <Property name="dataType">String</Property>
+        <Property name="label">描述</Property>
+      </PropertyDef>
+      <PropertyDef name="value">
+        <Property name="dataType">String</Property>
+        <Property name="label">参数值</Property>
+      </PropertyDef>
+      <PropertyDef name="packageId">
+        <Property name="dataType">String</Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="dataTypePackageSelectMapping">
+      <Property name="creationType">com.bstek.bdf2.rapido.domain.PackageInfo</Property>
+      <PropertyDef name="id">
+        <Property name="dataType">String</Property>
+      </PropertyDef>
+      <PropertyDef name="name">
+        <Property name="dataType">String</Property>
+        <Property name="label">包名</Property>
+      </PropertyDef>
+      <PropertyDef name="desc">
+        <Property name="dataType">String</Property>
+        <Property name="label">描述</Property>
+      </PropertyDef>
+      <PropertyDef name="parentId">
+        <Property name="dataType">String</Property>
+      </PropertyDef>
+      <PropertyDef name="type"/>
+      <PropertyDef name="icon"/>
+      <Reference name="children">
+        <Property name="dataProvider">bdf.rapido.componentPR#loadPackages</Property>
+        <Property name="dataType">[SELF]</Property>
+        <Property name="parameter">
+          <Entity>
+            <Property name="parentId">$${this.id}</Property>
+            <Property name="packageType">mapping</Property>
+          </Entity>
+        </Property>
+      </Reference>
+      <Reference name="mappings">
+        <Property name="dataProvider">bdf.rapido.entityPR#loadMappings</Property>
+        <Property name="dataType">[dataTypeMapping]</Property>
+        <Property name="parameter">
+          <Entity>
+            <Property name="packageId">$${this.id}</Property>
+          </Entity>
+        </Property>
+      </Reference>
+    </DataType>
+    <DataType name="dataTypeMapping">
+      <Property name="creationType">com.bstek.bdf2.rapido.domain.Mapping</Property>
+      <Property name="defaultDisplayProperty">name</Property>
+      <PropertyDef name="id">
+        <Property name="dataType">String</Property>
+      </PropertyDef>
+      <PropertyDef name="name">
+        <Property name="dataType">String</Property>
+        <Property name="label">名称</Property>
+      </PropertyDef>
+      <PropertyDef name="source">
+        <Property name="label">映射数据来源</Property>
+        <Property name="mapping">
+          <Property name="mapValues">
+            <Collection>
+              <Entity>
+                <Property name="key">table</Property>
+                <Property name="value">数据库表</Property>
+              </Entity>
+              <Entity>
+                <Property name="key">custom</Property>
+                <Property name="value">自定义</Property>
+              </Entity>
+            </Collection>
+          </Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="packageId">
+        <Property name="dataType">String</Property>
+      </PropertyDef>
+      <PropertyDef name="valueField">
+        <Property name="dataType">String</Property>
+        <Property name="label">显示用字段名</Property>
+      </PropertyDef>
+      <PropertyDef name="keyField">
+        <Property name="dataType">String</Property>
+        <Property name="label">实际值字段名</Property>
+      </PropertyDef>
+      <PropertyDef name="querySql">
+        <Property name="dataType">String</Property>
+        <Property name="label">查询SQL</Property>
+      </PropertyDef>
+      <PropertyDef name="customKeyValue">
+        <Property name="dataType">String</Property>
+        <Property name="label">自定义键值对</Property>
+        <Property name="tags">customKeyValueTag</Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="dataTypeValidator">
+      <Property name="creationType">com.bstek.bdf2.rapido.domain.Validator</Property>
+      <PropertyDef name="id">
+        <Property name="dataType">String</Property>
+      </PropertyDef>
+      <PropertyDef name="name">
+        <Property name="dataType">String</Property>
+        <Property name="label">验证器名称</Property>
+      </PropertyDef>
+      <PropertyDef name="desc">
+        <Property name="dataType">String</Property>
+        <Property name="label">描述</Property>
+      </PropertyDef>
+      <PropertyDef name="fieldId">
+        <Property name="dataType">String</Property>
+      </PropertyDef>
+      <Reference name="properties">
+        <Property name="dataType">[dataTypeValidatorProperty]</Property>
+        <Property name="dataProvider">bdf.rapido.entityPR#loadValidatorProperties</Property>
+        <Property name="parameter">$${this.id}</Property>
+      </Reference>
+    </DataType>
+    <DataType name="dataTypeValidatorProperty">
+      <Property name="creationType">com.bstek.bdf2.rapido.domain.ValidatorProperty</Property>
+      <PropertyDef name="id">
+        <Property name="dataType">String</Property>
+      </PropertyDef>
+      <PropertyDef name="name">
+        <Property name="dataType">String</Property>
+        <Property name="label">属性名</Property>
+      </PropertyDef>
+      <PropertyDef name="value">
+        <Property name="dataType">String</Property>
+        <Property name="label">属性值</Property>
+      </PropertyDef>
+      <PropertyDef name="validatorId">
+        <Property name="dataType">String</Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="dataTypeValidatorDef">
+      <Property name="creationType">com.bstek.bdf2.rapido.view.entity.def.ValidatorDef</Property>
+      <PropertyDef name="name">
+        <Property name="dataType">String</Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="dataTypePreview">
+      <Property name="autoCreatePropertyDefs">true</Property>
+    </DataType>
+    <DataType name="dataTypePackageSelectMetadata">
+      <Property name="creationType">com.bstek.bdf2.rapido.domain.PackageInfo</Property>
+      <PropertyDef name="id">
+        <Property name="dataType">String</Property>
+      </PropertyDef>
+      <PropertyDef name="name">
+        <Property name="dataType">String</Property>
+        <Property name="label">包名</Property>
+      </PropertyDef>
+      <PropertyDef name="desc">
+        <Property name="dataType">String</Property>
+        <Property name="label">描述</Property>
+      </PropertyDef>
+      <PropertyDef name="parentId">
+        <Property name="dataType">String</Property>
+      </PropertyDef>
+      <PropertyDef name="type"/>
+      <PropertyDef name="icon"/>
+      <Reference name="children">
+        <Property name="dataProvider">bdf.rapido.componentPR#loadPackages</Property>
+        <Property name="dataType">[SELF]</Property>
+        <Property name="parameter">
+          <Entity>
+            <Property name="parentId">$${this.id}</Property>
+            <Property name="packageType">metadata</Property>
+          </Entity>
+        </Property>
+      </Reference>
+      <Reference name="metadata">
+        <Property name="dataProvider">bdf.rapido.entityPR#loadMetadata</Property>
+        <Property name="dataType">[dataTypeMetadata]</Property>
+        <Property name="parameter">
+          <Entity>
+            <Property name="packageId">$${this.id}</Property>
+          </Entity>
+        </Property>
+      </Reference>
+    </DataType>
+    <DataType name="dataTypeVariable">
+      <PropertyDef name="name">
+        <Property name="label">变量名称</Property>
+        <Property name="dataType">String</Property>
+      </PropertyDef>
+      <PropertyDef name="desc">
+        <Property name="dataType">String</Property>
+        <Property name="label">描述</Property>
+      </PropertyDef>
+    </DataType>
+  </Model>
+  <View>
+    <ClientEvent name="onReady">self.entityCount=0;</ClientEvent>
+    <Property name="packages">codemirror</Property>
+    <DataSet id="dataSetEntity">
+      <Property name="dataType">[dataTypeEntity]</Property>
+      <Property name="dataProvider">bdf.rapido.entityPR#loadEntitys</Property>
+    </DataSet>
+    <DataSet id="dataSetVariable">
+      <Property name="dataProvider">bdf.rapido.entityPR#loadVariables</Property>
+      <Property name="dataType">[dataTypeVariable]</Property>
+    </DataSet>
+    <Import src="bdf2.rapido.view.common.Common#dialogCodeEditor"/>
+    <SplitPanel>
+      <Property name="position">200</Property>
+      <MainControl>
+        <SplitPanel>
+          <Property name="direction">top</Property>
+          <Property name="position">220</Property>
+          <MainControl>
+            <Panel>
+              <Property name="maximizeable">true</Property>
+              <Property name="caption">实体字段与查询参数</Property>
+              <Buttons/>
+              <Children>
+                <TabControl>
+                  <ControlTab>
+                    <Property name="caption">实体字段信息</Property>
+                    <Container>
+                      <ToolBar>
+                        <DataPilot>
+                          <ClientEvent name="onSubControlAction">switch(arg.code){&#xD;
+	case &quot;+&quot;:&#xD;
+		this.id(&quot;dataSetEntity&quot;).getData(&quot;!currentEntity.entityFields&quot;).insert();&#xD;
+		break;&#xD;
+	case &quot;-&quot;:&#xD;
+		var selection=this.id(&quot;dataGridFields&quot;).get(&quot;selection&quot;);&#xD;
+		selection=selection.slice(0,selection.length);&#xD;
+		if(selection){&#xD;
+			selection.each(function(item){&#xD;
+				item.remove();&#xD;
+			});&#xD;
+		}else{&#xD;
+			dorado.MessageBox.alert(&quot;请先选择要删除的列!&quot;);&#xD;
+		}&#xD;
+		break;&#xD;
+}&#xD;
+arg.processDefault=false;</ClientEvent>
+                          <Property name="itemCodes">+,-</Property>
+                          <Property name="dataSet">dataSetEntity</Property>
+                          <Property name="dataPath">!currentEntity.entityFields</Property>
+                        </DataPilot>
+                        <ToolBarButton>
+                          <ClientEvent name="onClick">var data=this.id(&quot;dataSetEntity&quot;).getData(&quot;!currentEntity.#entityFields&quot;);&#xD;
+if(data){&#xD;
+	var matchData=this.id(&quot;dataSetMatchMetadata&quot;).getData();&#xD;
+	var action=this.id(&quot;ajaxActionMatchMetadata&quot;);&#xD;
+	action.set(&quot;parameter&quot;,data.get(&quot;name&quot;));&#xD;
+	var dialogMatchMetadata=this.id(&quot;dialogMatchMetadata&quot;);&#xD;
+	action.execute(function(metadatas){&#xD;
+		if(metadatas.length==1){&#xD;
+			dorado.widget.NotifyTipManager.notify(&quot;找到一条匹配的元数据信息【&quot;+metadatas[0].name+&quot;】！&quot;);&#xD;
+			data.set(&quot;metaData&quot;,{id:metadatas[0].id,name:metadatas[0].name});&#xD;
+		}else if(metadatas.length>1){&#xD;
+			dorado.MessageBox.alert(&quot;找到&quot;+metadatas.length+&quot;条与当前字段匹配的元数据信息，请从列表中选择一条！&quot;,function(){&#xD;
+				matchData.clear();&#xD;
+				matchData.fromJSON(metadatas);&#xD;
+				dialogMatchMetadata.show();&#xD;
+			});&#xD;
+		}else{&#xD;
+			dorado.MessageBox.alert(&quot;未找到与当前选中字段匹配的元数据！&quot;);&#xD;
+		}&#xD;
+	});&#xD;
+}else{&#xD;
+	dorado.MessageBox.alert(&quot;匹配元数据需要先选中一个字段！&quot;);&#xD;
+}&#xD;
+</ClientEvent>
+                          <Property name="caption">元数据匹配</Property>
+                          <Property name="icon">url(skin>common/icons.gif) -200px -180px</Property>
+                        </ToolBarButton>
+                        <ToolBarButton>
+                          <ClientEvent name="onClick">var field=this.id(&quot;dataSetEntity&quot;).getData(&quot;#.#entityFields&quot;);&#xD;
+if(field){&#xD;
+	this.id(&quot;dialogValidator&quot;).show();&#xD;
+}else{&#xD;
+	dorado.MessageBox.alert(&quot;请先选中一个字段！&quot;);&#xD;
+}&#xD;
+</ClientEvent>
+                          <Property name="caption">验证信息管理</Property>
+                          <Property name="icon">url(skin>common/icons.gif) -20px 0px</Property>
+                        </ToolBarButton>
+                      </ToolBar>
+                      <DataGrid id="dataGridFields">
+                        <Property name="dataSet">dataSetEntity</Property>
+                        <Property name="dataPath">!currentEntity.entityFields</Property>
+                        <Property name="dataType">dataTypeEntityField</Property>
+                        <Property name="rowHeight">20</Property>
+                        <Property name="selectionMode">multiRows</Property>
+                        <Property name="fixedColumnCount">2</Property>
+                        <Property name="showFilterBar">true</Property>
+                        <RowSelectorColumn/>
+                        <DataColumn name="name">
+                          <ClientEvent name="onRenderCell">arg.dom.innerHTML=&quot;&lt;div style='font-style:italic;color:blue'>&quot;+arg.data.get(&quot;name&quot;)+&quot;&lt;/div>&quot;&#xD;
+</ClientEvent>
+                          <Property name="property">name</Property>
+                          <Property name="width">200</Property>
+                        </DataColumn>
+                        <DataColumn name="dataType">
+                          <Property name="property">dataType</Property>
+                          <Property name="width">100</Property>
+                          <Property name="filterable">false</Property>
+                        </DataColumn>
+                        <DataColumn>
+                          <Property name="property">tableName</Property>
+                          <Property name="width">120</Property>
+                          <Property name="filterable">false</Property>
+                        </DataColumn>
+                        <DataColumn>
+                          <Property name="property">metaData</Property>
+                          <Property name="width">110</Property>
+                          <Property name="filterable">false</Property>
+                          <Property name="trigger">triggerSelectMetadata</Property>
+                        </DataColumn>
+                        <DataColumn name="readOnly">
+                          <Property name="property">readOnly</Property>
+                          <Property name="width">70</Property>
+                          <Property name="filterable">false</Property>
+                        </DataColumn>
+                        <DataColumn>
+                          <Property name="property">submittable</Property>
+                          <Property name="name">submittable</Property>
+                          <Property name="width">70</Property>
+                          <Property name="filterable">false</Property>
+                          <Editor/>
+                        </DataColumn>
+                        <DataColumn name="primaryKey">
+                          <Property name="property">primaryKey</Property>
+                          <Property name="width">70</Property>
+                          <Property name="filterable">false</Property>
+                        </DataColumn>
+                        <DataColumn name="keyGenerateType">
+                          <Property name="property">keyGenerateType</Property>
+                          <Property name="width">100</Property>
+                          <Property name="filterable">false</Property>
+                        </DataColumn>
+                        <DataColumn name="keyGenerator">
+                          <Property name="property">keyGenerator</Property>
+                          <Property name="width">160</Property>
+                          <Property name="filterable">false</Property>
+                        </DataColumn>
+                        <DataColumn name="mapping">
+                          <Property name="property">mapping</Property>
+                          <Property name="trigger">triggerSelectMapping</Property>
+                          <Property name="width">100</Property>
+                          <Property name="filterable">false</Property>
+                        </DataColumn>
+                        <DataColumn name="label">
+                          <Property name="property">label</Property>
+                          <Property name="width">100</Property>
+                          <Property name="filterable">false</Property>
+                        </DataColumn>
+                        <DataColumn name="required">
+                          <Property name="property">required</Property>
+                          <Property name="width">100</Property>
+                          <Property name="filterable">false</Property>
+                        </DataColumn>
+                        <DataColumn name="defaultValue">
+                          <Property name="property">defaultValue</Property>
+                          <Property name="width">100</Property>
+                          <Property name="filterable">false</Property>
+                        </DataColumn>
+                        <DataColumn name="displayFormat">
+                          <Property name="property">displayFormat</Property>
+                          <Property name="width">100</Property>
+                          <Property name="filterable">false</Property>
+                        </DataColumn>
+                        <DataColumn name="desc">
+                          <Property name="property">desc</Property>
+                          <Property name="width">200</Property>
+                          <Property name="filterable">false</Property>
+                        </DataColumn>
+                      </DataGrid>
+                      <Dialog id="dialogSelectMapping">
+                        <Property name="center">true</Property>
+                        <Property name="width">300</Property>
+                        <Property name="height">400</Property>
+                        <Property name="modal">true</Property>
+                        <Buttons>
+                          <Button>
+                            <ClientEvent name="onClick">var currentNode=this.id(&quot;dataTreeSelectAction&quot;).get(&quot;currentNode&quot;);&#xD;
+if(currentNode &amp;&amp; currentNode.get(&quot;tags&quot;)==&quot;actionTag&quot;){&#xD;
+	this.id(&quot;dataSetEntity&quot;).getData(&quot;!currentEntity.#entityFields&quot;).set(&quot;mapping&quot;,currentNode.get(&quot;data&quot;).toJSON());&#xD;
+	this.id(&quot;dialogSelectMapping&quot;).hide();&#xD;
+}else{&#xD;
+	dorado.MessageBox.alert(&quot;请选择一个动作对象!&quot;);&#xD;
+}&#xD;
+</ClientEvent>
+                            <Property name="caption">确认</Property>
+                            <Property name="icon">url(skin>common/icons.gif) -140px -20px</Property>
+                          </Button>
+                          <Button>
+                            <ClientEvent name="onClick">this.id(&quot;dialogSelectMapping&quot;).hide();</ClientEvent>
+                            <Property name="icon">url(skin>common/icons.gif) -40px 0px</Property>
+                            <Property name="caption">取消</Property>
+                          </Button>
+                        </Buttons>
+                        <Children>
+                          <DataTree id="dataTreeSelectAction">
+                            <Property name="dataSet">dataSetSelectMapping</Property>
+                            <BindingConfigs>
+                              <BindingConfig>
+                                <Property name="recursive">true</Property>
+                                <Property name="childrenProperty">children</Property>
+                                <Property name="tipProperty">desc</Property>
+                                <Property name="labelProperty">name</Property>
+                                <Property name="icon">dorado/res/icons/package.png</Property>
+                                <Property name="expandLevel">2</Property>
+                                <BindingConfig>
+                                  <Property name="childrenProperty">mappings</Property>
+                                  <Property name="icon">dorado/res/icons/table_relationship.png</Property>
+                                  <Property name="labelProperty">name</Property>
+                                  <Property name="tags">actionTag</Property>
+                                </BindingConfig>
+                              </BindingConfig>
+                            </BindingConfigs>
+                          </DataTree>
+                        </Children>
+                        <Tools/>
+                      </Dialog>
+                      <DataSet id="dataSetSelectMapping">
+                        <Property name="dataType">[dataTypePackageSelectMapping]</Property>
+                        <Property name="dataProvider">bdf.rapido.componentPR#loadPackages</Property>
+                        <Property name="parameter">
+                          <Entity>
+                            <Property name="packageType">mapping</Property>
+                          </Entity>
+                        </Property>
+                      </DataSet>
+                      <Trigger id="triggerSelectMapping">
+                        <ClientEvent name="onExecute">this.id(&quot;dialogSelectMapping&quot;).show();&#xD;
+</ClientEvent>
+                      </Trigger>
+                      <AjaxAction id="ajaxActionMatchMetadata">
+                        <Property name="service">bdf.rapido.entityPR#matchMetadata</Property>
+                      </AjaxAction>
+                      <DataSet id="dataSetMatchMetadata">
+                        <Property name="dataType">[dataTypeMetadata]</Property>
+                      </DataSet>
+                      <Dialog id="dialogMatchMetadata">
+                        <Property name="modal">true</Property>
+                        <Property name="width">600</Property>
+                        <Property name="height">400</Property>
+                        <Property name="center">true</Property>
+                        <Buttons>
+                          <Button>
+                            <ClientEvent name="onClick">var data=this.id(&quot;dataSetMatchMetadata&quot;).getData(&quot;#&quot;);&#xD;
+if(data){&#xD;
+	this.id(&quot;dataSetEntity&quot;).getData(&quot;!currentEntity.#entityFields&quot;).set(&quot;metaData&quot;,data.toJSON());&#xD;
+}&#xD;
+this.id(&quot;dialogMatchMetadata&quot;).hide();&#xD;
+</ClientEvent>
+                            <Property name="caption">确定</Property>
+                            <Property name="icon">url(skin>common/icons.gif) -140px -20px</Property>
+                          </Button>
+                          <Button>
+                            <ClientEvent name="onClick">this.id(&quot;dialogMatchMetadata&quot;).hide();&#xD;
+</ClientEvent>
+                            <Property name="caption">取消</Property>
+                            <Property name="icon">	url(skin>common/icons.gif) -40px 0px</Property>
+                          </Button>
+                        </Buttons>
+                        <Children>
+                          <DataGrid>
+                            <Property name="dataSet">dataSetMatchMetadata</Property>
+                            <Property name="dataType">dataTypeMetadata</Property>
+                            <Property name="stretchColumnsMode">off</Property>
+                            <DataColumn name="name">
+                              <Property name="property">name</Property>
+                              <Property name="width">120</Property>
+                            </DataColumn>
+                            <DataColumn name="label">
+                              <Property name="property">label</Property>
+                              <Property name="width">120</Property>
+                            </DataColumn>
+                            <DataColumn name="desc">
+                              <Property name="property">desc</Property>
+                              <Property name="width">200</Property>
+                            </DataColumn>
+                            <DataColumn name="defaultValue">
+                              <Property name="property">defaultValue</Property>
+                              <Property name="width">120</Property>
+                            </DataColumn>
+                            <DataColumn name="displayFormat">
+                              <Property name="property">displayFormat</Property>
+                              <Property name="width">120</Property>
+                            </DataColumn>
+                          </DataGrid>
+                        </Children>
+                        <Tools/>
+                      </Dialog>
+                      <DataSet id="dataSetSelectMetadata">
+                        <Property name="dataType">[dataTypePackageSelectMetadata]</Property>
+                        <Property name="dataProvider">bdf.rapido.componentPR#loadPackages</Property>
+                        <Property name="parameter">
+                          <Entity>
+                            <Property name="packageType">metadata</Property>
+                          </Entity>
+                        </Property>
+                      </DataSet>
+                      <Dialog id="dialogSelectMetadata">
+                        <Property name="center">true</Property>
+                        <Property name="width">300</Property>
+                        <Property name="height">400</Property>
+                        <Property name="modal">true</Property>
+                        <Buttons>
+                          <Button>
+                            <ClientEvent name="onClick">var currentNode=this.id(&quot;dataTreeSelectMetadata&quot;).get(&quot;currentNode&quot;);&#xD;
+if(currentNode &amp;&amp; currentNode.get(&quot;tags&quot;)==&quot;metadataTag&quot;){&#xD;
+	this.id(&quot;dataSetEntity&quot;).getData(&quot;!currentEntity.#entityFields&quot;).set(&quot;metaData&quot;,currentNode.get(&quot;data&quot;).toJSON());&#xD;
+	this.id(&quot;dialogSelectMetadata&quot;).hide();&#xD;
+}else{&#xD;
+	dorado.MessageBox.alert(&quot;请选择一个元数据对象!&quot;);&#xD;
+}&#xD;
+</ClientEvent>
+                            <Property name="caption">确认</Property>
+                            <Property name="icon">url(skin>common/icons.gif) -140px -20px</Property>
+                          </Button>
+                          <Button>
+                            <ClientEvent name="onClick">this.id(&quot;dialogSelectMetadata&quot;).hide();</ClientEvent>
+                            <Property name="icon">url(skin>common/icons.gif) -40px 0px</Property>
+                            <Property name="caption">取消</Property>
+                          </Button>
+                        </Buttons>
+                        <Children>
+                          <DataTree id="dataTreeSelectMetadata">
+                            <Property name="dataSet">dataSetSelectMetadata</Property>
+                            <BindingConfigs>
+                              <BindingConfig>
+                                <Property name="recursive">true</Property>
+                                <Property name="childrenProperty">children</Property>
+                                <Property name="tipProperty">desc</Property>
+                                <Property name="labelProperty">name</Property>
+                                <Property name="icon">>dorado/res/icons/package.png</Property>
+                                <Property name="expandLevel">2</Property>
+                                <BindingConfig>
+                                  <Property name="childrenProperty">metadata</Property>
+                                  <Property name="icon">>dorado/res/icons/brick.png</Property>
+                                  <Property name="labelProperty">name</Property>
+                                  <Property name="tags">metadataTag</Property>
+                                </BindingConfig>
+                              </BindingConfig>
+                            </BindingConfigs>
+                          </DataTree>
+                        </Children>
+                        <Tools/>
+                      </Dialog>
+                      <Trigger id="triggerSelectMetadata">
+                        <ClientEvent name="onExecute">this.id(&quot;dialogSelectMetadata&quot;).show();&#xD;
+</ClientEvent>
+                      </Trigger>
+                    </Container>
+                  </ControlTab>
+                  <ControlTab>
+                    <Property name="caption">实体查询参数</Property>
+                    <Container>
+                      <ToolBar>
+                        <DataPilot>
+                          <Property name="itemCodes">+,-</Property>
+                          <Property name="dataSet">dataSetEntity</Property>
+                          <Property name="dataPath">!currentEntity.parameters</Property>
+                        </DataPilot>
+                      </ToolBar>
+                      <DataGrid>
+                        <Property name="dataSet">dataSetEntity</Property>
+                        <Property name="dataPath">!currentEntity.parameters</Property>
+                        <Property name="dataType">dataTypeParameter</Property>
+                        <Property name="rowHeight">20</Property>
+                        <DataColumn name="name">
+                          <Property name="property">name</Property>
+                        </DataColumn>
+                        <DataColumn name="value">
+                          <Property name="property">value</Property>
+                        </DataColumn>
+                        <DataColumn name="desc">
+                          <Property name="property">desc</Property>
+                          <Property name="width">200</Property>
+                        </DataColumn>
+                      </DataGrid>
+                    </Container>
+                  </ControlTab>
+                </TabControl>
+              </Children>
+              <Tools/>
+            </Panel>
+          </MainControl>
+          <SideControl>
+            <Container>
+              <ToolBar>
+                <ToolBarButton>
+                  <Property name="caption">保存</Property>
+                  <Property name="icon">url(skin>common/icons.gif) -140px -20px</Property>
+                  <Property name="action">updateActionSaveEntity</Property>
+                </ToolBarButton>
+                <ToolBarButton>
+                  <ClientEvent name="onClick">var data=this.id(&quot;dataTreeEntity&quot;).get(&quot;currentEntity&quot;);&#xD;
+if(data &amp;&amp; data.get(&quot;tableName&quot;) &amp;&amp; data.get(&quot;querySql&quot;)){&#xD;
+	var dataParameters=this.id(&quot;dataSetParameterSync&quot;).getData();&#xD;
+	var dialogSyncParameters=this.id(&quot;dialogSyncParameters&quot;);&#xD;
+	dialogSyncParameters.target=&quot;sync&quot;;&#xD;
+	var actionParameters=this.id(&quot;ajaxActionParametersSync&quot;);&#xD;
+	var actionFields=this.id(&quot;ajaxActionFieldsSync&quot;);&#xD;
+	actionParameters.set(&quot;parameter&quot;,data.get(&quot;querySql&quot;));&#xD;
+	actionParameters.execute(function(result){&#xD;
+		if(result &amp;&amp; result.length>0){&#xD;
+			var params=data.get(&quot;parameters&quot;);&#xD;
+			dataParameters.clear();&#xD;
+			for(var i=0;i&lt;result.length;i++){&#xD;
+				var pname=result[i].name;&#xD;
+				dataParameters.insert({name:pname});&#xD;
+				var insertFlag=true;&#xD;
+				params.each(function(item){&#xD;
+					if(pname==item.get(&quot;name&quot;)){&#xD;
+						insertFlag=false;&#xD;
+						return false;&#xD;
+					}&#xD;
+				});&#xD;
+				if(insertFlag){&#xD;
+					params.insert({name:pname});&#xD;
+				}&#xD;
+			}&#xD;
+			dialogSyncParameters.show();&#xD;
+		}else{&#xD;
+			actionFields.set(&quot;parameter&quot;,{querySql:data.get(&quot;querySql&quot;),tableName:data.get(&quot;tableName&quot;),parameters:dataParameters.toJSON()});&#xD;
+			actionFields.execute(function(result){&#xD;
+				var entityFields=data.get(&quot;entityFields&quot;);&#xD;
+				for(var i=0;i&lt;result.length;i++){&#xD;
+					var name=result[i].name;&#xD;
+					var label=result[i].label;&#xD;
+					var tableName=result[i].tableName;&#xD;
+					var type=result[i].type;&#xD;
+					var primaryKey=result[i].primaryKey;&#xD;
+					var insertFlag=true;&#xD;
+					entityFields.each(function(item){&#xD;
+						if(item.get(&quot;name&quot;)==name &amp;&amp; item.get(&quot;tableName&quot;)==tableName){&#xD;
+							insertFlag=false;&#xD;
+							return false;&#xD;
+						}&#xD;
+					});&#xD;
+					if(insertFlag){&#xD;
+						entityFields.insert({name:name,label:label,tableName:tableName,dataType:type,primaryKey:primaryKey});&#xD;
+					}&#xD;
+				}&#xD;
+			});&#xD;
+			dorado.MessageBox.alert(&quot;同步完成！&quot;);&#xD;
+		}&#xD;
+	});&#xD;
+}else{&#xD;
+	dorado.MessageBox.alert(&quot;请先输入主体表名和查询的SQL!&quot;)&#xD;
+}</ClientEvent>
+                  <Property name="caption">字段参数同步</Property>
+                  <Property name="icon">dorado/res/icons/arrow_refresh.png</Property>
+                </ToolBarButton>
+                <ToolBarButton>
+                  <ClientEvent name="onClick">var data=this.id(&quot;dataTreeEntity&quot;).get(&quot;currentEntity&quot;);&#xD;
+if(data &amp;&amp; data.get(&quot;tableName&quot;) &amp;&amp; data.get(&quot;querySql&quot;)){&#xD;
+	var dataParameters=this.id(&quot;dataSetParameterSync&quot;).getData();&#xD;
+	var dialogSyncParameters=this.id(&quot;dialogSyncParameters&quot;);&#xD;
+	var actionParameters=this.id(&quot;ajaxActionParametersSync&quot;);&#xD;
+	dialogSyncParameters.target=&quot;preview&quot;;&#xD;
+	var dialogPreview=this.id(&quot;dialogPreview&quot;);&#xD;
+	var dataSetPreview=this.id(&quot;dataSetPreview&quot;);&#xD;
+	actionParameters.set(&quot;parameter&quot;,data.get(&quot;querySql&quot;));&#xD;
+	actionParameters.execute(function(result){&#xD;
+		if(result &amp;&amp; result.length>0){&#xD;
+			var params=data.get(&quot;parameters&quot;);&#xD;
+			dataParameters.clear();&#xD;
+			for(var i=0;i&lt;result.length;i++){&#xD;
+				var pname=result[i].name;&#xD;
+				dataParameters.insert({name:pname});&#xD;
+			}&#xD;
+			dialogSyncParameters.show();&#xD;
+		}else{&#xD;
+			dataSetPreview.set(&quot;parameter&quot;,{querySql:data.get(&quot;querySql&quot;),parameters:dataParameters.toJSON()});&#xD;
+			dataSetPreview.flushAsync();&#xD;
+			dialogPreview.show();&#xD;
+		}&#xD;
+	});&#xD;
+}else{&#xD;
+	dorado.MessageBox.alert(&quot;请先输入主体表名和查询的SQL!&quot;)&#xD;
+}</ClientEvent>
+                  <Property name="caption">数据预览</Property>
+                  <Property name="icon">dorado/res/icons/world_go.png</Property>
+                </ToolBarButton>
+              </ToolBar>
+              <AutoForm>
+                <ClientEvent name="onKeyDown">if(arg.keyCode==9){&#xD;
+	//disable tab key&#xD;
+	return false;&#xD;
+}&#xD;
+</ClientEvent>
+                <Property name="dataPath">!currentEntity</Property>
+                <Property name="dataSet">dataSetEntity</Property>
+                <Property name="dataType">dataTypeEntity</Property>
+                <Property name="labelAlign">right</Property>
+                <AutoFormElement>
+                  <Property name="name">name</Property>
+                  <Property name="property">name</Property>
+                  <Editor/>
+                </AutoFormElement>
+                <AutoFormElement>
+                  <Property name="property">recursive</Property>
+                  <Property name="editorType">RadioGroup</Property>
+                  <Property name="tags">recursiveTag</Property>
+                  <Editor/>
+                </AutoFormElement>
+                <AutoFormElement>
+                  <Property name="name">tableName</Property>
+                  <Property name="property">tableName</Property>
+                  <Property name="trigger">triggerOpenWizard</Property>
+                  <Editor/>
+                </AutoFormElement>
+                <AutoFormElement>
+                  <Property name="name">pageSize</Property>
+                  <Property name="property">pageSize</Property>
+                  <Editor/>
+                </AutoFormElement>
+                <AutoFormElement layoutConstraint="colSpan:2">
+                  <Property name="name">desc</Property>
+                  <Property name="property">desc</Property>
+                  <Editor/>
+                </AutoFormElement>
+                <AutoFormElement layoutConstraint="colSpan:2">
+                  <Property name="name">querySql</Property>
+                  <Property name="property">querySql</Property>
+                  <Property name="height">100</Property>
+                  <Property name="editorType">TextArea</Property>
+                  <Property name="trigger">triggerOpenCodeEditor</Property>
+                  <Editor/>
+                </AutoFormElement>
+              </AutoForm>
+              <AjaxAction id="ajaxActionParametersSync">
+                <Property name="service">bdf.rapido.entityPR#buildParameters</Property>
+              </AjaxAction>
+              <Dialog id="dialogSyncParameters">
+                <Property name="center">true</Property>
+                <Property name="width">500</Property>
+                <Property name="height">400</Property>
+                <Property name="caption">请输入查询参数值</Property>
+                <Buttons>
+                  <Button>
+                    <ClientEvent name="onClick">var actionFields=this.id(&quot;ajaxActionFieldsSync&quot;);&#xD;
+var dataParameters=this.id(&quot;dataSetParameterSync&quot;).getData();&#xD;
+var dataSetPreview=this.id(&quot;dataSetPreview&quot;);&#xD;
+var data=this.id(&quot;dataTreeEntity&quot;).get(&quot;currentEntity&quot;);&#xD;
+var dialog=this.id(&quot;dialogSyncParameters&quot;);&#xD;
+var dialogPreview=this.id(&quot;dialogPreview&quot;);&#xD;
+if(dialog.target==&quot;sync&quot;){&#xD;
+	actionFields.set(&quot;parameter&quot;,{querySql:data.get(&quot;querySql&quot;),tableName:data.get(&quot;tableName&quot;),parameters:dataParameters.toJSON()});&#xD;
+	actionFields.execute(function(result){&#xD;
+		var entityFields=data.get(&quot;entityFields&quot;);&#xD;
+		for(var i=0;i&lt;result.length;i++){&#xD;
+			var name=result[i].name;&#xD;
+			var tableName=result[i].tableName;&#xD;
+			var type=result[i].type;&#xD;
+			var label=result[i].label;&#xD;
+			var primaryKey=result[i].primaryKey;&#xD;
+			var insertFlag=true;&#xD;
+			entityFields.each(function(item){&#xD;
+				if(item.get(&quot;name&quot;)==name &amp;&amp; item.get(&quot;tableName&quot;)==tableName){&#xD;
+					insertFlag=false;&#xD;
+					return false;&#xD;
+				}&#xD;
+			});&#xD;
+			if(insertFlag){&#xD;
+				entityFields.insert({name:name,label:label,tableName:tableName,dataType:type,primaryKey:primaryKey});&#xD;
+			}&#xD;
+		}&#xD;
+		dorado.MessageBox.alert(&quot;同步操作完成！&quot;);&#xD;
+		dialog.hide();&#xD;
+	});&#xD;
+}else{&#xD;
+	dataSetPreview.set(&quot;parameter&quot;,{querySql:data.get(&quot;querySql&quot;),parameters:dataParameters.toJSON()});&#xD;
+	dataSetPreview.flushAsync();&#xD;
+	dialogPreview.show();&#xD;
+}&#xD;
+</ClientEvent>
+                    <Property name="caption">确定</Property>
+                    <Property name="icon">url(skin>common/icons.gif) -140px -20px</Property>
+                  </Button>
+                  <Button>
+                    <ClientEvent name="onClick">this.id(&quot;dialogSyncParameters&quot;).hide();</ClientEvent>
+                    <Property name="caption">取消</Property>
+                    <Property name="icon">	url(skin>common/icons.gif) -40px 0px</Property>
+                  </Button>
+                </Buttons>
+                <Children>
+                  <DataGrid>
+                    <Property name="dataSet">dataSetParameterSync</Property>
+                    <Property name="dataType">dataTypeParameter</Property>
+                    <Property name="rowHeight">20</Property>
+                    <DataColumn name="name">
+                      <Property name="property">name</Property>
+                      <Property name="readOnly">true</Property>
+                    </DataColumn>
+                    <DataColumn name="value">
+                      <Property name="property">value</Property>
+                    </DataColumn>
+                  </DataGrid>
+                </Children>
+                <Tools/>
+              </Dialog>
+              <DataSet id="dataSetParameterSync">
+                <Property name="dataType">[dataTypeParameter]</Property>
+              </DataSet>
+              <AjaxAction id="ajaxActionFieldsSync">
+                <Property name="service">bdf.rapido.entityPR#buildSQLFields</Property>
+              </AjaxAction>
+              <Dialog id="dialogPreview">
+                <Property name="center">true</Property>
+                <Property name="width">600</Property>
+                <Property name="height">500</Property>
+                <Property name="caption">数据预览</Property>
+                <Buttons>
+                  <Button>
+                    <ClientEvent name="onClick">this.id(&quot;dialogPreview&quot;).hide();&#xD;
+</ClientEvent>
+                    <Property name="caption">关闭窗口</Property>
+                    <Property name="icon">url(skin>common/icons.gif) -40px 0px</Property>
+                  </Button>
+                </Buttons>
+                <Children>
+                  <DataGrid id="dataGridPreview">
+                    <Property name="dataSet">dataSetPreview</Property>
+                    <Property name="stretchColumnsMode">off</Property>
+                    <Property name="autoCreateColumns">true</Property>
+                    <Property name="dataType">dataTypePreview</Property>
+                  </DataGrid>
+                  <DataSet id="dataSetPreview">
+                    <ClientEvent name="onDataLoad">var data=self.getData(&quot;#&quot;);&#xD;
+var grid=this.id(&quot;dataGridPreview&quot;);&#xD;
+grid.get(&quot;columns&quot;).clear();&#xD;
+if(data){&#xD;
+	var json=data.toJSON();&#xD;
+	for(var item in json){&#xD;
+		var column=new dorado.widget.grid.DataColumn({name:item});&#xD;
+		grid.addColumn(column);&#xD;
+	}&#xD;
+}&#xD;
+</ClientEvent>
+                    <Property name="dataType">[dataTypePreview]</Property>
+                    <Property name="dataProvider">bdf.rapido.entityPR#previewData</Property>
+                  </DataSet>
+                </Children>
+                <Tools/>
+              </Dialog>
+              <Dialog id="dialogSqlDemo">
+                <Property name="center">true</Property>
+                <Property name="width">600</Property>
+                <Property name="height">330</Property>
+                <Property name="modal">true</Property>
+                <Property name="caption">基于Velocity动态拼装查询SQL示例</Property>
+                <Buttons/>
+                <Children>
+                  <HtmlContainer>
+                    <Property name="style">
+                      <Property name="color">#336600</Property>
+                      <Property name="fontSize">11pt</Property>
+                    </Property>
+                    <Property name="content">&lt;font color=&quot;blue&quot;>此处查询SQL的编写，支持基于Velocity语法，&#xD;
+在拼装时可以使用一名为&lt;strong>parameters&lt;/strong>的Velocity变量，该变量中包含所有可能传入的查询条件，&#xD;
+通过对&lt;strong>parameters&lt;/strong>变量中是否包含某个查询条件的值的判断，以实现SQL查询条件的动态拼装，&#xD;
+示例如下：&lt;/font>&lt;br>&lt;br>&#xD;
+select employee_name,sex,dept_id,birthday from employee where 1=1 &lt;br>&#xD;
+#if($parameters.employeeName)&lt;br>&#xD;
+&amp;nbsp;&amp;nbsp;&amp;nbsp; and employee_name like :employeeName&lt;br>&#xD;
+#end&lt;br>&lt;br>&#xD;
+&#xD;
+#if($parameters.deptId)&lt;br>&#xD;
+&amp;nbsp;&amp;nbsp;&amp;nbsp; and dept_id=:deptId&lt;br>&#xD;
+#end&lt;br></Property>
+                  </HtmlContainer>
+                </Children>
+                <Tools/>
+              </Dialog>
+              <Trigger id="triggerOpenCodeEditor">
+                <ClientEvent name="onExecute">var data=view.id(&quot;dataSetEntity&quot;).getData(&quot;!currentEntity&quot;);&#xD;
+var dialog=view.id(&quot;dialogCodeEditor&quot;);&#xD;
+dialog.$show(data.get(&quot;querySql&quot;),&quot;eclipse&quot;,&quot;velocity&quot;,function(value){&#xD;
+	data.set(&quot;querySql&quot;,value);&#xD;
+})&#xD;
+view.tag(&quot;beanShell&quot;).set(&quot;visible&quot;,false);&#xD;
+view.tag(&quot;eventHelp&quot;).set(&quot;visible&quot;,false);</ClientEvent>
+                <Property name="icon">>dorado/res/icons/script.png</Property>
+              </Trigger>
+            </Container>
+          </SideControl>
+        </SplitPanel>
+      </MainControl>
+      <SideControl>
+        <Container>
+          <DataTree id="dataTreeEntity">
+            <ClientEvent name="onContextMenu">this.id(&quot;menuOperate&quot;).show({&#xD;
+	position: {&#xD;
+		left: arg.event.pageX,&#xD;
+		top: arg.event.pageY&#xD;
+	}&#xD;
+});</ClientEvent>
+            <ClientEvent name="onCurrentChange">if(arg.newCurrent){&#xD;
+	var level=arg.newCurrent.get(&quot;level&quot;);&#xD;
+	if(level&lt;2){&#xD;
+		this.tag(&quot;recursiveTag&quot;).set(&quot;visible&quot;,false);&#xD;
+	}else{&#xD;
+		this.tag(&quot;recursiveTag&quot;).set(&quot;visible&quot;,true);	&#xD;
+	}&#xD;
+}&#xD;
+</ClientEvent>
+            <Property name="dataSet">dataSetEntity</Property>
+            <Property name="currentNodeDataPath">currentEntity</Property>
+            <BindingConfigs>
+              <BindingConfig>
+                <Property name="childrenProperty">children</Property>
+                <Property name="labelProperty">name</Property>
+                <Property name="tipProperty">desc</Property>
+                <Property name="recursive">true</Property>
+                <Property name="icon">dorado/res/icons/table.png</Property>
+                <Property name="expandLevel">2</Property>
+              </BindingConfig>
+            </BindingConfigs>
+          </DataTree>
+          <Menu id="menuOperate">
+            <MenuItem>
+              <ClientEvent name="onClick">this.id(&quot;dataSetEntity&quot;).getData().insert({&#xD;
+	packageId:&quot;${request.getParameter(&quot;packageId&quot;)}&quot;,&#xD;
+	name:&quot;entity&quot;+this.entityCount&#xD;
+	});&#xD;
+this.id(&quot;updateActionSaveEntity&quot;).execute();&#xD;
+this.entityCount++;</ClientEvent>
+              <Property name="caption">添加顶级实体</Property>
+              <Property name="icon">dorado/res/icons/table_add.png</Property>
+            </MenuItem>
+            <MenuItem>
+              <ClientEvent name="onClick">var treeEntity=this.id(&quot;dataTreeEntity&quot;);&#xD;
+var currentEntity=treeEntity.get(&quot;currentEntity&quot;);&#xD;
+if(!currentEntity){&#xD;
+	dorado.MessageBox.alert(&quot;请先选中要添加的实体的父节点&quot;);&#xD;
+	return;&#xD;
+}&#xD;
+var newEntity = currentEntity.createChild(&quot;children&quot;,{parentId:currentEntity.get(&quot;id&quot;),name:&quot;entity&quot;+this.entityCount});&#xD;
+treeEntity.get(&quot;currentNode&quot;).expand();&#xD;
+treeEntity.set(&quot;currentEntity&quot;, newEntity);&#xD;
+this.id(&quot;updateActionSaveEntity&quot;).execute();&#xD;
+</ClientEvent>
+              <Property name="caption">添加子实体</Property>
+              <Property name="icon">dorado/res/icons/table_add.png</Property>
+            </MenuItem>
+            <MenuItem>
+              <ClientEvent name="onClick">var entity=this.id(&quot;dataTreeEntity&quot;).get(&quot;currentEntity&quot;);&#xD;
+if(entity){&#xD;
+	var action=this.id(&quot;updateActionSaveEntity&quot;);&#xD;
+	dorado.MessageBox.confirm(&quot;真的要删除当前实体?&quot;,function(){&#xD;
+		entity.remove();&#xD;
+		action.execute();&#xD;
+	});&#xD;
+}</ClientEvent>
+              <Property name="caption">删除实体</Property>
+              <Property name="icon">dorado/res/icons/table_delete.png</Property>
+            </MenuItem>
+          </Menu>
+        </Container>
+      </SideControl>
+    </SplitPanel>
+    <UpdateAction id="updateActionSaveEntity">
+      <Property name="dataResolver">bdf.rapido.entityPR#saveEntitys</Property>
+      <Property name="successMessage">保存成功！</Property>
+      <UpdateItem>
+        <Property name="dataSet">dataSetEntity</Property>
+      </UpdateItem>
+    </UpdateAction>
+    <Dialog id="dialogWizard">
+      <Property name="width">750</Property>
+      <Property name="height">600</Property>
+      <Property name="center">true</Property>
+      <Property name="modal">true</Property>
+      <Property name="caption">实体对象创建向导</Property>
+      <Property name="closeable">false</Property>
+      <Buttons>
+        <Button>
+          <ClientEvent name="onClick">var view=this.id(&quot;iFrameWizard&quot;).get(&quot;iFrameWindow&quot;).doradoView;&#xD;
+var tables=view.id(&quot;dataSetTable&quot;).getData();&#xD;
+if(!tables){&#xD;
+	dorado.MessageBox.alert(&quot;请先定义实体表信息！&quot;);&#xD;
+	return;&#xD;
+}&#xD;
+var action=view.id(&quot;updateActionSaveTable&quot;);&#xD;
+var dialog=this.id(&quot;dialogWizard&quot;);&#xD;
+var ds=this.id(&quot;dataSetEntity&quot;);&#xD;
+var entity=ds.getData(&quot;!currentEntity&quot;);&#xD;
+var fields=ds.getData(&quot;!currentEntity.entityFields&quot;);&#xD;
+var parameters=ds.getData(&quot;!currentEntity.parameters&quot;);&#xD;
+var querySqlEditor=this.querySqlEditor;&#xD;
+action.execute(function(data){&#xD;
+	entity.set(&quot;querySql&quot;,data.querySql);&#xD;
+	entity.set(&quot;tableName&quot;,data.masterTable);&#xD;
+	fields.each(function(item){&#xD;
+		item.remove();&#xD;
+	});&#xD;
+	parameters.each(function(item){&#xD;
+		item.remove();&#xD;
+	});&#xD;
+	for(var i=0;i&lt;data.fields.length;i++){&#xD;
+		fields.insert(data.fields[i]);&#xD;
+	}&#xD;
+	for(var i=0;i&lt;data.parameters.length;i++){&#xD;
+		parameters.insert(data.parameters[i]);&#xD;
+	}&#xD;
+	dialog.hide();&#xD;
+});</ClientEvent>
+          <Property name="caption">确定</Property>
+          <Property name="icon">url(skin>common/icons.gif) -140px -20px</Property>
+        </Button>
+        <Button>
+          <ClientEvent name="onClick">this.id(&quot;dialogWizard&quot;).hide();</ClientEvent>
+          <Property name="caption">取消</Property>
+          <Property name="icon">	url(skin>common/icons.gif) -40px 0px</Property>
+        </Button>
+      </Buttons>
+      <Children>
+        <IFrame id="iFrameWizard"/>
+      </Children>
+      <Tools/>
+    </Dialog>
+    <Trigger id="triggerOpenWizard">
+      <ClientEvent name="onExecute">var view=this;&#xD;
+var id=view.id(&quot;dataSetEntity&quot;).getData(&quot;!currentEntity&quot;).get(&quot;id&quot;);&#xD;
+var path=&quot;bdf2.rapido.view.wizard.QueryWizard.d?entityId=&quot;+id;&#xD;
+view.id(&quot;iFrameWizard&quot;).set(&quot;path&quot;,path);&#xD;
+view.id(&quot;dialogWizard&quot;).show();</ClientEvent>
+      <Property name="icon">url(skin>common/icons.gif) -180px -120px</Property>
+    </Trigger>
+    <Dialog id="dialogValidator">
+      <Property name="center">true</Property>
+      <Property name="width">600</Property>
+      <Property name="height">550</Property>
+      <Property name="modal">true</Property>
+      <Property name="caption">字段验证信息管理</Property>
+      <Property name="maximizeable">true</Property>
+      <Buttons>
+        <Button>
+          <ClientEvent name="onClick">var action=this.id(&quot;updateActionSaveEntity&quot;);&#xD;
+action.execute();&#xD;
+this.id(&quot;dialogValidator&quot;).hide();&#xD;
+</ClientEvent>
+          <Property name="caption">确定</Property>
+          <Property name="icon">url(skin>common/icons.gif) -140px -20px</Property>
+        </Button>
+        <Button>
+          <ClientEvent name="onClick">this.id(&quot;dialogValidator&quot;).hide();</ClientEvent>
+          <Property name="caption">取消</Property>
+          <Property name="icon">	url(skin>common/icons.gif) -40px 0px</Property>
+        </Button>
+      </Buttons>
+      <Children>
+        <SplitPanel>
+          <Property name="direction">top</Property>
+          <Property name="position">200</Property>
+          <MainControl>
+            <Container>
+              <ToolBar>
+                <DataPilot>
+                  <Property name="dataSet">dataSetEntity</Property>
+                  <Property name="dataPath">!currentEntity.#entityFields.#validators.properties</Property>
+                  <Property name="itemCodes">+,-</Property>
+                </DataPilot>
+              </ToolBar>
+              <DataGrid>
+                <Property name="dataSet">dataSetEntity</Property>
+                <Property name="dataPath">!currentEntity.#entityFields.#validators.properties</Property>
+                <Property name="dataType">dataTypeValidatorProperty</Property>
+                <DataColumn name="name">
+                  <Property name="property">name</Property>
+                  <Property name="trigger">dataSetDropDownValidatorDefProperty</Property>
+                </DataColumn>
+                <DataColumn name="value">
+                  <Property name="property">value</Property>
+                </DataColumn>
+              </DataGrid>
+              <DataSet id="dataSetValidatorDefProperty">
+                <Property name="dataType">[dataTypeValidatorDef]</Property>
+                <Property name="dataProvider">bdf.rapido.entityPR#loadValidatorDefProperties</Property>
+              </DataSet>
+              <DataSetDropDown id="dataSetDropDownValidatorDefProperty">
+                <Property name="dataSet">dataSetValidatorDefProperty</Property>
+                <Property name="property">name</Property>
+              </DataSetDropDown>
+            </Container>
+          </MainControl>
+          <SideControl>
+            <Container>
+              <ToolBar>
+                <DataPilot>
+                  <Property name="dataSet">dataSetEntity</Property>
+                  <Property name="dataPath">!currentEntity.#entityFields.validators</Property>
+                  <Property name="itemCodes">+,-</Property>
+                </DataPilot>
+              </ToolBar>
+              <DataGrid>
+                <Property name="dataSet">dataSetEntity</Property>
+                <Property name="dataPath">!currentEntity.#entityFields.validators</Property>
+                <Property name="dataType">dataTypeValidator</Property>
+                <DataColumn name="name">
+                  <Property name="property">name</Property>
+                  <Property name="trigger">dataSetDropDownValidatorDef</Property>
+                </DataColumn>
+                <DataColumn name="desc">
+                  <Property name="property">desc</Property>
+                </DataColumn>
+              </DataGrid>
+              <DataSet id="dataSetValidatorDef">
+                <Property name="dataType">[dataTypeValidatorDef]</Property>
+                <Property name="dataProvider">bdf.rapido.entityPR#loadValidatorDefs</Property>
+              </DataSet>
+              <DataSetDropDown id="dataSetDropDownValidatorDef">
+                <ClientEvent name="onValueSelect">var ds=this.id(&quot;dataSetValidatorDefProperty&quot;);&#xD;
+ds.set(&quot;parameter&quot;,arg.selectedValue);&#xD;
+ds.flushAsync();&#xD;
+</ClientEvent>
+                <Property name="dataSet">dataSetValidatorDef</Property>
+                <Property name="property">name</Property>
+              </DataSetDropDown>
+            </Container>
+          </SideControl>
+        </SplitPanel>
+      </Children>
+      <Tools/>
+    </Dialog>
+    <Dialog id="dialogVelocityVariableList">
+      <Property name="center">true</Property>
+      <Property name="width">550</Property>
+      <Property name="height">300</Property>
+      <Property name="caption">系统可用的Velocity变量</Property>
+      <Property name="maximizeable">true</Property>
+      <Buttons/>
+      <Children>
+        <DataGrid>
+          <Property name="dataSet">dataSetVariable</Property>
+          <Property name="dataType">dataTypeVariable</Property>
+          <Property name="stretchColumnsMode">off</Property>
+          <Property name="readOnly">true</Property>
+          <DataColumn name="name">
+            <Property name="property">name</Property>
+            <Property name="width">200</Property>
+          </DataColumn>
+          <DataColumn name="desc">
+            <Property name="property">desc</Property>
+            <Property name="width">300</Property>
+          </DataColumn>
+        </DataGrid>
+      </Children>
+      <Tools/>
+    </Dialog>
+  </View>
+</ViewConfig>

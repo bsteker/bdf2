@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Model>
+  <DataType name="$dataTypeResourceOwner">
+    <Property name="creationType">com.bstek.bdf2.authoritydelegation.model.ResourceOwner</Property>
+    <PropertyDef name="username">
+      <Property name="dataType">String</Property>
+      <Property name="label">拥有者</Property>
+    </PropertyDef>
+    <PropertyDef name="createUser">
+      <Property name="dataType">String</Property>
+    </PropertyDef>
+    <PropertyDef name="createDate">
+      <Property name="dataType">Date</Property>
+    </PropertyDef>
+    <PropertyDef name="companyId">
+      <Property name="dataType">String</Property>
+    </PropertyDef>
+  </DataType>
+  <DataType name="$dataTypeResourceAllocation">
+    <Property name="creationType">com.bstek.bdf2.authoritydelegation.model.ResourceAllocation</Property>
+    <PropertyDef name="id">
+      <Property name="dataType">String</Property>
+    </PropertyDef>
+    <PropertyDef name="resourceType">
+      <Property name="dataType">String</Property>
+    </PropertyDef>
+    <PropertyDef name="resourceId">
+      <Property name="dataType">String</Property>
+    </PropertyDef>
+    <PropertyDef name="resourceOwner">
+      <Property name="dataType">String</Property>
+      <Property name="label">拥有者</Property>
+    </PropertyDef>
+    <PropertyDef name="createUser">
+      <Property name="dataType">String</Property>
+    </PropertyDef>
+    <PropertyDef name="createDate">
+      <Property name="dataType">Date</Property>
+    </PropertyDef>
+  </DataType>
+</Model>

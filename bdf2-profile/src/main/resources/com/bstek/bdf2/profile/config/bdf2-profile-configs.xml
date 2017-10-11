@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd
+	">
+	<context:component-scan base-package="com.bstek.bdf2.core.view.builder,com.bstek.bdf2.profile.listener.handler*,com.bstek.bdf2.profile.view*"></context:component-scan>
+	<bean class="com.bstek.bdf2.core.orm.AnnotationPackages">
+		<property name="scanPackages">
+			<list>
+				<value>com/bstek/bdf2/profile/model</value>
+			</list>
+		</property>
+		<property name="dataSourceRegisterName" value="${bdf2.profile.dataSourceName}"></property>
+	</bean>
+	
+	<bean parent="bdf2.refreshCacheRegister">
+       <property name="beanMethodNames">
+           <list>
+               <value>bdf2.profile.componentMaintain#refreshCache</value>
+           </list>
+       </property>
+   </bean>
+	
+	<bean parent="dorado.dataConfigLoader">
+		<property name="configLocation" value="classpath:com/bstek/bdf2/profile/view/*.model.xml" />
+	</bean>	
+	
+	<bean id="bdf2.profile.componentService" class="com.bstek.bdf2.profile.service.impl.DefaultComponentService">
+		<property name="applicationCache" ref="bdf2.applicationCache"></property>
+	</bean>
+	<bean parent="dorado.genericObjectListenerRegister">
+		<property name="listener">
+			<bean class="com.bstek.bdf2.profile.listener.GlobalComponentFilterListener">
+				<property name="order" value="1" />
+				<property name="pattern" value="*" />
+				<property name="componentService" ref="bdf2.profile.componentService" />
+				<property name="applicationCache" ref="bdf2.applicationCache"></property>
+			</bean>
+		</property>
+	</bean>		
+	<bean parent="dorado.genericObjectListenerRegister">
+		<property name="listener">
+			<bean class="com.bstek.bdf2.profile.listener.GlobalDataTypeFilterListener">
+				<property name="order" value="2" />
+				<property name="pattern" value="*" />
+				<property name="componentService" ref="bdf2.profile.componentService" />
+				<property name="applicationCache" ref="bdf2.applicationCache"></property>
+			</bean>
+		</property>
+	</bean>		
+	<bean parent="dorado.genericObjectListenerRegister">
+		<property name="listener">
+			<bean class="com.bstek.bdf2.profile.listener.GlobalProperDefFilterListener">
+				<property name="order" value="3" />
+				<property name="pattern" value="*" />
+				<property name="componentService" ref="bdf2.profile.componentService" />
+				<property name="applicationCache" ref="bdf2.applicationCache"></property>
+			</bean>
+		</property>
+	</bean>		
+	<bean id="bdf2.profile.validatorService" class="com.bstek.bdf2.profile.service.impl.DefaultValidatorService">
+		<property name="applicationCache" ref="bdf2.applicationCache"></property>
+	</bean>
+</beans>

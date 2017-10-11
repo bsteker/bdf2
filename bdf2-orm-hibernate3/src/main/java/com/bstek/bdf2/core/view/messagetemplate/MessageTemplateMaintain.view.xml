@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ViewConfig>
+  <Arguments/>
+  <Context/>
+  <Model>
+    <DataType name="dataTypeMessageTemplate" parent="$dataTypeMessageTemplate">
+      <PropertyDef name="type">
+        <Property name="dataType">String</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;bdf2.messageTemplateMaintain#loadMessageTypes&quot;).getResult()}</Property>
+          <Property name="keyProperty">typeId</Property>
+          <Property name="valueProperty">typeName</Property>
+        </Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="dataTypeMessageVariable">
+      <Property name="creationType">com.bstek.bdf2.core.model.MessageVariable</Property>
+      <PropertyDef name="name">
+        <Property name="dataType">String</Property>
+        <Property name="label">变量名</Property>
+      </PropertyDef>
+      <PropertyDef name="desc">
+        <Property name="dataType">String</Property>
+        <Property name="label">描述</Property>
+      </PropertyDef>
+    </DataType>
+  </Model>
+  <View>
+    <DataSet id="dataSetMessageTemplate">
+      <Property name="dataType">[dataTypeMessageTemplate]</Property>
+      <Property name="dataProvider">bdf2.messageTemplateMaintain#loadMessageTemplates</Property>
+      <Property name="pageSize">20</Property>
+    </DataSet>
+    <DataSet id="dataSetMessageVariable">
+      <Property name="dataProvider">bdf2.messageTemplateMaintain#loadMessageVariables</Property>
+      <Property name="dataType">[dataTypeMessageVariable]</Property>
+    </DataSet>
+    <ToolBar>
+      <DataPilot>
+        <ClientEvent name="onSubControlAction">var data=view.id(&quot;dataSetMessageTemplate&quot;);&#xD;
+switch(arg.code){&#xD;
+	case &quot;+&quot;:&#xD;
+		data.insert();&#xD;
+		view.id(&quot;dialogMessageTemplate&quot;).show();&#xD;
+		arg.processDefault=false;&#xD;
+		break;&#xD;
+	case &quot;-&quot;:&#xD;
+		dorado.MessageBox.confirm(&quot;真的要删除当前消息模版吗？&quot;,function(){&#xD;
+			data.getData(&quot;#&quot;).remove();&#xD;
+			view.id(&quot;updateActionSaveMessageTemplate&quot;).execute();&#xD;
+		});&#xD;
+		arg.processDefault=false;&#xD;
+		break;&#xD;
+}</ClientEvent>
+        <Property name="dataSet">dataSetMessageTemplate</Property>
+        <Property name="itemCodes">pages,+,-</Property>
+      </DataPilot>
+      <ToolBarButton>
+        <ClientEvent name="onClick">var data=view.id(&quot;dataSetMessageTemplate&quot;).getData(&quot;#&quot;);&#xD;
+if(data){&#xD;
+	view.id(&quot;dialogMessageTemplate&quot;).show();&#xD;
+}else{&#xD;
+	dorado.MessageBox.alert(&quot;当前没有可供编辑的数据&quot;);&#xD;
+}</ClientEvent>
+        <Property name="caption">编辑</Property>
+        <Property name="icon">url(skin>common/icons.gif) -200px 0px</Property>
+      </ToolBarButton>
+    </ToolBar>
+    <DataGrid>
+      <Property name="dataSet">dataSetMessageTemplate</Property>
+      <Property name="filterMode">serverSide</Property>
+      <Property name="showFilterBar">true</Property>
+      <DataColumn name="name">
+        <Property name="property">name</Property>
+        <Property name="width">200</Property>
+      </DataColumn>
+      <DataColumn name="type">
+        <Property name="property">type</Property>
+        <Property name="width">200</Property>
+        <Property name="filterable">false</Property>
+      </DataColumn>
+      <DataColumn name="content">
+        <Property name="property">content</Property>
+        <Property name="filterable">false</Property>
+      </DataColumn>
+    </DataGrid>
+    <Dialog id="dialogMessageTemplate">
+      <Property name="center">true</Property>
+      <Property name="modal">true</Property>
+      <Property name="width">500</Property>
+      <Property name="height">300</Property>
+      <Buttons>
+        <Button>
+          <ClientEvent name="onClick">view.id(&quot;updateActionSaveMessageTemplate&quot;).execute(function(){&#xD;
+	view.id(&quot;dialogMessageTemplate&quot;).hide();&#xD;
+});</ClientEvent>
+          <Property name="caption">确定</Property>
+          <Property name="icon">url(skin>common/icons.gif) -140px -20px</Property>
+        </Button>
+        <Button>
+          <ClientEvent name="onClick">view.id(&quot;dataSetMessageTemplate&quot;).getData().cancel();&#xD;
+view.id(&quot;dialogMessageTemplate&quot;).hide();</ClientEvent>
+          <Property name="caption">取消</Property>
+          <Property name="icon">url(skin>common/icons.gif) -40px 0px</Property>
+        </Button>
+      </Buttons>
+      <Children>
+        <AutoForm>
+          <Property name="dataSet">dataSetMessageTemplate</Property>
+          <Property name="cols">*</Property>
+          <AutoFormElement>
+            <Property name="name">type</Property>
+            <Property name="property">type</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">name</Property>
+            <Property name="property">name</Property>
+            <Property name="trigger">triggerSeeMessageVariable</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">content</Property>
+            <Property name="property">content</Property>
+            <Property name="trigger">triggerSeeMessageVariable</Property>
+            <Editor>
+              <TextArea>
+                <Property name="height">100</Property>
+              </TextArea>
+            </Editor>
+          </AutoFormElement>
+        </AutoForm>
+      </Children>
+      <Tools/>
+    </Dialog>
+    <UpdateAction id="updateActionSaveMessageTemplate">
+      <Property name="dataResolver">bdf2.messageTemplateMaintain#saveMessageTemplates</Property>
+      <Property name="successMessage">操作成功</Property>
+      <UpdateItem>
+        <Property name="dataSet">dataSetMessageTemplate</Property>
+      </UpdateItem>
+    </UpdateAction>
+    <Dialog id="dialogMessageVariable">
+      <Property name="center">true</Property>
+      <Property name="modal">true</Property>
+      <Property name="width">600</Property>
+      <Property name="height">500</Property>
+      <Buttons>
+        <Button>
+          <ClientEvent name="onClick">view.id(&quot;dialogMessageVariable&quot;).hide();</ClientEvent>
+          <Property name="caption">取消</Property>
+          <Property name="icon">url(skin>common/icons.gif) -40px 0px</Property>
+        </Button>
+      </Buttons>
+      <Children>
+        <Label>
+          <Property name="text">变量使用时需要遵循下面的格式：#{变量名}</Property>
+          <Property name="style">
+            <Property name="border">solid 1px</Property>
+            <Property name="background">yellow</Property>
+            <Property name="padding">5px</Property>
+          </Property>
+        </Label>
+        <DataGrid>
+          <Property name="dataSet">dataSetMessageVariable</Property>
+          <DataColumn name="name">
+            <Property name="property">name</Property>
+            <Property name="width">200</Property>
+          </DataColumn>
+          <DataColumn name="desc">
+            <Property name="property">desc</Property>
+          </DataColumn>
+        </DataGrid>
+      </Children>
+      <Tools/>
+    </Dialog>
+    <Trigger id="triggerSeeMessageVariable">
+      <ClientEvent name="onExecute">var type=view.id(&quot;dataSetMessageTemplate&quot;).getData(&quot;#.type&quot;);&#xD;
+if(type){&#xD;
+	view.id(&quot;dataSetMessageVariable&quot;).set(&quot;parameter&quot;,{type:type}).flushAsync();&#xD;
+	view.id(&quot;dialogMessageVariable&quot;).show();&#xD;
+}else{&#xD;
+	dorado.MessageBox.alert(&quot;请先选择消息模版类型!&quot;);&#xD;
+}</ClientEvent>
+    </Trigger>
+  </View>
+</ViewConfig>

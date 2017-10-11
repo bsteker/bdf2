@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ViewConfig>
+  <Arguments/>
+  <Context/>
+  <Model>
+    <DataType name="dataTypeUrl" parent="global:$dataTypeUrl">
+      <PropertyDef name="children">
+        <Property name="dataType">[SELF]</Property>
+      </PropertyDef>
+    </DataType>
+  </Model>
+  <View>
+    <ClientEvent name="onReady">if (typeof(view)==&quot;undefined&quot;){
+	view = self;
+}
+window.openUrlInFrameTab=function(url,caption,icon,double,closeable){
+	if(!url){
+		dorado.MessageBox.alert(&quot;Url不能空&quot;);
+		return;
+	}
+	if(!caption){
+		dorado.MessageBox.alert(&quot;caption不能空&quot;);
+		return;
+	}
+	if(!icon){
+		icon=&quot;url(skin>common/icons.gif) -40px -120px&quot;;
+	}
+	var tabControl = view.id(&quot;tabControlWorkarea&quot;);
+	var tab=tabControl.getTab(url);
+	if(!tab){
+		tab=new dorado.widget.tab.IFrameTab({
+			name:url,
+			path:url,
+			caption:caption,
+			icon:icon,
+			closeable:(closeable==false)?false:true
+		});
+		tabControl.addTab(tab);
+	}else if(double){
+		if (url !=  tab.get(&quot;path&quot;)){
+			tab.set(&quot;path&quot;, url);
+		}else{
+			tab.getControl().reload();
+		}
+		if(caption){
+			tab.set(&quot;caption&quot;,caption);
+		}
+	}
+	tabControl.set(&quot;currentTab&quot;,tab);
+}
+
+var path=&quot;${configure.getString(&quot;bdf2.mainFrame.welcomePath&quot;)}&quot;;
+var icon=&quot;${configure.getString(&quot;bdf2.mainFrame.welcomeIcon&quot;)}&quot;;
+var title=&quot;${configure.getString(&quot;bdf2.mainFrame.welcomeTitle&quot;)}&quot;;
+if(path){
+	window.openUrlInFrameTab(path,title,icon,true, false);
+}</ClientEvent>
+    <Property name="packages">tree</Property>
+    <SubViewHolder id="subViewHolderTop" layoutConstraint="top">
+      <Property name="subView">${configure.getString(&quot;bdf2.mainFrameTopView&quot;)}</Property>
+    </SubViewHolder>
+    <Menu id="menuForTab">
+      <ClientEvent name="onReady">var menuForTab=view.get(&quot;#menuForTab&quot;);&#xD;
+var resizeItem=new dorado.widget.menu.MenuItem({&#xD;
+		icon:'>dorado/res/icons/max.png',&#xD;
+		caption:&quot;${res['bdf2.core/menuItemCaptionMaximize']}&quot;,&#xD;
+		listener:{&#xD;
+			onClick:function(self,arg){&#xD;
+				var item=self;&#xD;
+				setTimeout(function(){&#xD;
+					var panelWorkarea=view.get(&quot;#panelWorkarea&quot;);&#xD;
+					var maximized=panelWorkarea.get(&quot;maximized&quot;);&#xD;
+					var maxIcon=&quot;>dorado/res/icons/max.png&quot;;&#xD;
+					var normalIcon=&quot;>dorado/res/icons/min.png&quot;;&#xD;
+					if(maximized){&#xD;
+						self.set(&quot;icon&quot;, maxIcon);&#xD;
+						self.set(&quot;caption&quot;, &quot;${res.get('bdf2.core/menuItemCaptionMaximize')}&quot;);&#xD;
+						panelWorkarea.maximizeRestore();&#xD;
+					}else{&#xD;
+						self.set(&quot;icon&quot;, normalIcon);&#xD;
+						self.set(&quot;caption&quot;, &quot;${res.get('bdf2.core/menuItemCaptionRestore')}&quot;);&#xD;
+						panelWorkarea.maximize();&#xD;
+					}&#xD;
+				}, 600);&#xD;
+			}&#xD;
+		}&#xD;
+	});&#xD;
+	menuForTab.addItem(resizeItem);&#xD;
+var showMenu=&quot;${configure.getBoolean('bdf2.showTabOperatorMenu')}&quot;;&#xD;
+if(showMenu==&quot;true&quot;){&#xD;
+	var closeItem=new dorado.widget.menu.MenuItem({&#xD;
+		icon:'url(>skin>common/icons.gif) -80px -120px',&#xD;
+		caption:'${res[&quot;bdf2.core/menuItemCaptionClose&quot;]}',&#xD;
+		listener:{&#xD;
+			onClick:function(){&#xD;
+				var tabControl=view.get(&quot;#tabControlWorkarea&quot;);&#xD;
+				var currentTab=tabControl.get(&quot;currentTab&quot;);&#xD;
+				tabControl.closeTab(currentTab);&#xD;
+			}&#xD;
+		}&#xD;
+	});&#xD;
+	var closeOthersItem=new dorado.widget.menu.MenuItem({&#xD;
+		icon:'url(>skin>common/icons.gif) -300px -100px',&#xD;
+		caption:'${res[&quot;bdf2.core/menuItemCaptionCloseOthers&quot;]}',&#xD;
+		listener:{&#xD;
+			onClick:function(){&#xD;
+				var tabControl=view.get(&quot;#tabControlWorkarea&quot;);&#xD;
+				var currentTab=tabControl.get(&quot;currentTab&quot;);&#xD;
+				tabControl.closeOtherTabs(currentTab);&#xD;
+			}&#xD;
+		}&#xD;
+	});&#xD;
+	var closeAllItem=new dorado.widget.menu.MenuItem({&#xD;
+		icon:'url(>skin>common/icons.gif) -40px -0px',&#xD;
+		caption:'${res[&quot;bdf2.core/menuItemCaptionCloseAll&quot;]}',&#xD;
+		listener:{&#xD;
+			onClick:function(){&#xD;
+				var tabControl=view.get(&quot;#tabControlWorkarea&quot;);&#xD;
+				tabControl.closeAllTabs ();&#xD;
+			}&#xD;
+		}&#xD;
+	});&#xD;
+	menuForTab.addItem(closeItem);&#xD;
+	menuForTab.addItem(closeOthersItem);&#xD;
+	menuForTab.addItem(closeAllItem);&#xD;
+}</ClientEvent>
+    </Menu>
+    <PlaceHolder id="workspace"/>
+    <Container listener="spring:bdf2.frameBottomListener#onInit" layout="hbox regionPadding:0;padding:0" layoutConstraint="bottom ">
+      <Property name="height">19</Property>
+      <Property name="style">
+        <Property name="background">#FDFDFD</Property>
+        <Property name="margin-left">2px</Property>
+      </Property>
+      <Property name="contentOverflow">hidden</Property>
+    </Container>
+  </View>
+</ViewConfig>

@@ -1,0 +1,301 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns="http://www.springframework.org/schema/security" xmlns:beans="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+           http://www.springframework.org/schema/security
+           http://www.springframework.org/schema/security/spring-security-3.1.xsd">
+	<http entry-point-ref="bdf2.authenticationEntryPoint" access-denied-page="${bdf2.accessDeniedPage}">
+		<custom-filter ref="bdf2.contextFilter" after="SECURITY_CONTEXT_FILTER" />
+		<custom-filter ref="bdf2.logoutFilter" position="LOGOUT_FILTER" />
+		<custom-filter ref="bdf2.preAuthenticatedProcessingFilter" position="PRE_AUTH_FILTER" />
+		<custom-filter ref="singleLogoutFilter" before="CAS_FILTER" />
+		<custom-filter ref="bdf2.casAuthenticationFilter" position="CAS_FILTER" />
+		<custom-filter ref="bdf2.usernamePasswordAuthenticationFilter" position="FORM_LOGIN_FILTER" />
+		<custom-filter ref="bdf2.concurrentSessionFilter" position="CONCURRENT_SESSION_FILTER" />
+		<custom-filter ref="bdf2.basicAuthenticationFilter" position="BASIC_AUTH_FILTER" />
+		<custom-filter ref="bdf2.rememberMeLoginFilter" position="REMEMBER_ME_FILTER" />
+		<anonymous key="doesNotMatter" />
+		<session-management session-authentication-strategy-ref="${bdf2.loginCreateSessionStrategy}"></session-management>
+		<custom-filter ref="bdf2.controllerFilter" after="SESSION_MANAGEMENT_FILTER" />
+		<custom-filter ref="bdf2.filterSecurityInterceptor" before="FILTER_SECURITY_INTERCEPTOR" />
+	</http>
+
+	<!-- This filter handles a Single Logout Request from the CAS Server -->
+	<beans:bean id="singleLogoutFilter" class="org.jasig.cas.client.session.SingleSignOutFilter" />
+
+	<authentication-manager alias="bdf2.authenticationManager">
+		<authentication-provider ref="bdf2.casAuthenticationProvider" />
+		<authentication-provider ref="bdf2.formLoginAuthenticationProvider" />
+		<authentication-provider ref="bdf2.rememberMeAuthenticationProvider" />
+		<authentication-provider ref="bdf2.anonymousAuthenticationProvider" />
+	</authentication-manager>
+
+	<beans:bean id="bdf2.preAuthenticatedProcessingFilter" class="com.bstek.bdf2.core.security.filter.PreAuthenticatedProcessingFilter"></beans:bean>
+	<beans:bean id="bdf2.forwardRedirectStrategy" class="com.bstek.bdf2.core.security.ForwardRedirectStrategy"></beans:bean>
+
+	<beans:bean id="bdf2.sessionRegistry" class="com.bstek.bdf2.core.security.session.SessionRegistryImpl" />
+	<beans:bean id="bdf2.concurrentSessionFilter" class="com.bstek.bdf2.core.security.filter.ConcurrentSessionControlFilter">
+		<beans:constructor-arg name="sessionRegistry" ref="bdf2.sessionRegistry"></beans:constructor-arg>
+		<beans:constructor-arg name="expiredUrl" value="${bdf2.sessionExpiredUrl}"></beans:constructor-arg>
+		<beans:constructor-arg name="sessionKickAwayUrl" value="${bdf2.sessionKickAwayUrl}"></beans:constructor-arg>
+	</beans:bean>
+
+	<beans:bean id="bdf2.noneCreateSessionStrategy" class="org.springframework.security.web.authentication.session.SessionFixationProtectionStrategy">
+		<beans:property name="alwaysCreateSession" value="false"></beans:property>
+	</beans:bean>
+
+	<beans:bean id="bdf2.concurrentSessionControlStrategy" class="com.bstek.bdf2.core.security.session.ConcurrentSessionControlStrategyImpl">
+		<beans:constructor-arg name="sessionRegistry" ref="bdf2.sessionRegistry" />
+		<beans:property name="maximumSessions" value="${bdf2.securityMaximumSessions}" />
+		<beans:property name="alwaysCreateSession" value="${bdf2.alwaysCreateSessionForLogin}" />
+	</beans:bean>
+
+	<beans:bean id="bdf2.rememberMeLoginFilter" class="com.bstek.bdf2.core.security.filter.RememberMeLoginFilter">
+		<beans:constructor-arg name="authenticationManager" ref="bdf2.authenticationManager"></beans:constructor-arg>
+		<beans:constructor-arg name="rememberMeServices" ref="bdf2.tokenBasedRememberMeServices"></beans:constructor-arg>
+		<beans:property name="userService" ref="bdf2.userService" />
+		<beans:property name="deptService" ref="bdf2.deptService"></beans:property>
+		<beans:property name="positionService" ref="bdf2.positionService"></beans:property>
+		<beans:property name="groupService" ref="bdf2.groupService"></beans:property>
+		<beans:property name="authenticationFailureHandler">
+			<beans:bean class="org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler">
+				<beans:constructor-arg name="defaultFailureUrl" value="${bdf2.rememberMeLoginFailUrl}"></beans:constructor-arg>
+			</beans:bean>
+		</beans:property>
+	</beans:bean>
+
+	<beans:bean id="bdf2.filterSecurityInterceptor" class="org.springframework.security.web.access.intercept.FilterSecurityInterceptor">
+		<beans:property name="securityMetadataSource" ref="bdf2.urlMetadataSource"></beans:property>
+		<beans:property name="authenticationManager" ref="bdf2.authenticationManager"></beans:property>
+		<beans:property name="accessDecisionManager" ref="bdf2.accessDecisionManager"></beans:property>
+	</beans:bean>
+
+	<beans:bean id="bdf2.accessDecisionManager" class="com.bstek.bdf2.core.security.decision.UrlAccessDecisionManager">
+		<beans:constructor-arg name="decisionVoters">
+			<beans:list>
+				<beans:ref bean="bdf2.authenticatedVoter" />
+				<beans:ref bean="bdf2.userVoter" />
+				<beans:ref bean="bdf2.positionVoter" />
+				<beans:ref bean="bdf2.deptVoter" />
+				<beans:ref bean="bdf2.groupVoter" />
+			</beans:list>
+		</beans:constructor-arg>
+	</beans:bean>
+
+	<beans:bean id="bdf2.controllerFilter" class="com.bstek.bdf2.core.security.filter.ControllerFilter">
+		<beans:property name="controllerSuffix" value="${bdf2.controllerSuffix}"></beans:property>
+	</beans:bean>
+
+	<beans:bean id="bdf2.companyService" class="com.bstek.bdf2.core.service.impl.DefaultCompanyService"></beans:bean>
+
+	<beans:bean id="bdf2.authenticatedVoter" class="org.springframework.security.access.vote.AuthenticatedVoter"></beans:bean>
+	<beans:bean class="com.bstek.bdf2.core.controller.CaptchaController">
+		<beans:constructor-arg name="url" value="${bdf2.generateCaptchaUrl}"></beans:constructor-arg>
+	</beans:bean>
+	<beans:bean id="bdf2.passwordEncoder" class="com.bstek.bdf2.core.security.UserShaPasswordEncoder">
+	</beans:bean>
+
+	<beans:bean id="bdf2.userVoter" class="com.bstek.bdf2.core.security.decision.UserAccessDecisionVoter"></beans:bean>
+	<beans:bean id="bdf2.deptVoter" class="com.bstek.bdf2.core.security.decision.DeptAccessDecisionVoter"></beans:bean>
+	<beans:bean id="bdf2.positionVoter" class="com.bstek.bdf2.core.security.decision.PositionAccessDecisionVoter"></beans:bean>
+	<beans:bean id="bdf2.groupVoter" class="com.bstek.bdf2.core.security.decision.GroupAccessDecisionVoter"></beans:bean>
+
+	<beans:bean id="bdf2.tokenBasedRememberMeServices" class="org.springframework.security.web.authentication.rememberme.TokenBasedRememberMeServices">
+		<beans:constructor-arg name="key" value="${bdf2.rememberMeLoginCookieKey}"></beans:constructor-arg>
+		<beans:constructor-arg name="userDetailsService" ref="bdf2.userService"></beans:constructor-arg>
+		<beans:property name="parameter" value="remember_me_"></beans:property>
+	</beans:bean>
+
+	<beans:bean id="bdf2.anonymousAuthenticationProvider" class="org.springframework.security.authentication.AnonymousAuthenticationProvider">
+		<beans:constructor-arg name="key" value="doesNotMatter"></beans:constructor-arg>
+	</beans:bean>
+
+	<beans:bean id="bdf2.rememberMeAuthenticationProvider" class="org.springframework.security.authentication.RememberMeAuthenticationProvider">
+		<beans:constructor-arg name="key" value="${bdf2.rememberMeLoginCookieKey}"></beans:constructor-arg>
+	</beans:bean>
+
+	<beans:bean id="bdf2.formLoginAuthenticationProvider" class="com.bstek.bdf2.core.security.provider.FormLoginAuthenticationProvider">
+		<beans:property name="userDetailsService" ref="bdf2.userService"></beans:property>
+		<beans:property name="passwordEncoder" ref="bdf2.userPasswordEncoder"></beans:property>
+		<beans:property name="frameworkService" ref="bdf2.frameworkService"></beans:property>
+	</beans:bean>
+
+	<beans:bean id="bdf2.casAuthenticationProvider" class="org.springframework.security.cas.authentication.CasAuthenticationProvider">
+		<beans:property name="authenticationUserDetailsService" ref="bdf2.authenticationUserDetailsService"></beans:property>
+		<beans:property name="ticketValidator" ref="${bdf2.casTicketValidator}"></beans:property>
+		<beans:property name="key" value="${bdf2.casAuthenticationTokenKey}"></beans:property>
+		<beans:property name="serviceProperties" ref="bdf2.caserviceProperties"></beans:property>
+	</beans:bean>
+
+	<beans:bean id="bdf2.cas10TicketValidator" class="org.jasig.cas.client.validation.Cas10TicketValidator">
+		<beans:constructor-arg index="0" value="${bdf2.casServerUrl}"></beans:constructor-arg>
+	</beans:bean>
+	<beans:bean id="bdf2.cas20ServiceTicketValidator" class="org.jasig.cas.client.validation.Cas20ServiceTicketValidator">
+		<beans:constructor-arg index="0" value="${bdf2.casServerUrl}"></beans:constructor-arg>
+	</beans:bean>
+
+	<beans:bean id="bdf2.authenticationUserDetailsService" class="org.springframework.security.core.userdetails.UserDetailsByNameServiceWrapper">
+		<beans:constructor-arg name="userDetailsService" ref="bdf2.userService"></beans:constructor-arg>
+	</beans:bean>
+
+	<beans:bean id="bdf2.userPasswordEncoder" class="org.springframework.security.authentication.encoding.ShaPasswordEncoder"></beans:bean>
+
+	<beans:bean id="bdf2.urlMetadataSource" class="com.bstek.bdf2.core.security.metadata.UrlMetadataSource">
+		<beans:property name="roleService" ref="bdf2.roleService" />
+		<beans:property name="applicationCache" ref="bdf2.applicationCache" />
+		<beans:property name="urlService" ref="bdf2.urlService" />
+		<beans:property name="useConservativeAuthorityStrategy" value="${bdf2.useConservativeAuthorityStrategy}" />
+	</beans:bean>
+
+	<beans:bean id="bdf2.componentMetadataSource" class="com.bstek.bdf2.core.security.metadata.ComponentMetadataSource">
+		<beans:property name="roleService" ref="bdf2.roleService" />
+		<beans:property name="applicationCache" ref="bdf2.applicationCache" />
+		<beans:property name="urlService" ref="bdf2.urlService" />
+	</beans:bean>
+
+	<beans:bean id="bdf2.componentAccessDecisionManager" class="com.bstek.bdf2.core.security.decision.ComponentAccessDecisionManager">
+		<beans:constructor-arg name="decisionVoters">
+			<beans:list>
+				<beans:ref bean="bdf2.userVoter" />
+				<beans:ref bean="bdf2.positionVoter" />
+				<beans:ref bean="bdf2.deptVoter" />
+				<beans:ref bean="bdf2.groupVoter" />
+			</beans:list>
+		</beans:constructor-arg>
+	</beans:bean>
+
+	<beans:bean id="bdf2.frameworkService" class="com.bstek.bdf2.core.service.impl.DefaultFrameworkService">
+		<beans:property name="deptService" ref="bdf2.deptService"></beans:property>
+		<beans:property name="positionService" ref="bdf2.positionService"></beans:property>
+		<beans:property name="groupService" ref="bdf2.groupService"></beans:property>
+		<beans:property name="passwordEncoder" ref="bdf2.passwordEncoder" />
+	</beans:bean>
+
+	<beans:bean id="bdf2.userService" class="com.bstek.bdf2.core.service.impl.DefaultUserService">
+		<beans:property name="passwordEncoder" ref="bdf2.passwordEncoder"></beans:property>
+	</beans:bean>
+	<beans:bean id="bdf2.urlService" class="com.bstek.bdf2.core.service.impl.DefaultUrlService"></beans:bean>
+	<beans:bean id="bdf2.positionService" class="com.bstek.bdf2.core.service.impl.DefaultPositionService"></beans:bean>
+	<beans:bean id="bdf2.deptService" class="com.bstek.bdf2.core.service.impl.DefaultDeptService"></beans:bean>
+	<beans:bean id="bdf2.roleService" class="com.bstek.bdf2.core.service.impl.DefaultRoleService">
+		<beans:property name="userService" ref="bdf2.userService" />
+		<beans:property name="deptService" ref="bdf2.deptService" />
+		<beans:property name="positionService" ref="bdf2.positionService" />
+	</beans:bean>
+
+	<beans:bean id="bdf2.groupService" class="com.bstek.bdf2.core.service.impl.DefaultGroupService"></beans:bean>
+
+	<beans:bean id="bdf2.contextFilter" class="com.bstek.bdf2.core.security.filter.ContextFilter"></beans:bean>
+	<beans:bean id="bdf2.logoutFilter" class="org.springframework.security.web.authentication.logout.LogoutFilter">
+		<beans:constructor-arg name="logoutSuccessUrl" value="${bdf2.logoutSuccessURL}"></beans:constructor-arg>
+		<beans:constructor-arg name="handlers">
+			<beans:bean class="com.bstek.bdf2.core.security.filter.LogoutHandlerFactory"></beans:bean>
+		</beans:constructor-arg>
+		<beans:property name="filterProcessesUrl" value="${bdf2.logoutURL}"></beans:property>
+	</beans:bean>
+
+	<beans:bean class="org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler"></beans:bean>
+
+	<beans:bean id="bdf2.basicAuthenticationFilter" class="com.bstek.bdf2.core.security.filter.BasicLoginAuthenticationFilter">
+		<beans:constructor-arg name="authenticationManager" ref="bdf2.authenticationManager"></beans:constructor-arg>
+		<beans:property name="authenticationEntryPoint" ref="bdf2.basicAuthenticationEntryPoint" />
+	</beans:bean>
+
+	<beans:bean id="bdf2.authenticationEntryPoint" class="com.bstek.bdf2.core.security.MultiAuthenticationEntryPoint">
+		<beans:property name="authenticationType" value="${bdf2.authenticationType}"></beans:property>
+		<beans:property name="loginUrlAuthenticationEntryPoint" ref="bdf2.loginUrlAuthenticationEntryPoint"></beans:property>
+		<beans:property name="casAuthenticationEntryPoint" ref="bdf2.casAuthenticationEntryPoint"></beans:property>
+		<beans:property name="basicAuthenticationEntryPoint" ref="bdf2.basicAuthenticationEntryPoint"></beans:property>
+	</beans:bean>
+
+	<beans:bean id="bdf2.loginUrlAuthenticationEntryPoint" class="com.bstek.bdf2.core.security.FormLoginUrlAuthenticationEntryPoint">
+		<beans:constructor-arg name="loginFormUrl" value="${bdf2.formLoginUrl}"></beans:constructor-arg>
+		<beans:constructor-arg name="sessionKickAwayUrl" value="${bdf2.sessionKickAwayUrl}"></beans:constructor-arg>
+		<beans:constructor-arg name="expiredUrl" value="${bdf2.sessionExpiredUrl}"></beans:constructor-arg>
+		<beans:property name="forceHttps" value="${bdf2.forceHttpsFormLogin}"></beans:property>
+		<beans:property name="useForward" value="${bdf2.useForwardFormLogin}"></beans:property>
+	</beans:bean>
+	<beans:bean id="bdf2.casAuthenticationEntryPoint" class="org.springframework.security.cas.web.CasAuthenticationEntryPoint">
+		<beans:property name="loginUrl" value="${bdf2.casLoginUrl}"></beans:property>
+		<beans:property name="serviceProperties" ref="bdf2.caserviceProperties"></beans:property>
+	</beans:bean>
+	<beans:bean id="bdf2.caserviceProperties" class="com.bstek.bdf2.core.security.CasServiceProperties">
+		<beans:property name="service" value="${bdf2.casClientServerUrl}"></beans:property>
+		<beans:property name="authenticateAllArtifacts" value="true"></beans:property>
+	</beans:bean>
+	<beans:bean id="bdf2.basicAuthenticationEntryPoint" class="org.springframework.security.web.authentication.www.BasicAuthenticationEntryPoint">
+		<beans:property name="realmName" value="${bdf2.basicRealmName}"></beans:property>
+	</beans:bean>
+	<beans:bean id="bdf2.casAuthenticationFilter" class="com.bstek.bdf2.core.security.filter.CasLoginAuthenticationFilter">
+		<beans:property name="deptService" ref="bdf2.deptService"></beans:property>
+		<beans:property name="positionService" ref="bdf2.positionService"></beans:property>
+		<beans:property name="groupService" ref="bdf2.groupService"></beans:property>
+		<beans:property name="filterProcessesUrl" value="/cas_security_check_"></beans:property>
+		<beans:property name="authenticationManager" ref="bdf2.authenticationManager"></beans:property>
+		<beans:property name="sessionAuthenticationStrategy" ref="${bdf2.loginCreateSessionStrategy}" />
+	</beans:bean>
+	<beans:bean id="bdf2.usernamePasswordAuthenticationFilter" class="org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter">
+		<beans:property name="usernameParameter" value="username_"></beans:property>
+		<beans:property name="passwordParameter" value="password_"></beans:property>
+		<beans:property name="sessionAuthenticationStrategy" ref="${bdf2.loginCreateSessionStrategy}" />
+		<beans:property name="filterProcessesUrl" value="${bdf2.loginProcessUrl}"></beans:property>
+		<beans:property name="rememberMeServices" ref="bdf2.tokenBasedRememberMeServices"></beans:property>
+		<beans:property name="authenticationManager" ref="bdf2.authenticationManager"></beans:property>
+		<beans:property name="authenticationSuccessHandler" ref="bdf2.savedRequestAwareAuthenticationSuccessHandler"></beans:property>
+		<beans:property name="authenticationFailureHandler" ref="bdf2.authenticationFailureHandler"></beans:property>
+	</beans:bean>
+
+	<beans:bean id="bdf2.authenticationFailureHandler" class="org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler">
+		<beans:property name="defaultFailureUrl" value="${bdf2.loginFailureTargetUrl}"></beans:property>
+		<beans:property name="useForward" value="${bdf2.loginFailureToTargetUrlUseForward}"></beans:property>
+	</beans:bean>
+
+	<beans:bean id="bdf2.savedRequestAwareAuthenticationSuccessHandler"
+		class="org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler">
+		<beans:property name="alwaysUseDefaultTargetUrl" value="${bdf2.loginSuccessAlwaysUseDefaultTargetUrl}"></beans:property>
+		<beans:property name="defaultTargetUrl" value="${bdf2.loginSuccessDefaultTargetUrl}"></beans:property>
+		<beans:property name="targetUrlParameter" value="loginSuccessUrl"></beans:property>
+	</beans:bean>
+	<beans:bean parent="bdf2.anonymousUrl">
+		<beans:property name="urlPattern" value="${bdf2.formLoginUrl}"></beans:property>
+	</beans:bean>
+	<beans:bean parent="bdf2.anonymousUrl">
+		<beans:property name="urlPattern" value="${bdf2.sessionExpiredUrl}"></beans:property>
+	</beans:bean>
+	<beans:bean parent="bdf2.anonymousUrl">
+		<beans:property name="urlPattern" value="${bdf2.sessionKickAwayUrl}"></beans:property>
+	</beans:bean>
+	<beans:bean parent="bdf2.anonymousUrl">
+		<beans:property name="urlPattern" value="${bdf2.rememberMeLoginFailUrl}"></beans:property>
+	</beans:bean>
+	<beans:bean parent="bdf2.anonymousUrl">
+		<beans:property name="urlPattern" value="${bdf2.generateCaptchaUrl}"></beans:property>
+	</beans:bean>
+	<beans:bean parent="bdf2.anonymousUrl">
+		<beans:property name="urlPattern" value="${bdf2.logoutSuccessURL}"></beans:property>
+	</beans:bean>
+	<beans:bean parent="bdf2.anonymousUrl">
+		<beans:property name="urlPattern" value="${bdf2.userRegisterMainWizardPath}"></beans:property>
+	</beans:bean>
+	<beans:bean parent="bdf2.anonymousUrl">
+		<beans:property name="urlPattern" value="/index.html"></beans:property>
+	</beans:bean>
+	<beans:bean parent="bdf2.anonymousUrl">
+		<beans:property name="urlPattern" value="/*.dpkg"></beans:property>
+	</beans:bean>
+	<beans:bean parent="bdf2.anonymousUrl">
+		<beans:property name="urlPattern" value="/*.ico"></beans:property>
+	</beans:bean>
+	<beans:bean parent="bdf2.anonymousUrl">
+		<beans:property name="urlPattern" value="/**/*.ico"></beans:property>
+	</beans:bean>
+	<beans:bean parent="bdf2.anonymousUrl">
+		<beans:property name="urlPattern" value="/dorado/**"></beans:property>
+	</beans:bean>
+	<beans:bean parent="bdf2.anonymousUrl">
+		<beans:property name="urlPattern" value="/"></beans:property>
+	</beans:bean>
+
+	<beans:bean id="bdf2.anonymousUrl" class="com.bstek.bdf2.core.security.metadata.AnonymousUrl" abstract="true"></beans:bean>
+</beans:beans>

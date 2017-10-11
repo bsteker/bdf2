@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ViewConfig>
+  <Arguments/>
+  <Context/>
+  <Model/>
+  <View>
+    <Dialog id="$dialogGroupSelect">
+      <ClientEvent name="onCreate">self.$show=function(config){&#xD;
+	if(!config.callback){&#xD;
+		dorado.MessageBox.alert(&quot;请先为当前dialog添加一个名为callback的函数&quot;);&#xD;
+		return;&#xD;
+	}&#xD;
+	self.callback=config.callback;&#xD;
+	if(config.width){&#xD;
+		self.set(&quot;width&quot;,config.width);&#xD;
+	}&#xD;
+	&#xD;
+	if(config.maxSelect){&#xD;
+		self.maxSelect=config.maxSelect;&#xD;
+	}&#xD;
+	&#xD;
+	if(config.height){&#xD;
+		self.set(&quot;height&quot;,config.height);&#xD;
+	}&#xD;
+	if(config.caption){&#xD;
+		self.set(&quot;caption&quot;,config.caption);&#xD;
+	}&#xD;
+	if(config.selected){&#xD;
+		self.selected=config.selected;&#xD;
+	}&#xD;
+	self.show();&#xD;
+}&#xD;
+</ClientEvent>
+      <Property name="center">true</Property>
+      <Property name="modal">true</Property>
+      <Property name="width">630</Property>
+      <Property name="height">460</Property>
+      <Buttons>
+        <Button>
+          <ClientEvent name="onClick">var data=view.id(&quot;$dataSetGroupSelected&quot;).getData();&#xD;
+if(data.isEmpty()){&#xD;
+	dorado.MessageBox.alert(&quot;请选择一个群组后再进行此操作&quot;);&#xD;
+	return;&#xD;
+}&#xD;
+view.id(&quot;$dialogGroupSelect&quot;).callback(data.toJSON());&#xD;
+</ClientEvent>
+          <Property name="caption">确定</Property>
+          <Property name="icon">url(skin>common/icons.gif) -140px -20px</Property>
+        </Button>
+        <Button>
+          <ClientEvent name="onClick">view.id(&quot;$dialogGroupSelect&quot;).hide();&#xD;
+</ClientEvent>
+          <Property name="caption">取消</Property>
+          <Property name="icon">url(skin>common/icons.gif) -40px 0px</Property>
+        </Button>
+      </Buttons>
+      <Children>
+        <DataSet id="$dataSetGroupForSelect">
+          <ClientEvent name="onReady">self.move=function(){&#xD;
+	var ds=view.id(&quot;$dataSetGroupForSelect&quot;);&#xD;
+	var data=ds.getData(&quot;#&quot;);&#xD;
+	if(data){&#xD;
+		var targetData=view.id(&quot;$dataSetGroupSelected&quot;).getData();&#xD;
+		var insertAble=true;&#xD;
+		targetData.each(function(user){&#xD;
+			if(user.get(&quot;id&quot;)==data.get(&quot;id&quot;)){&#xD;
+				insertAble=false;&#xD;
+				return false;&#xD;
+			}&#xD;
+		});&#xD;
+		if(insertAble){&#xD;
+			var max=view.id(&quot;$dialogGroupSelect&quot;).maxSelect;&#xD;
+			if(max &amp;&amp; targetData.toArray().length>=max){&#xD;
+				dorado.MessageBox.alert(&quot;当前最多只允许选择[&quot;+max+&quot;]个群组！&quot;);&#xD;
+				return;&#xD;
+			}&#xD;
+			targetData.insert(data.toJSON());&#xD;
+			data.remove();&#xD;
+		}else{&#xD;
+			dorado.MessageBox.alert(&quot;当前群组已存在！&quot;)&#xD;
+		}&#xD;
+	}else{&#xD;
+		dorado.MessageBox.alert(&quot;当前没有选中的群组信息！&quot;)&#xD;
+	}	&#xD;
+}</ClientEvent>
+          <ClientEvent name="onDataLoad">var movedData=view.id(&quot;$dataSetGroupSelected&quot;).getData();&#xD;
+var data=self.getData();&#xD;
+if(movedData){&#xD;
+	data.each(function(entity){&#xD;
+		movedData.each(function(movedEntity){&#xD;
+			if(entity.get(&quot;id&quot;)==movedEntity.get(&quot;id&quot;)){&#xD;
+				entity.remove();&#xD;
+			}&#xD;
+		});&#xD;
+	});&#xD;
+}&#xD;
+var dialog=view.id(&quot;$dialogGroupSelect&quot;);&#xD;
+var selected=dialog.selected&#xD;
+if(selected){&#xD;
+	data.each(function(entity){&#xD;
+		for(var i=0;i&lt;selected.length;i++){&#xD;
+			if(selected[i]==entity.get(&quot;id&quot;)){&#xD;
+				entity.remove();&#xD;
+				break;&#xD;
+			}&#xD;
+		}&#xD;
+	});&#xD;
+}&#xD;
+</ClientEvent>
+          <Property name="dataType">[$dataTypeGroup]</Property>
+          <Property name="dataProvider">bdf2.groupSelect#loadGroups</Property>
+          <Property name="pageSize">15</Property>
+        </DataSet>
+        <DataSet id="$dataSetGroupSelected">
+          <ClientEvent name="onReady">self.remove=function(){&#xD;
+	var data=view.id(&quot;$dataSetGroupSelected&quot;).getData(&quot;#&quot;);&#xD;
+	if(data){&#xD;
+		data.remove();&#xD;
+		view.id(&quot;$dataSetGroupForSelect&quot;).flushAsync();&#xD;
+	}else{&#xD;
+		dorado.MessageBox.alert(&quot;当前没有选中的群组信息！&quot;)&#xD;
+	}	&#xD;
+}</ClientEvent>
+          <Property name="dataType">[$dataTypeGroup]</Property>
+        </DataSet>
+        <ToolBar>
+          <DataPilot>
+            <Property name="dataSet">$dataSetGroupForSelect</Property>
+            <Property name="itemCodes">pages</Property>
+          </DataPilot>
+        </ToolBar>
+        <Container>
+          <DataGrid id="$dataGridGroupForSelect" layoutConstraint="left">
+            <ClientEvent name="onDoubleClick">view.id(&quot;$dataSetGroupForSelect&quot;).move();&#xD;
+</ClientEvent>
+            <Property name="dataSet">$dataSetGroupForSelect</Property>
+            <Property name="readOnly">true</Property>
+            <Property name="width">46%</Property>
+            <Property name="filterMode">serverSide</Property>
+            <Property name="showFilterBar">true</Property>
+            <DataColumn>
+              <Property name="property">name</Property>
+              <Property name="name">name</Property>
+            </DataColumn>
+          </DataGrid>
+          <Container layout="vbox padding:5" layoutConstraint="center">
+            <Button layoutConstraint="align:center">
+              <ClientEvent name="onClick">view.id(&quot;$dataSetGroupForSelect&quot;).move();&#xD;
+</ClientEvent>
+              <Property name="caption">添加</Property>
+            </Button>
+            <Button layoutConstraint="align:center">
+              <ClientEvent name="onClick">view.id(&quot;$dataSetGroupSelected&quot;).remove();&#xD;
+</ClientEvent>
+              <Property name="caption">删除</Property>
+            </Button>
+          </Container>
+          <DataGrid id="$dataGridGroupSelected" layoutConstraint="right">
+            <ClientEvent name="onDoubleClick">view.id(&quot;$dataSetGroupSelected&quot;).remove();&#xD;
+</ClientEvent>
+            <Property name="readOnly">true</Property>
+            <Property name="width">46%</Property>
+            <Property name="dataSet">$dataSetGroupSelected</Property>
+            <DataColumn>
+              <Property name="property">name</Property>
+              <Property name="name">name</Property>
+            </DataColumn>
+          </DataGrid>
+        </Container>
+      </Children>
+      <Tools/>
+    </Dialog>
+  </View>
+</ViewConfig>

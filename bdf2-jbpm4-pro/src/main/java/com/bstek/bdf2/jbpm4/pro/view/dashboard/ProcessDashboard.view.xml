@@ -1,0 +1,815 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ViewConfig>
+  <Model>
+    <DataType name="dataTypeProcessDefinition" matchType="org.jbpm.pvm.internal.model.ProcessDefinitionImpl">
+      <Property name="creationType">org.jbpm.pvm.internal.model.ProcessDefinitionImpl</Property>
+      <PropertyDef name="key">
+        <Property name="dataType">String</Property>
+        <Property name="label">关键字</Property>
+      </PropertyDef>
+      <PropertyDef name="id">
+        <Property name="dataType">String</Property>
+        <Property name="label">ID</Property>
+      </PropertyDef>
+      <PropertyDef name="version">
+        <Property name="dataType">int</Property>
+        <Property name="label">版本号</Property>
+      </PropertyDef>
+      <PropertyDef name="packageName">
+        <Property name="dataType">String</Property>
+      </PropertyDef>
+      <PropertyDef name="deploymentTime">
+        <Property name="dataType">Date</Property>
+      </PropertyDef>
+      <PropertyDef name="deploymentDbid">
+        <Property name="dataType">long</Property>
+      </PropertyDef>
+      <PropertyDef name="isSuspended">
+        <Property name="dataType">boolean</Property>
+      </PropertyDef>
+      <PropertyDef name="imageResourceName">
+        <Property name="dataType">String</Property>
+      </PropertyDef>
+      <PropertyDef name="name">
+        <Property name="dataType">String</Property>
+        <Property name="label">名称</Property>
+      </PropertyDef>
+      <PropertyDef name="description">
+        <Property name="dataType">String</Property>
+        <Property name="label">描述</Property>
+      </PropertyDef>
+      <PropertyDef name="deploymentId">
+        <Property name="label">版本号</Property>
+      </PropertyDef>
+      <Reference name="processInstances">
+        <Property name="dataProvider">bdf2.jbpm4.processDashboard#findProcessInstance</Property>
+        <Property name="parameter">$${this.id}</Property>
+        <Property name="dataType">[dataTypeExecution]</Property>
+        <Property name="pageSize">10</Property>
+      </Reference>
+    </DataType>
+    <DataType name="dataTypeVariable">
+      <Property name="creationType">com.bstek.bdf2.jbpm4.model.Variable</Property>
+      <PropertyDef name="name">
+        <Property name="dataType">String</Property>
+        <Property name="label">变量名</Property>
+      </PropertyDef>
+      <PropertyDef name="value">
+        <Property name="dataType">String</Property>
+        <Property name="label">值</Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="dataTypeExecution" matchType="org.jbpm.pvm.internal.model.ExecutionImpl">
+      <Property name="creationType">org.jbpm.pvm.internal.model.ExecutionImpl</Property>
+      <PropertyDef name="id">
+        <Property name="dataType">String</Property>
+        <Property name="label">ID</Property>
+      </PropertyDef>
+      <PropertyDef name="key">
+        <Property name="dataType">String</Property>
+        <Property name="label">关键字</Property>
+      </PropertyDef>
+      <PropertyDef name="name">
+        <Property name="dataType">String</Property>
+        <Property name="label">名称</Property>
+      </PropertyDef>
+      <PropertyDef name="activityName">
+        <Property name="dataType">String</Property>
+        <Property name="label">当前所在节点名称</Property>
+      </PropertyDef>
+      <PropertyDef name="ended">
+        <Property name="dataType">String</Property>
+      </PropertyDef>
+      <PropertyDef name="state">
+        <Property name="dataType">String</Property>
+        <Property name="label">状态</Property>
+      </PropertyDef>
+      <PropertyDef name="suspended">
+        <Property name="dataType">String</Property>
+        <Property name="label">是否挂起</Property>
+      </PropertyDef>
+      <PropertyDef name="dbid">
+        <Property name="dataType">long</Property>
+      </PropertyDef>
+      <PropertyDef name="processDefinitionId">
+        <Property name="dataType">String</Property>
+        <Property name="label">所属流程模版ID</Property>
+      </PropertyDef>
+      <Reference name="tasks">
+        <Property name="dataType">[dataTypeTask]</Property>
+        <Property name="dataProvider">bdf2.jbpm4.processDashboard#findTaskByExecutionId</Property>
+        <Property name="parameter">$${this.id}</Property>
+      </Reference>
+    </DataType>
+    <DataType name="dataTypeTask" matchType="org.jbpm.pvm.internal.task.TaskImpl">
+      <Property name="creationType">org.jbpm.pvm.internal.task.TaskImpl</Property>
+      <PropertyDef name="superTaskDbid">
+        <Property name="dataType"></Property>
+      </PropertyDef>
+      <PropertyDef name="state">
+        <Property name="dataType">String</Property>
+        <Property name="label">状态</Property>
+      </PropertyDef>
+      <PropertyDef name="elContext">
+        <Property name="dataType"></Property>
+      </PropertyDef>
+      <PropertyDef name="isNew">
+        <Property name="dataType">boolean</Property>
+      </PropertyDef>
+      <PropertyDef name="name">
+        <Property name="dataType">String</Property>
+        <Property name="label">任务名称</Property>
+      </PropertyDef>
+      <PropertyDef name="description">
+        <Property name="dataType">String</Property>
+        <Property name="label">描述</Property>
+      </PropertyDef>
+      <PropertyDef name="assignee">
+        <Property name="dataType">String</Property>
+        <Property name="label">任务处理人</Property>
+      </PropertyDef>
+      <PropertyDef name="formResourceName">
+        <Property name="dataType">String</Property>
+      </PropertyDef>
+      <PropertyDef name="createTime">
+        <Property name="dataType">Date</Property>
+        <Property name="displayFormat">Y-m-d H:i:s</Property>
+        <Property name="label">创建时间</Property>
+      </PropertyDef>
+      <PropertyDef name="duedate">
+        <Property name="dataType">Date</Property>
+        <Property name="label">过期时间</Property>
+      </PropertyDef>
+      <PropertyDef name="progress">
+        <Property name="dataType"></Property>
+      </PropertyDef>
+      <PropertyDef name="isSignalling">
+        <Property name="dataType">boolean</Property>
+      </PropertyDef>
+      <PropertyDef name="priority">
+        <Property name="dataType">int</Property>
+      </PropertyDef>
+      <PropertyDef name="activityName">
+        <Property name="dataType">String</Property>
+        <Property name="label">节点名称</Property>
+      </PropertyDef>
+      <PropertyDef name="executionDbid">
+        <Property name="dataType"></Property>
+      </PropertyDef>
+      <PropertyDef name="suspended">
+        <Property name="label">是否被挂起</Property>
+      </PropertyDef>
+      <PropertyDef name="id">
+        <Property name="label">ID</Property>
+      </PropertyDef>
+      <PropertyDef name="dbid">
+        <Property name="dataType">long</Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="dataTypeOutgoing">
+      <PropertyDef name="name">
+        <Property name="dataType">String</Property>
+      </PropertyDef>
+    </DataType>
+  </Model>
+  <View>
+    <ClientEvent name="onCreate">self.DefaultD7URLSubfix=&quot;${preferenceService.getD7UrlSuffix()}&quot;;&#xD;
+</ClientEvent>
+    <DataSet id="dataSetProcessDefinition">
+      <Property name="dataProvider">bdf2.jbpm4.processDashboard#findProcessDefinition</Property>
+      <Property name="dataType">[dataTypeProcessDefinition]</Property>
+      <Property name="loadMode">preload</Property>
+      <Property name="pageSize">20</Property>
+    </DataSet>
+    <DataSet id="dataSetOutgoing">
+      <Property name="dataType">[dataTypeOutgoing]</Property>
+      <Property name="dataProvider">bdf2.jbpm4.processDashboard#findOutgoings</Property>
+      <Property name="loadMode">manual</Property>
+    </DataSet>
+    <DataSet id="dataSetVariable">
+      <Property name="dataType">[dataTypeVariable]</Property>
+    </DataSet>
+    <SplitPanel>
+      <Property name="position">50%</Property>
+      <MainControl>
+        <Container>
+          <Panel layoutConstraint="top">
+            <Property name="height">300</Property>
+            <Property name="caption">运行中的流程实例</Property>
+            <Children>
+              <ToolBar>
+                <DataPilot>
+                  <Property name="itemCodes">pages</Property>
+                  <Property name="dataSet">dataSetProcessDefinition</Property>
+                  <Property name="dataPath">#.processInstances</Property>
+                </DataPilot>
+                <ToolBarButton>
+                  <ClientEvent name="onClick">var ds=view.id(&quot;dataSetProcessDefinition&quot;);&#xD;
+var currentInstance = ds.getData(&quot;#.#processInstances&quot;);&#xD;
+if (currentInstance) {&#xD;
+	dorado.MessageBox.confirm(&quot;真的要结束当前流程实例?&quot;,function(){&#xD;
+	var action = view.id(&quot;ajaxActionCancelInstance&quot;);&#xD;
+	    action.set(&quot;parameter&quot;, {&#xD;
+	        processInstanceId: currentInstance.get(&quot;id&quot;)&#xD;
+	    })&#xD;
+	    action.execute(function(){    &#xD;
+	        ds.getData(&quot;#&quot;).reset(&quot;processInstances&quot;);&#xD;
+	    });   	&#xD;
+	}); &#xD;
+}else{&#xD;
+	dorado.MessageBox.alert(&quot;当前没有流程实例可供结束!&quot;);&#xD;
+}&#xD;
+</ClientEvent>
+                  <Property name="icon"> url(>skin>common/icons.gif) -40px -0px</Property>
+                  <Property name="caption">结束实例</Property>
+                </ToolBarButton>
+                <ToolBarButton>
+                  <ClientEvent name="onClick">var ds=view.id(&quot;dataSetProcessDefinition&quot;);&#xD;
+var currentInstance = ds.getData(&quot;#.#processInstances&quot;);&#xD;
+if (currentInstance) {&#xD;
+	dorado.MessageBox.confirm(&quot;真的要删除当前流程实例?&quot;,function(){&#xD;
+	var action = view.id(&quot;ajaxActionDeleteInstance&quot;);&#xD;
+	    action.set(&quot;parameter&quot;, {&#xD;
+	        processInstanceId: currentInstance.get(&quot;id&quot;)&#xD;
+	    })&#xD;
+	    action.execute(function(){    &#xD;
+	        ds.getData(&quot;#&quot;).reset(&quot;processInstances&quot;);&#xD;
+	    });   	&#xD;
+	}); &#xD;
+}else{&#xD;
+	dorado.MessageBox.alert(&quot;当前没有流程实例可供删除!&quot;);&#xD;
+}&#xD;
+</ClientEvent>
+                  <Property name="icon"> url(>skin>common/icons.gif) -140px -0px</Property>
+                  <Property name="caption">删除实例</Property>
+                </ToolBarButton>
+                <ToolBarButton>
+                  <ClientEvent name="onClick">var data=view.id(&quot;dataSetProcessDefinition&quot;).getData(&quot;#.#processInstances&quot;);&#xD;
+if(data){&#xD;
+	var executionId=data.get(&quot;id&quot;);&#xD;
+	view.id(&quot;jbpm4ProcessImage&quot;).set(&quot;taskId&quot;,null);&#xD;
+	view.id(&quot;jbpm4ProcessImage&quot;).set(&quot;executionId&quot;,executionId);&#xD;
+	view.id(&quot;dialogInprogressProcessImage&quot;).show();&#xD;
+}else{&#xD;
+	dorado.MessageBox.alert(&quot;当前没有流程实例可供显示!&quot;);&#xD;
+}</ClientEvent>
+                  <Property name="icon"> url(>skin>common/icons.gif) -280px -40px</Property>
+                  <Property name="caption">查看当前实例流程图</Property>
+                </ToolBarButton>
+              </ToolBar>
+              <DataGrid id="dataGridProcessInstance">
+                <Property name="readOnly">true</Property>
+                <Property name="dataSet">dataSetProcessDefinition</Property>
+                <Property name="dataPath">#.processInstances</Property>
+                <DataColumn name="id">
+                  <Property name="property">id</Property>
+                  <Property name="width">100</Property>
+                </DataColumn>
+                <DataColumn name="state">
+                  <Property name="property">state</Property>
+                  <Property name="width">100</Property>
+                </DataColumn>
+                <DataColumn name="activityName">
+                  <Property name="property">activityName</Property>
+                  <Property name="width">200</Property>
+                </DataColumn>
+                <DataColumn name="suspended">
+                  <Property name="property">suspended</Property>
+                  <Property name="width">100</Property>
+                </DataColumn>
+              </DataGrid>
+              <Dialog id="dialogInprogressProcessImage">
+                <Property name="center">true</Property>
+                <Property name="modal">true</Property>
+                <Property name="width">660</Property>
+                <Property name="height">500</Property>
+                <Property name="maximizeable">true</Property>
+                <Buttons/>
+                <Children>
+                  <Jbpm4ProcessImage id="jbpm4ProcessImage"/>
+                </Children>
+                <Tools/>
+              </Dialog>
+            </Children>
+          </Panel>
+          <Panel layoutConstraint="center">
+            <Property name="caption">流程实例当前节点</Property>
+            <Children>
+              <ToolBar layoutConstraint="top">
+                <ToolBarButton>
+                  <ClientEvent name="onClick">var ds = view.id(&quot;dataSetProcessDefinition&quot;);&#xD;
+var currentTask = ds.getData(&quot;#.#processInstances.#tasks&quot;);&#xD;
+if (currentTask) {&#xD;
+	view.id(&quot;textEditorOutgoing&quot;).set(&quot;value&quot;,&quot;&quot;);&#xD;
+	var dsOutgoing=view.id(&quot;dataSetOutgoing&quot;);&#xD;
+	dsOutgoing.set(&quot;parameter&quot;,{taskId:currentTask.get(&quot;id&quot;)});&#xD;
+	dsOutgoing.flushAsync();&#xD;
+    var dialog = view.id(&quot;dialogFinishTask&quot;);&#xD;
+	view.id(&quot;dataSetVariable&quot;).clear();&#xD;
+    dialog.show();&#xD;
+}&#xD;
+else {&#xD;
+    dorado.MessageBox.alert(&quot;请选择一条需要完成的任务&quot;);&#xD;
+}&#xD;
+</ClientEvent>
+                  <Property name="icon"> url(>skin>common/icons.gif) -20px -0px</Property>
+                  <Property name="caption">完成当前任务</Property>
+                </ToolBarButton>
+                <ToolBarButton>
+                  <ClientEvent name="onClick">var ds = view.id(&quot;dataSetProcessDefinition&quot;);&#xD;
+var currentInstance = ds.getData(&quot;#.#processInstances&quot;);&#xD;
+var currentTask = ds.getData(&quot;#.#processInstances.#tasks&quot;);&#xD;
+if (currentTask) {&#xD;
+    var dataSetActivity = view.id(&quot;dataSetActivity&quot;);&#xD;
+    dataSetActivity.set(&quot;parameter&quot;, {&#xD;
+        taskId: currentTask.get(&quot;id&quot;),&#xD;
+		processDefinitionId:ds.getData(&quot;#.id&quot;)&#xD;
+    });&#xD;
+    dataSetActivity.flushAsync();&#xD;
+    view.id(&quot;dialogJumpTask&quot;).show();&#xD;
+}&#xD;
+else {&#xD;
+    dorado.MessageBox.alert(&quot;请选择要跳转的节点!&quot;);&#xD;
+}</ClientEvent>
+                  <Property name="icon"> url(>skin>common/icons.gif) -200px -240px</Property>
+                  <Property name="caption">节点跳转</Property>
+                </ToolBarButton>
+                <ToolBarButton>
+                  <ClientEvent name="onClick">var ds = view.id(&quot;dataSetProcessDefinition&quot;);&#xD;
+var taskId = ds.getData(&quot;#.#processInstances.#tasks.id&quot;);&#xD;
+if(taskId){&#xD;
+	dorado.MessageBox.prompt(&quot;请输入新的任务处理人用户名&quot;,function(username){&#xD;
+			if(username){&#xD;
+				var action=view.id(&quot;ajaxActionchangeTaskAssignee&quot;);&#xD;
+		    	action.set(&quot;parameter&quot;,{taskId:taskId,userId:username});&#xD;
+		    	action.execute(function(){&#xD;
+		    		ds.getData(&quot;#.#processInstances&quot;).reset(&quot;tasks&quot;);&#xD;
+		    	});			&#xD;
+			}else{&#xD;
+				dorado.MessageBox.alert(&quot;请输入处理人用户名!&quot;);&#xD;
+			}&#xD;
+    	}); &#xD;
+}else {&#xD;
+    dorado.MessageBox.alert(&quot;请选择一条需要更改操作人的任务！&quot;);&#xD;
+}&#xD;
+</ClientEvent>
+                  <Property name="icon"> url(>skin>common/icons.gif) -140px -100px</Property>
+                  <Property name="caption">更改任务处理人</Property>
+                </ToolBarButton>
+                <ToolBarButton>
+                  <ClientEvent name="onClick">var taskId=view.id(&quot;dataSetProcessDefinition&quot;).getData(&quot;#.#processInstances.#tasks.id&quot;);&#xD;
+if(taskId){&#xD;
+	view.id(&quot;jbpm4ProcessImage&quot;).set(&quot;executionId&quot;,null);&#xD;
+	view.id(&quot;jbpm4ProcessImage&quot;).set(&quot;taskId&quot;,taskId);&#xD;
+	view.id(&quot;dialogInprogressProcessImage&quot;).show();&#xD;
+}else{&#xD;
+	dorado.MessageBox.alert(&quot;当前没有流程实例可供显示!&quot;);&#xD;
+}</ClientEvent>
+                  <Property name="icon"> url(>skin>common/icons.gif) -280px -40px</Property>
+                  <Property name="caption">查看流程图</Property>
+                </ToolBarButton>
+              </ToolBar>
+              <DataGrid layoutConstraint="center">
+                <Property name="dataSet">dataSetProcessDefinition</Property>
+                <Property name="readOnly">true</Property>
+                <Property name="dataPath">#.#processInstances.tasks</Property>
+                <DataColumn>
+                  <Property name="name">id</Property>
+                  <Property name="property">id</Property>
+                  <Property name="width">100</Property>
+                </DataColumn>
+                <DataColumn name="name">
+                  <Property name="property">name</Property>
+                  <Property name="width">150</Property>
+                </DataColumn>
+                <DataColumn name="activityName">
+                  <Property name="property">activityName</Property>
+                  <Property name="width">150</Property>
+                </DataColumn>
+                <DataColumn name="assignee">
+                  <Property name="property">assignee</Property>
+                  <Property name="width">200</Property>
+                </DataColumn>
+                <DataColumn name="state">
+                  <Property name="property">state</Property>
+                  <Property name="width">100</Property>
+                </DataColumn>
+                <DataColumn name="createTime">
+                  <Property name="property">createTime</Property>
+                  <Property name="width">120</Property>
+                </DataColumn>
+                <DataColumn name="description">
+                  <Property name="property">description</Property>
+                  <Property name="width">200</Property>
+                </DataColumn>
+                <DataColumn name="suspended">
+                  <Property name="property">suspended</Property>
+                  <Property name="width">90</Property>
+                </DataColumn>
+              </DataGrid>
+              <AjaxAction id="ajaxActionJumpTask">
+                <Property name="service">bdf2.jbpm4.processDashboard#executeJump</Property>
+                <Property name="confirmMessage">确定要跳转当前任务?</Property>
+                <Property name="successMessage">任务跳转成功!</Property>
+                <Property name="executingMessage">跳转中...</Property>
+              </AjaxAction>
+              <Dialog id="dialogJumpTask" layout="padding:3">
+                <Property name="modal">true</Property>
+                <Property name="width">400</Property>
+                <Property name="height">250</Property>
+                <Property name="center">true</Property>
+                <Property name="caption">任务跳转</Property>
+                <Buttons>
+                  <Button>
+                    <ClientEvent name="onClick">var ds = view.id(&quot;dataSetProcessDefinition&quot;);&#xD;
+var currentTask = ds.getData(&quot;#.#processInstances.#tasks&quot;);&#xD;
+var activity = view.id(&quot;dataSetActivity&quot;).getData(&quot;#&quot;);&#xD;
+if (activity) {&#xD;
+    var action = view.id(&quot;ajaxActionJumpTask&quot;);&#xD;
+    action.set(&quot;parameter&quot;, {&#xD;
+        taskId: currentTask.get(&quot;id&quot;),&#xD;
+        activityName: activity.get(&quot;name&quot;)&#xD;
+    });&#xD;
+    action.execute(function(){&#xD;
+        view.id(&quot;dialogJumpTask&quot;).hide();&#xD;
+		ds.getData(&quot;#&quot;).reset(&quot;processInstances&quot;);&#xD;
+    });&#xD;
+}else {&#xD;
+    dorado.MessageBox.alert(&quot;请选择要跳转到的目标节点!&quot;);&#xD;
+}&#xD;
+</ClientEvent>
+                    <Property name="icon">url(skin>common/icons.gif) -140px -20px</Property>
+                    <Property name="caption">确定</Property>
+                  </Button>
+                  <Button>
+                    <ClientEvent name="onClick">view.id(&quot;dialogJumpTask&quot;).hide();&#xD;
+</ClientEvent>
+                    <Property name="icon">url(skin>common/icons.gif) -40px 0px</Property>
+                    <Property name="caption">取消</Property>
+                  </Button>
+                </Buttons>
+                <Children>
+                  <DataGrid id="dataGridActivity">
+                    <Property name="dataSet">dataSetActivity</Property>
+                    <Property name="readOnly">true</Property>
+                    <Property name="width">100%</Property>
+                    <Property name="stretchColumnsMode">allColumns</Property>
+                    <DataColumn name="name">
+                      <Property name="property">name</Property>
+                      <Property name="width">200</Property>
+                    </DataColumn>
+                  </DataGrid>
+                </Children>
+              </Dialog>
+              <Dialog id="dialogFinishTask">
+                <Property name="center">true</Property>
+                <Property name="modal">true</Property>
+                <Property name="width">500</Property>
+                <Property name="height">300</Property>
+                <Buttons>
+                  <Button>
+                    <ClientEvent name="onClick">var ds=view.id(&quot;dataSetProcessDefinition&quot;);&#xD;
+var taskId=ds.getData(&quot;#.#processInstances.#tasks.id&quot;);&#xD;
+if(taskId){&#xD;
+	dorado.MessageBox.confirm(&quot;真的要完成当前任务？&quot;,function(){&#xD;
+		var action=view.id(&quot;updateActionFinishTask&quot;);&#xD;
+		var path=view.id(&quot;textEditorOutgoing&quot;).get(&quot;value&quot;);&#xD;
+		action.set(&quot;parameter&quot;,{taskId:taskId,path:path});&#xD;
+		action.execute(function(){&#xD;
+			view.id(&quot;dialogFinishTask&quot;).hide();&#xD;
+			ds.getData(&quot;#&quot;).reset(&quot;processInstances&quot;);&#xD;
+		});	&#xD;
+	});&#xD;
+}else{&#xD;
+	dorado.MessageBox.alert(&quot;当前没有可供完成的任务!&quot;);&#xD;
+}</ClientEvent>
+                    <Property name="icon">url(skin>common/icons.gif) -140px -20px</Property>
+                    <Property name="caption">确定</Property>
+                  </Button>
+                  <Button>
+                    <ClientEvent name="onClick">view.id(&quot;dialogFinishTask&quot;).hide();</ClientEvent>
+                    <Property name="caption">取消</Property>
+                    <Property name="icon">url(skin>common/icons.gif) -40px 0px</Property>
+                  </Button>
+                </Buttons>
+                <Children>
+                  <DataSetDropDown id="dataSetDropDownOutgoing">
+                    <Property name="property">name</Property>
+                    <Property name="displayProperty">name</Property>
+                    <Property name="dataSet">dataSetOutgoing</Property>
+                  </DataSetDropDown>
+                  <ToolBar>
+                    <DataPilot>
+                      <Property name="itemCodes">+,-</Property>
+                      <Property name="dataSet">dataSetVariable</Property>
+                    </DataPilot>
+                    <ToolBarLabel>
+                      <Property name="text">流向节点名：</Property>
+                    </ToolBarLabel>
+                    <TextEditor id="textEditorOutgoing">
+                      <Property name="trigger">dataSetDropDownOutgoing</Property>
+                      <Property name="width">240</Property>
+                    </TextEditor>
+                  </ToolBar>
+                  <DataGrid>
+                    <Property name="dataSet">dataSetVariable</Property>
+                    <Property name="stretchColumnsMode">allColumns</Property>
+                    <DataColumn>
+                      <Property name="property">name</Property>
+                      <Property name="width">100</Property>
+                      <Property name="name">name</Property>
+                    </DataColumn>
+                    <DataColumn name="value">
+                      <Property name="property">value</Property>
+                      <Property name="width">150</Property>
+                    </DataColumn>
+                  </DataGrid>
+                </Children>
+                <Tools/>
+              </Dialog>
+              <UpdateAction id="updateActionFinishTask">
+                <Property name="dataResolver">bdf2.jbpm4.processDashboard#completeTask</Property>
+                <Property name="alwaysExecute">true</Property>
+                <Property name="successMessage">任务完成!</Property>
+                <Property name="executingMessage">任务完成中...</Property>
+                <UpdateItem>
+                  <Property name="dataSet">dataSetVariable</Property>
+                  <Property name="dataPath">[#all]</Property>
+                </UpdateItem>
+              </UpdateAction>
+              <AjaxAction id="ajaxActionchangeTaskAssignee">
+                <Property name="service">bdf2.jbpm4.processDashboard#changeTaskAssignee</Property>
+                <Property name="successMessage">更改任务处理人操作成功！</Property>
+                <Property name="executingMessage">更改操作进行中...</Property>
+              </AjaxAction>
+            </Children>
+          </Panel>
+          <DataSet id="dataSetActivity">
+            <Property name="dataProvider">bdf2.jbpm4.processDashboard#findAllTaskActivitys</Property>
+            <Property name="dataType">[$dataTypeActivity]</Property>
+            <Property name="loadMode">manual</Property>
+          </DataSet>
+          <AjaxAction id="ajaxActionCancelInstance">
+            <Property name="service">bdf2.jbpm4.processDashboard#cancelProcessInstance</Property>
+            <Property name="successMessage">成功结束当前流程实例!</Property>
+            <Property name="executingMessage">流程实例结束中...</Property>
+          </AjaxAction>
+          <AjaxAction id="ajaxActionDeleteInstance">
+            <Property name="service">bdf2.jbpm4.processDashboard#deleteProcessInstance</Property>
+            <Property name="successMessage">成功删除当前流程实例!</Property>
+            <Property name="executingMessage">流程实例删除中...</Property>
+          </AjaxAction>
+        </Container>
+      </MainControl>
+      <SideControl>
+        <Container>
+          <ToolBar layoutConstraint="top">
+            <Property name="fixRight">false</Property>
+            <DataPilot>
+              <Property name="itemCodes">pages</Property>
+              <Property name="dataSet">dataSetProcessDefinition</Property>
+            </DataPilot>
+            <ToolBarButton layoutConstraint="right">
+              <ClientEvent name="onClick">var data = view.id(&quot;dataSetProcessDefinition&quot;).getData(&quot;#&quot;);&#xD;
+if (data) {&#xD;
+	var processDefinitionId = data.get(&quot;id&quot;);&#xD;
+	var url = &quot;bdf2.jbpm4.pro.view.dashboard.config.NodeConfig.d?processDefinitionId=&quot; + processDefinitionId;&#xD;
+    view.id(&quot;iFrameConfig&quot;).set(&quot;path&quot;,url);&#xD;
+    view.id(&quot;dialogNodeConfig&quot;).show();&#xD;
+}else{&#xD;
+	dorado.MessageBox.alert(&quot;当前没有可配置的流程模版！&quot;);&#xD;
+}&#xD;
+</ClientEvent>
+              <Property name="icon">url(skin>common/icons.gif) -60px -20px</Property>
+              <Property name="caption">节点配置</Property>
+            </ToolBarButton>
+            <ToolBarButton layoutConstraint="right">
+              <ClientEvent name="onClick">var ds = view.id(&quot;dataSetProcessDefinition&quot;);&#xD;
+if (ds.getData(&quot;#&quot;)) {&#xD;
+	var dialog = view.id(&quot;dialogStartNewInstance&quot;);&#xD;
+	var dsVariable = view.id(&quot;dataSetVariable&quot;);&#xD;
+	dsVariable.getData().clear();&#xD;
+	dialog.show();&#xD;
+}else{&#xD;
+	dorado.MessageBox.alert(&quot;请选择一个流程模版！&quot;);&#xD;
+}&#xD;
+</ClientEvent>
+              <Property name="icon"> url(>skin>common/icons.gif) -60px -220px</Property>
+              <Property name="caption">创建实例</Property>
+            </ToolBarButton>
+            <ToolBarButton>
+              <ClientEvent name="onClick">var data=view.id(&quot;dataSetProcessDefinition&quot;).getData(&quot;#&quot;);&#xD;
+if(data){&#xD;
+	var id=data.get(&quot;id&quot;);&#xD;
+	var url=&quot;dorado/bdf2/jbpm4/generate.processimage?processDefinitionId=&quot;+id;&#xD;
+	view.id(&quot;htmlContainerProcessImage&quot;).set(&quot;content&quot;,&quot;&lt;img src='&quot;+url+&quot;'>&quot;)&#xD;
+	view.id(&quot;dialogProcessImage&quot;).show();&#xD;
+}else{&#xD;
+	dorado.MessageBox.alert(&quot;当前没有可用的流程模版&quot;);&#xD;
+}</ClientEvent>
+              <Property name="icon"> url(>skin>common/icons.gif) -280px -40px</Property>
+              <Property name="caption">查看流程图</Property>
+            </ToolBarButton>
+            <ToolBarButton>
+              <ClientEvent name="onClick">var ds = view.id(&quot;dataSetProcessDefinition&quot;);&#xD;
+var data = ds.getData(&quot;#&quot;);&#xD;
+if(data){&#xD;
+	var action = view.id(&quot;ajaxActionDeleteDefinition&quot;);&#xD;
+	action.set(&quot;parameter&quot;,{&#xD;
+		deploymentId:data.get(&quot;deploymentId&quot;),&#xD;
+		processDefinitionId:data.get(&quot;id&quot;)&#xD;
+	});&#xD;
+	&#xD;
+	dorado.MessageBox.confirm(&quot;确定要删除当前流程模版？&quot;,function(){&#xD;
+		 action.execute(function(){               &#xD;
+			ds.flushAsync();&#xD;
+			dialog.hide();&#xD;
+         });&#xD;
+	});&#xD;
+}&#xD;
+</ClientEvent>
+              <Property name="icon"> url(>skin>common/icons.gif) -140px -0px</Property>
+              <Property name="caption">删除模版</Property>
+            </ToolBarButton>
+            <ToolBarButton>
+              <ClientEvent name="onClick">view.id(&quot;dialogUploadProcessDefinition&quot;).show();</ClientEvent>
+              <Property name="caption">上传流程模版</Property>
+              <Property name="icon">url(skin>common/icons.gif) -120px -240px</Property>
+            </ToolBarButton>
+          </ToolBar>
+          <DataGrid id="dataGridProcessDefinition">
+            <Property name="dataSet">dataSetProcessDefinition</Property>
+            <Property name="readOnly">true</Property>
+            <Property name="showFilterBar">true</Property>
+            <Property name="stretchColumnsMode">allColumns</Property>
+            <DataColumn name="name">
+              <Property name="property">name</Property>
+              <Property name="width">160</Property>
+            </DataColumn>
+            <DataColumn name="id">
+              <Property name="property">id</Property>
+              <Property name="width">150</Property>
+              <Property name="filterable">false</Property>
+            </DataColumn>
+            <DataColumn name="key">
+              <Property name="property">key</Property>
+              <Property name="width">90</Property>
+              <Property name="filterable">false</Property>
+            </DataColumn>
+            <DataColumn name="version">
+              <Property name="property">version</Property>
+              <Property name="width">70</Property>
+              <Property name="filterable">false</Property>
+            </DataColumn>
+            <DataColumn name="description">
+              <Property name="property">description</Property>
+              <Property name="filterable">false</Property>
+            </DataColumn>
+          </DataGrid>
+          <Dialog id="dialogStartNewInstance" layout="padding:2">
+            <Property name="modal">true</Property>
+            <Property name="center">true</Property>
+            <Property name="width">450</Property>
+            <Property name="height">300</Property>
+            <Property name="caption">开启新的流程实例</Property>
+            <Buttons>
+              <Button>
+                <ClientEvent name="onClick">var ds = view.id(&quot;dataSetProcessDefinition&quot;);&#xD;
+var pdId = ds.getData(&quot;#.id&quot;);&#xD;
+if(pdId){&#xD;
+	dorado.MessageBox.confirm(&quot;真的要创建一个流程实例吗？&quot;,function(){&#xD;
+		var action = view.id(&quot;updateActionStartInstance&quot;);&#xD;
+		action.set(&quot;parameter&quot;, {&#xD;
+		    processDefinitionId: pdId&#xD;
+		})&#xD;
+		action.execute(function(){&#xD;
+			view.id(&quot;dialogStartNewInstance&quot;).hide();&#xD;
+			view.id(&quot;dataSetProcessDefinition&quot;).getData(&quot;#&quot;).reset(&quot;processInstances&quot;);&#xD;
+		});	&#xD;
+	});&#xD;
+}else{&#xD;
+	dorado.MessageBox.alert(&quot;当前没有选中的流程模版!&quot;);&#xD;
+}&#xD;
+</ClientEvent>
+                <Property name="icon"> url(>skin>common/icons.gif) -60px -220px</Property>
+                <Property name="caption">确定</Property>
+              </Button>
+              <Button>
+                <ClientEvent name="onClick">view.id(&quot;dialogStartNewInstance&quot;).hide();</ClientEvent>
+                <Property name="icon"> url(>skin>common/icons.gif) -40px -0px</Property>
+                <Property name="caption">取消</Property>
+              </Button>
+            </Buttons>
+            <Children>
+              <ToolBar>
+                <DataPilot>
+                  <Property name="dataSet">dataSetVariable</Property>
+                  <Property name="itemCodes">+,-</Property>
+                </DataPilot>
+              </ToolBar>
+              <DataGrid>
+                <Property name="dataSet">dataSetVariable</Property>
+                <Property name="stretchColumnsMode">allColumns</Property>
+                <DataColumn>
+                  <Property name="property">name</Property>
+                  <Property name="width">100</Property>
+                  <Property name="name">name</Property>
+                </DataColumn>
+                <DataColumn name="value">
+                  <Property name="property">value</Property>
+                  <Property name="width">150</Property>
+                </DataColumn>
+              </DataGrid>
+            </Children>
+          </Dialog>
+          <UpdateAction id="updateActionStartInstance">
+            <Property name="dataResolver">bdf2.jbpm4.processDashboard#startNewProcess</Property>
+            <Property name="alwaysExecute">true</Property>
+            <Property name="successMessage">流程实例成功创建!</Property>
+            <Property name="executingMessage">流程实例创建中...</Property>
+            <UpdateItem>
+              <Property name="dataSet">dataSetVariable</Property>
+              <Property name="dataPath">[#all]</Property>
+            </UpdateItem>
+          </UpdateAction>
+          <AjaxAction id="ajaxActionDeleteDefinition">
+            <Property name="service">bdf2.jbpm4.processDashboard#deleteProcessDefinitionById</Property>
+            <Property name="successMessage">模版删除成功!</Property>
+            <Property name="executingMessage">流程模版删除中...</Property>
+          </AjaxAction>
+          <Dialog id="dialogNodeConfig">
+            <Property name="center">true</Property>
+            <Property name="width">800</Property>
+            <Property name="height">600</Property>
+            <Property name="modal">true</Property>
+            <Property name="maximizeable">true</Property>
+            <Buttons/>
+            <Children>
+              <IFrame id="iFrameConfig"/>
+            </Children>
+            <Tools/>
+          </Dialog>
+          <Dialog id="dialogUploadProcessDefinition">
+            <Property name="center">true</Property>
+            <Property name="modal">true</Property>
+            <Property name="width">400</Property>
+            <Property name="height">200</Property>
+            <Buttons>
+              <Button>
+                <ClientEvent name="onClick">var file=$(&quot;#processDefinitionZipFile&quot;).attr(&quot;value&quot;);&#xD;
+if(!file){&#xD;
+	dorado.MessageBox.alert(&quot;请选择一个要上传的流程模版文件!&quot;);&#xD;
+	return;&#xD;
+}&#xD;
+$(&quot;#uploadProcessDefinitionForm&quot;).submit();&#xD;
+</ClientEvent>
+                <Property name="caption">确定</Property>
+                <Property name="icon">url(skin>common/icons.gif) -140px -20px</Property>
+              </Button>
+              <Button>
+                <ClientEvent name="onClick">view.id(&quot;dialogUploadProcessDefinition&quot;).hide();</ClientEvent>
+                <Property name="caption">取消</Property>
+                <Property name="icon">url(skin>common/icons.gif) -40px 0px</Property>
+              </Button>
+            </Buttons>
+            <Children>
+              <HtmlContainer>
+                <ClientEvent name="onRefreshDom">var iframe=document.getElementById(&quot;iframeForUpload&quot;);&#xD;
+if(iframe.attachEvent){&#xD;
+    iframe.attachEvent(&quot;onload&quot;, function(){&#xD;
+    	view.id(&quot;dialogUploadProcessDefinition&quot;).hide();&#xD;
+        dorado.MessageBox.alert(&quot;上传操作完成&quot;);&#xD;
+        view.id(&quot;dataSetProcessDefinition&quot;).flushAsync();&#xD;
+    });&#xD;
+}else{&#xD;
+    iframe.onload = function(){&#xD;
+       view.id(&quot;dialogUploadProcessDefinition&quot;).hide();&#xD;
+        dorado.MessageBox.alert(&quot;上传操作完成&quot;);&#xD;
+        view.id(&quot;dataSetProcessDefinition&quot;).flushAsync();&#xD;
+    };&#xD;
+}</ClientEvent>
+                <Property name="content">&lt;form id=&quot;uploadProcessDefinitionForm&quot; action=&quot;dorado/bdf2/jbpm4/deploy.processdefinition&quot; target=&quot;iframeForUpload&quot; style=&quot;font-size:12px;padding:10px&quot; method=&quot;post&quot; enctype=&quot;multipart/form-data&quot;>&#xD;
+&lt;strong>&lt;font color=&quot;green&quot;>请选择包含要上传的流程模版的压缩文件：&lt;/font>&lt;/strong>&lt;br>&#xD;
+&lt;input type=&quot;file&quot; id=&quot;processDefinitionZipFile&quot; name=&quot;processDefinitionZipFile&quot; style=&quot;width:300px&quot;/>&#xD;
+&lt;/form>&#xD;
+&lt;iframe id=&quot;iframeForUpload&quot; name=&quot;iframeForUpload&quot; width=&quot;0&quot; height=&quot;0&quot; src=&quot;&quot;>&lt;/iframe></Property>
+              </HtmlContainer>
+            </Children>
+            <Tools/>
+          </Dialog>
+        </Container>
+      </SideControl>
+    </SplitPanel>
+    <Dialog id="dialogProcessImage">
+      <Property name="width">700</Property>
+      <Property name="height">600</Property>
+      <Property name="center">true</Property>
+      <Property name="maximizeable">true</Property>
+      <Buttons/>
+      <Children>
+        <HtmlContainer id="htmlContainerProcessImage"/>
+      </Children>
+      <Tools/>
+    </Dialog>
+  </View>
+</ViewConfig>

@@ -1,0 +1,273 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ViewConfig>
+  <Arguments/>
+  <Context/>
+  <Model>
+    <DataType name="dataTypeValidator" parent="$dataTypeValidatorDef">
+      <ClientEvent name="onDataChange">var type=arg.entity.get(&quot;type&quot;);&#xD;
+if(!type)return;&#xD;
+var ds=view.id(&quot;dataSetPresetValidatorProperty&quot;);&#xD;
+ds.set(&quot;parameter&quot;,type);&#xD;
+ds.flushAsync();&#xD;
+&#xD;
+var ds1=view.id(&quot;dataSetPresetValidatorEvent&quot;);&#xD;
+ds1.set(&quot;parameter&quot;,type);&#xD;
+ds1.flushAsync();</ClientEvent>
+      <ClientEvent name="onCurrentChange">var type=arg.newCurrent.get(&quot;type&quot;);&#xD;
+if(!type)return;&#xD;
+var ds=view.id(&quot;dataSetPresetValidatorProperty&quot;);&#xD;
+ds.set(&quot;parameter&quot;,type);&#xD;
+ds.flushAsync();&#xD;
+&#xD;
+var ds1=view.id(&quot;dataSetPresetValidatorEvent&quot;);&#xD;
+ds1.set(&quot;parameter&quot;,type);&#xD;
+ds1.flushAsync();</ClientEvent>
+      <PropertyDef name="type">
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;bdf2.profile.validatorMaintain#loadPresetValidators&quot;).getResult()}</Property>
+          <Property name="keyProperty">name</Property>
+          <Property name="valueProperty">name</Property>
+        </Property>
+        <Property name="label">验证器类型</Property>
+      </PropertyDef>
+      <Reference name="properties">
+        <Property name="dataProvider">bdf2.profile.validatorMaintain#loadValidatorProperties</Property>
+        <Property name="dataType">[dataTypeValidatorProperty]</Property>
+        <Property name="parameter">$${this.id}</Property>
+      </Reference>
+      <Reference name="events">
+        <Property name="dataProvider">bdf2.profile.validatorMaintain#loadValidatorEvents</Property>
+        <Property name="dataType">[dataTypeValidatorEvent]</Property>
+        <Property name="parameter">$${this.id}</Property>
+      </Reference>
+    </DataType>
+    <DataType name="dataTypeValidatorProperty" parent="$dataTypeValidatorProperty">
+      <ClientEvent name="onInsert">var data=view.id(&quot;dataSetValidator&quot;).getData(&quot;#&quot;);&#xD;
+var id=data.get(&quot;id&quot;)&#xD;
+arg.entity.set(&quot;validatorId&quot;,id);</ClientEvent>
+      <PropertyDef name="name">
+        <Property name="dataType">String</Property>
+        <Property name="label">属性名称</Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="dataTypeValidatorEvent" parent="$dataTypeValidatorEvent">
+      <ClientEvent name="onInsert">var data=view.id(&quot;dataSetValidator&quot;).getData(&quot;#&quot;);&#xD;
+var id=data.get(&quot;id&quot;)&#xD;
+arg.entity.set(&quot;validatorId&quot;,id);</ClientEvent>
+    </DataType>
+    <DataType name="dataTypePresetValidatorProperty">
+      <Property name="creationType">com.bstek.bdf2.profile.view.validator.PresetValidatorDef</Property>
+      <PropertyDef name="name"/>
+    </DataType>
+    <DataType name="dataTypePresetValidatorEvent">
+      <Property name="creationType">com.bstek.bdf2.profile.view.validator.PresetValidatorDef</Property>
+      <PropertyDef name="name"/>
+    </DataType>
+  </Model>
+  <View>
+    <DataSet id="dataSetValidator">
+      <Property name="dataType">[dataTypeValidator]</Property>
+      <Property name="dataProvider">bdf2.profile.validatorMaintain#loadValidators</Property>
+      <Property name="pageSize">20</Property>
+    </DataSet>
+    <DataSet id="dataSetPresetValidatorProperty">
+      <Property name="dataProvider">bdf2.profile.validatorMaintain#loadPresetValidatorProperties</Property>
+      <Property name="dataType">[dataTypePresetValidatorProperty]</Property>
+      <Property name="loadMode">manual</Property>
+    </DataSet>
+    <DataSet id="dataSetPresetValidatorEvent">
+      <Property name="dataProvider">bdf2.profile.validatorMaintain#loadPresetValidatorEvents</Property>
+      <Property name="dataType">[dataTypePresetValidatorEvent]</Property>
+      <Property name="loadMode">manual</Property>
+    </DataSet>
+    <Container layoutConstraint="left">
+      <Property name="width">470</Property>
+      <ToolBar>
+        <DataPilot>
+          <ClientEvent name="onSubControlAction">var ds=view.id(&quot;dataSetValidator&quot;);&#xD;
+switch(arg.code){&#xD;
+	case &quot;+&quot;:&#xD;
+		ds.insert();&#xD;
+		view.id(&quot;dialogValidator&quot;).show();&#xD;
+		arg.processDefault=false;&#xD;
+		break;&#xD;
+	case &quot;-&quot;:&#xD;
+		dorado.MessageBox.confirm(&quot;确认删除当前验证器吗？&quot;,function(){&#xD;
+			ds.getData(&quot;#&quot;).remove();&#xD;
+			view.id(&quot;updateActionSaveValidators&quot;).execute();&#xD;
+		});&#xD;
+		arg.processDefault=false;&#xD;
+	break;&#xD;
+}</ClientEvent>
+          <Property name="dataSet">dataSetValidator</Property>
+          <Property name="itemCodes">pages,+,-</Property>
+        </DataPilot>
+        <ToolBarButton>
+          <ClientEvent name="onClick">var ds=view.id(&quot;dataSetValidator&quot;);&#xD;
+if(ds.getData(&quot;#&quot;)){&#xD;
+	view.id(&quot;dialogValidator&quot;).show();&#xD;
+}else{&#xD;
+	dorado.MessageBox.alert(&quot;当前没有数据可供编辑&quot;);&#xD;
+}</ClientEvent>
+          <Property name="caption">修改</Property>
+        </ToolBarButton>
+      </ToolBar>
+      <DataGrid>
+        <Property name="dataSet">dataSetValidator</Property>
+        <Property name="filterMode">serverSide</Property>
+        <Property name="readOnly">true</Property>
+        <Property name="showFilterBar">true</Property>
+        <DataColumn name="name">
+          <Property name="property">name</Property>
+          <Property name="width">120</Property>
+        </DataColumn>
+        <DataColumn>
+          <Property name="property">type</Property>
+          <Property name="width">120</Property>
+          <Property name="name">type</Property>
+          <Property name="filterable">false</Property>
+        </DataColumn>
+        <DataColumn name="desc">
+          <Property name="property">desc</Property>
+          <Property name="width">190</Property>
+          <Property name="filterable">false</Property>
+        </DataColumn>
+      </DataGrid>
+      <Dialog id="dialogValidator">
+        <Property name="center">true</Property>
+        <Property name="modal">true</Property>
+        <Property name="width">400</Property>
+        <Property name="height">240</Property>
+        <Buttons>
+          <Button>
+            <ClientEvent name="onClick">view.id(&quot;updateActionSaveValidators&quot;).execute(function(){&#xD;
+	view.id(&quot;dialogValidator&quot;).hide();&#xD;
+});</ClientEvent>
+            <Property name="caption">确定</Property>
+            <Property name="icon">url(skin>common/icons.gif) -140px -20px</Property>
+          </Button>
+          <Button>
+            <ClientEvent name="onClick">view.id(&quot;dataSetValidator&quot;).getData().cancel();&#xD;
+view.id(&quot;dialogValidator&quot;).hide();</ClientEvent>
+            <Property name="caption">取消</Property>
+            <Property name="icon">url(skin>common/icons.gif) -40px 0px</Property>
+          </Button>
+        </Buttons>
+        <Children>
+          <AutoForm>
+            <Property name="dataSet">dataSetValidator</Property>
+            <Property name="cols">*</Property>
+            <AutoFormElement>
+              <Property name="name">name</Property>
+              <Property name="property">name</Property>
+              <Editor/>
+            </AutoFormElement>
+            <AutoFormElement>
+              <Property name="name">type</Property>
+              <Property name="property">type</Property>
+              <Editor/>
+            </AutoFormElement>
+            <AutoFormElement>
+              <Property name="name">desc</Property>
+              <Property name="property">desc</Property>
+              <Property name="editorType">TextArea</Property>
+              <Editor/>
+            </AutoFormElement>
+          </AutoForm>
+        </Children>
+        <Tools/>
+      </Dialog>
+    </Container>
+    <Container layoutConstraint="center">
+      <TabControl>
+        <ControlTab>
+          <Property name="caption">属性</Property>
+          <Container>
+            <ToolBar>
+              <DataPilot>
+                <Property name="dataSet">dataSetValidator</Property>
+                <Property name="dataPath">#.properties</Property>
+                <Property name="itemCodes">+,-</Property>
+              </DataPilot>
+              <ToolBarButton>
+                <Property name="caption">保存</Property>
+                <Property name="icon">url(skin>common/icons.gif) -140px -20px</Property>
+                <Property name="action">updateActionSaveValidatorProperties</Property>
+              </ToolBarButton>
+            </ToolBar>
+            <DataGrid>
+              <Property name="dataSet">dataSetValidator</Property>
+              <Property name="dataPath">#.properties</Property>
+              <DataColumn name="name">
+                <Property name="property">name</Property>
+                <Property name="trigger">dataSetDropDownValidatorProperty</Property>
+              </DataColumn>
+              <DataColumn name="value">
+                <Property name="property">value</Property>
+              </DataColumn>
+            </DataGrid>
+          </Container>
+        </ControlTab>
+        <ControlTab>
+          <Property name="caption">事件</Property>
+          <Container>
+            <ToolBar>
+              <DataPilot>
+                <Property name="dataSet">dataSetValidator</Property>
+                <Property name="dataPath">#.events</Property>
+                <Property name="itemCodes">+,-</Property>
+              </DataPilot>
+              <ToolBarButton>
+                <Property name="caption">保存</Property>
+                <Property name="icon">url(skin>common/icons.gif) -140px -20px</Property>
+                <Property name="action">updateActionSaveValidatorEvents</Property>
+              </ToolBarButton>
+            </ToolBar>
+            <DataGrid>
+              <Property name="dataSet">dataSetValidator</Property>
+              <Property name="dataPath">#.events</Property>
+              <DataColumn name="name">
+                <Property name="property">name</Property>
+                <Property name="trigger">dataSetDropDownValidatorEvent</Property>
+              </DataColumn>
+              <DataColumn name="content">
+                <Property name="property">content</Property>
+              </DataColumn>
+            </DataGrid>
+          </Container>
+        </ControlTab>
+      </TabControl>
+    </Container>
+    <DataSetDropDown id="dataSetDropDownValidatorProperty">
+      <Property name="dataSet">dataSetPresetValidatorProperty</Property>
+      <Property name="property">name</Property>
+    </DataSetDropDown>
+    <DataSetDropDown id="dataSetDropDownValidatorEvent">
+      <Property name="dataSet">dataSetPresetValidatorEvent</Property>
+      <Property name="property">name</Property>
+    </DataSetDropDown>
+    <UpdateAction id="updateActionSaveValidators">
+      <Property name="successMessage">操作成功</Property>
+      <Property name="dataResolver">bdf2.profile.validatorMaintain#saveValidators</Property>
+      <UpdateItem>
+        <Property name="dataSet">dataSetValidator</Property>
+      </UpdateItem>
+    </UpdateAction>
+    <UpdateAction id="updateActionSaveValidatorProperties">
+      <Property name="successMessage">操作成功</Property>
+      <Property name="dataResolver">bdf2.profile.validatorMaintain#saveValidatorProperties</Property>
+      <UpdateItem>
+        <Property name="dataSet">dataSetValidator</Property>
+        <Property name="dataPath">#.properties[#dirty]</Property>
+      </UpdateItem>
+    </UpdateAction>
+    <UpdateAction id="updateActionSaveValidatorEvents">
+      <Property name="successMessage">操作成功</Property>
+      <Property name="dataResolver">bdf2.profile.validatorMaintain#saveValidatorEvents</Property>
+      <UpdateItem>
+        <Property name="dataSet">dataSetValidator</Property>
+        <Property name="dataPath">#.events[#dirty]</Property>
+      </UpdateItem>
+    </UpdateAction>
+  </View>
+</ViewConfig>

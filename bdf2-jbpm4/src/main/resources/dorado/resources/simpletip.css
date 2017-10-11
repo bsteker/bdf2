@@ -1,0 +1,15 @@
+/*=======================================
+* Tooltips
+* ======================================*/
+.tooltip{
+   padding: 5px 5px;
+   z-index: 200000;
+   width:360px;
+   color: #303030;
+   background-color: #FDFDFD;
+   border: 1px solid #DECA7E;
+   
+   font-size: 12px;
+   line-height: 18px;
+   text-align: left;
+}

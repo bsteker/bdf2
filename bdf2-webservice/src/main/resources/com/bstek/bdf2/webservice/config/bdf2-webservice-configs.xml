@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:util="http://www.springframework.org/schema/util" xmlns:sws="http://www.springframework.org/schema/web-services"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+  http://www.springframework.org/schema/web-services http://www.springframework.org/schema/web-services/web-services-2.0.xsd
+  http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.0.xsd
+  http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+	<sws:annotation-driven marshaller="bdf2.jaxb2Marshaller" unmarshaller="bdf2.jaxb2Marshaller" />
+	<bean id="bdf2.jaxb2Marshaller" class="com.bstek.bdf2.webservice.jaxb.WSJaxb2Marshaller"></bean>
+	
+	<sws:dynamic-wsdl id="SpringBeanRPC" portTypeName="SpringBeanRPC" locationUri="/dorado/webservice/SpringBeanRPC">
+		<sws:xsd location="classpath:com/bstek/bdf2/webservice/rpc/xsd/RPC.xsd"/>
+	</sws:dynamic-wsdl>
+	
+	<context:component-scan base-package="com.bstek.bdf2.webservice.rpc.endpoint"></context:component-scan>
+	
+	<bean class="com.bstek.bdf2.webservice.sync.cache.SyncRefreshSecurityCache">
+		<property name="remoteServerUrls" value="${bdf2.syncCacheremoteServerUrls}"></property>
+		<property name="remoteServerUsernamePassword" value="${bdf2.syncCacheRemoteServerUsernamePassword}"></property>
+	</bean>
+	
+	<sws:interceptors>
+		<bean class="com.bstek.bdf2.webservice.interceptor.EndpointSecurityInterceptor">
+			<property name="wss4jSecurityInterceptor" ref="bdf2.wss4jSecurityInterceptor"></property>
+			<property name="noneSecurityInterceptor" ref="bdf2.noneSecurityInterceptor"></property>
+			<property name="useSecurity" value="${bdf2.webservice.useSecurity}"></property>
+		</bean>
+		<bean class="com.bstek.bdf2.webservice.interceptor.GenericWebServiceInterceptor"></bean>
+	</sws:interceptors>
+	<bean id="bdf2.noneSecurityInterceptor" class="com.bstek.bdf2.webservice.interceptor.NoneSecurityInterceptor">
+		<property name="wss4jSecurityInterceptor" ref="bdf2.wss4jSecurityInterceptor"></property>
+	</bean>
+
+	<bean id="bdf2.wss4jSecurityInterceptor" class="org.springframework.ws.soap.security.wss4j.Wss4jSecurityInterceptor">
+		<property name="validationActions" value="UsernameToken"></property>
+		<property name="validationCallbackHandler">
+			<bean class="com.bstek.bdf2.webservice.interceptor.DigestPasswordValidationCallbackHandler">
+				<property name="userServiceBean" value="${bdf2.webservice.userServiceBean}"></property>
+				<property name="userCacheBean" value="${bdf2.webservice.userCacheBean}"></property>
+			</bean>		
+		</property>
+	</bean>
+	
+	<bean id="messageDispatcher" class="org.springframework.ws.server.MessageDispatcher"/>
+	<bean id="bdf2.wsdlController" class="com.bstek.bdf2.webservice.controller.WsdlController">
+		<property name="wsdlDefinitionHandlerAdapter" ref="bdf2.wsdlDefinitionHandlerAdapter"></property>
+	</bean>
+	
+	 <bean id="bdf2.wsdlDefinitionHandlerAdapter" class="org.springframework.ws.transport.http.WsdlDefinitionHandlerAdapter">
+	 	<property name="transformLocations" value="true"></property>
+	 </bean>
+	
+	<bean id="bdf2.webserviceController" class="com.bstek.bdf2.webservice.controller.WebserviceController">
+		<property name="webServiceMessageReceiverHandlerAdapter" ref="bdf2.webServiceMessageReceiverHandlerAdapter"></property>
+		<property name="defaultHandler" ref="messageDispatcher"></property>
+	</bean>
+	<bean id="bdf2.webServiceMessageReceiverHandlerAdapter" class="org.springframework.ws.transport.http.WebServiceMessageReceiverHandlerAdapter">
+		<property name="messageFactory" ref="messageFactory"></property>
+	</bean>
+	<bean id="messageFactory" class="org.springframework.ws.soap.saaj.SaajSoapMessageFactory">
+        <property name="soapVersion">
+            <util:constant static-field="org.springframework.ws.soap.SoapVersion.SOAP_11"/>
+        </property>
+    </bean>	
+</beans>

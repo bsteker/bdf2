@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+	http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-2.5.xsd">
+	<context:component-scan base-package="com.bstek.bdf2.jbpm4.designer.converter.impl"></context:component-scan>
+	<bean parent="dorado.resolverRegister">
+		<property name="url" value="dorado/bdf2/jbpm4/designer.service" />
+		<property name="resolver">
+			<bean class="com.bstek.bdf2.jbpm4.designer.controller.DesignerServiceController" >
+				<property name="bpmService" ref="bdf2.jbpm4.bpmService"></property>
+				<property name="hibernateDao" ref="bdf2.jbpm4HibernateDao" />
+				<property name="lobStoreService" ref="bdf2.lobStoreService" />
+			</bean>
+		</property>
+	</bean>
+	<bean parent="dorado.resolverRegister">
+		<property name="url" value="dorado/bdf2/jbpm4/delete.process" />
+		<property name="resolver">
+			<bean class="com.bstek.bdf2.jbpm4.designer.controller.DeleteProcessController" >
+				<property name="bpmService" ref="bdf2.jbpm4.bpmService"></property>
+				<property name="hibernateDao" ref="bdf2.jbpm4HibernateDao" />
+				<property name="lobStoreService" ref="bdf2.lobStoreService" />
+			</bean>
+		</property>
+	</bean>
+	<bean parent="dorado.resolverRegister">
+		<property name="url" value="dorado/bdf2/jbpm4/process.list" />
+		<property name="resolver">
+			<bean class="com.bstek.bdf2.jbpm4.designer.controller.ProcessListController" >
+				<property name="hibernateDao" ref="bdf2.jbpm4HibernateDao" />
+			</bean>
+		</property>
+	</bean>
+	<bean parent="dorado.resolverRegister">
+		<property name="url" value="dorado/bdf2/jbpm4/load.process" />
+		<property name="resolver">
+			<bean class="com.bstek.bdf2.jbpm4.designer.controller.LoadProcessController" >
+				<property name="lobStoreService" ref="bdf2.lobStoreService" />
+			</bean>
+		</property>
+	</bean>
+	<bean parent="dorado.resolverRegister">
+		<property name="url" value="dorado/bdf2/jbpm4/designer" />
+		<property name="resolver">
+			<bean class="com.bstek.bdf2.jbpm4.designer.controller.DesignerController" />
+		</property>
+	</bean>
+</beans>
