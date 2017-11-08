@@ -10,7 +10,6 @@ import java.util.Map;
 import java.util.UUID;
 
 import org.apache.commons.lang.StringUtils;
-import org.hibernate.Query;
 import org.hibernate.Session;
 
 import com.bstek.bdf2.core.business.IUser;
@@ -93,10 +92,10 @@ public class RoleMemberMaintain extends RoleMaintain{
 		Session session=this.getSessionFactory().openSession();
 		try{
 			String error=null;
-			String sql = "delete from " + RoleMember.class.getName()+" rm where rm.roleId=?";  
-		    Query query = session.createQuery(sql);  
-		    query.setString(0, roleId);  
-		    query.executeUpdate();  
+//			String sql = "delete from " + RoleMember.class.getName()+" rm where rm.roleId=?";  
+//		    Query query = session.createQuery(sql);  
+//		    query.setString(0, roleId);  
+//		    query.executeUpdate();  
 		    
 			List<RoleMember> members=new ArrayList<RoleMember>();
 			for(String id:ids){

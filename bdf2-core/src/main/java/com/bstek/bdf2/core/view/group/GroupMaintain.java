@@ -165,10 +165,11 @@ public class GroupMaintain extends CoreHibernateDao {
 				map.put("positionId",id);
 				gm.setPositionId(id);
 			}
-			members.add(gm);
-			if(this.queryForInt(hql, map)>0){
-				error=id;
-				break;
+			
+			if(this.queryForInt(hql, map)==0){
+				//error=id;
+				//break;
+				members.add(gm);
 			}
 		}
 		if(error==null){

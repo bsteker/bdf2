@@ -110,7 +110,7 @@ switch(arg.code){&#xD;
 		}&#xD;
 		var dialog=view.id(&quot;$dialogUserSelect&quot;);	&#xD;
 		var groupId = data.get(&quot;id&quot;);&#xD;
-		if (self.currentGroupId != groupId){&#xD;
+		if (true || self.currentGroupId != groupId){&#xD;
 			self.currentGroupId = groupId;&#xD;
 			var dataSetUserForSelect = view.id(&quot;$dataSetUserForSelect&quot;);&#xD;
 			var dataSetUserSelected = view.id(&quot;$dataSetUserSelected&quot;);&#xD;
