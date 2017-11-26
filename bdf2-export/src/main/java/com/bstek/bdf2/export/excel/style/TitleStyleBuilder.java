@@ -5,7 +5,9 @@ import org.apache.poi.hssf.usermodel.HSSFFont;
 import org.apache.poi.hssf.usermodel.HSSFPalette;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.CellStyle;
-import org.apache.poi.ss.usermodel.Font;
+import org.apache.poi.ss.usermodel.FillPatternType;
+import org.apache.poi.ss.usermodel.HorizontalAlignment;
+import org.apache.poi.ss.usermodel.VerticalAlignment;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.apache.poi.xssf.usermodel.XSSFCellStyle;
@@ -44,15 +46,15 @@ public class TitleStyleBuilder extends AbstractStyleBuilder {
 		titleFont.setCharSet(HSSFFont.DEFAULT_CHARSET);
 		titleFont.setFontName("宋体");
 		titleFont.setColor((short) 9);
-		titleFont.setBoldweight(Font.BOLDWEIGHT_BOLD);
+		titleFont.setBold(true); 
 		titleFont.setFontHeightInPoints((short) fontSize);
 
 		HSSFCellStyle titleStyle = (HSSFCellStyle) createBorderCellStyle(workbook, true);
 		titleStyle.setFont(titleFont);
-		titleStyle.setFillPattern(CellStyle.SOLID_FOREGROUND);
+		titleStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
 		titleStyle.setFillForegroundColor((short) 10);
-		titleStyle.setAlignment(CellStyle.ALIGN_CENTER);
-		titleStyle.setVerticalAlignment(CellStyle.VERTICAL_CENTER);
+		titleStyle.setAlignment(HorizontalAlignment.CENTER);
+		titleStyle.setVerticalAlignment(VerticalAlignment.CENTER);
 
 		return titleStyle;
 	}
@@ -69,15 +71,15 @@ public class TitleStyleBuilder extends AbstractStyleBuilder {
 		if (!(fontColor[0] == 0 && fontColor[1] == 0 && fontColor[2] == 0)) {
 			titleFont.setColor(color9);
 		}
-		titleFont.setBoldweight(Font.BOLDWEIGHT_BOLD);
+		titleFont.setBold(true);
 		titleFont.setFontHeightInPoints((short) fontSize);
 
 		XSSFCellStyle titleStyle = (XSSFCellStyle) createBorderCellStyle(workbook, true);
 		titleStyle.setFont(titleFont);
-		titleStyle.setFillPattern(CellStyle.SOLID_FOREGROUND);
+		titleStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
 		titleStyle.setFillForegroundColor(color10);
-		titleStyle.setAlignment(CellStyle.ALIGN_CENTER);
-		titleStyle.setVerticalAlignment(CellStyle.VERTICAL_CENTER);
+		titleStyle.setAlignment(HorizontalAlignment.CENTER);
+		titleStyle.setVerticalAlignment(VerticalAlignment.CENTER);
 
 		return titleStyle;
 	}

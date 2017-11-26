@@ -9,7 +9,10 @@ import org.apache.poi.hssf.usermodel.HSSFPalette;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.CreationHelper;
+import org.apache.poi.ss.usermodel.FillPatternType;
 import org.apache.poi.ss.usermodel.Font;
+import org.apache.poi.ss.usermodel.HorizontalAlignment;
+import org.apache.poi.ss.usermodel.VerticalAlignment;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.apache.poi.xssf.usermodel.XSSFCellStyle;
@@ -76,15 +79,15 @@ public class GridStyleBuilder extends AbstractStyleBuilder {
 		headerFont.setCharSet(HSSFFont.DEFAULT_CHARSET);
 		headerFont.setFontName("宋体");
 		headerFont.setColor((short) 14);
-		headerFont.setBoldweight(Font.BOLDWEIGHT_BOLD);
+		headerFont.setBold(true);
 		headerFont.setFontHeightInPoints((short) headerFontSize);
 		CellStyle headerStyle = this.createBorderCellStyle(workbook, true);
 
 		headerStyle.setFont(headerFont);
-		headerStyle.setFillPattern(CellStyle.SOLID_FOREGROUND);
+		headerStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
 		headerStyle.setFillForegroundColor((short) 13);
 		this.setCellStyleAligment(headerStyle, headerAlign);
-		headerStyle.setVerticalAlignment(CellStyle.VERTICAL_CENTER);
+		headerStyle.setVerticalAlignment(VerticalAlignment.CENTER);
 		styles.put(GridStyleType.headerStyle.name(), headerStyle);
 
 		HSSFFont dataFont = workbook.createFont();
@@ -94,39 +97,39 @@ public class GridStyleBuilder extends AbstractStyleBuilder {
 		dataFont.setFontName("宋体");
 
 		CellStyle dataAlignLeftStyle = this.createBorderCellStyle(workbook, true);
-		dataAlignLeftStyle.setFillPattern(CellStyle.SOLID_FOREGROUND);
+		dataAlignLeftStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
 		dataAlignLeftStyle.setFillForegroundColor((short) 11);
 		dataAlignLeftStyle.setFont(dataFont);
-		dataAlignLeftStyle.setVerticalAlignment(CellStyle.ALIGN_CENTER);
+		dataAlignLeftStyle.setVerticalAlignment(VerticalAlignment.CENTER);
 		dataAlignLeftStyle.setWrapText(true);
-		dataAlignLeftStyle.setAlignment(CellStyle.ALIGN_LEFT);
+		dataAlignLeftStyle.setAlignment(HorizontalAlignment.LEFT);
 		styles.put(GridStyleType.dataAlignLeftStyle.name(), dataAlignLeftStyle);
 
 		CellStyle dataAlignCenterStyle = this.createBorderCellStyle(workbook, true);
-		dataAlignCenterStyle.setFillPattern(CellStyle.SOLID_FOREGROUND);
+		dataAlignCenterStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
 		dataAlignCenterStyle.setFillForegroundColor((short) 11);
 		dataAlignCenterStyle.setFont(dataFont);
-		dataAlignCenterStyle.setVerticalAlignment(CellStyle.ALIGN_CENTER);
+		dataAlignCenterStyle.setVerticalAlignment(VerticalAlignment.CENTER);
 		dataAlignCenterStyle.setWrapText(true);
-		dataAlignCenterStyle.setAlignment(CellStyle.ALIGN_CENTER);
+		dataAlignCenterStyle.setAlignment(HorizontalAlignment.CENTER);
 		styles.put(GridStyleType.dataAlignCenterStyle.name(), dataAlignCenterStyle);
 
 		CellStyle dataAlignRightStyle = this.createBorderCellStyle(workbook, true);
-		dataAlignRightStyle.setFillPattern(CellStyle.SOLID_FOREGROUND);
+		dataAlignRightStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
 		dataAlignRightStyle.setFillForegroundColor((short) 11);
 		dataAlignRightStyle.setFont(dataFont);
-		dataAlignRightStyle.setVerticalAlignment(CellStyle.ALIGN_CENTER);
+		dataAlignRightStyle.setVerticalAlignment(VerticalAlignment.CENTER);
 		dataAlignRightStyle.setWrapText(true);
-		dataAlignRightStyle.setAlignment(CellStyle.ALIGN_RIGHT);
+		dataAlignRightStyle.setAlignment(HorizontalAlignment.RIGHT);
 		styles.put(GridStyleType.dataAlignRightStyle.name(), dataAlignRightStyle);
 
 		CellStyle dateStyle = this.createBorderCellStyle(workbook, true);
 		CreationHelper helper = workbook.getCreationHelper();
 		dateStyle.setDataFormat(helper.createDataFormat().getFormat("m/d/yy h:mm"));
-		dateStyle.setFillPattern(CellStyle.SOLID_FOREGROUND);
+		dateStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
 		dateStyle.setFillForegroundColor((short) 11);
 		dateStyle.setFont(dataFont);
-		dateStyle.setVerticalAlignment(CellStyle.ALIGN_CENTER);
+		dateStyle.setVerticalAlignment(VerticalAlignment.CENTER);
 		this.setCellStyleAligment(dateStyle, contextFontAlign);
 		styles.put(GridStyleType.dateStyle.name(), dateStyle);
 
@@ -149,14 +152,14 @@ public class GridStyleBuilder extends AbstractStyleBuilder {
 		if (!(headerFontColor[0] == 0 && headerFontColor[1] == 0 && headerFontColor[2] == 0)) {
 			headerFont.setColor(xssfHeaderFontColor);
 		}
-		headerFont.setBoldweight(Font.BOLDWEIGHT_BOLD);
+		headerFont.setBold(true);
 		headerFont.setFontHeightInPoints((short) headerFontSize);
 		XSSFCellStyle headerStyle = (XSSFCellStyle) this.createBorderCellStyle(workbook, true);
 		headerStyle.setFont(headerFont);
-		headerStyle.setFillPattern(CellStyle.SOLID_FOREGROUND);
+		headerStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
 		headerStyle.setFillForegroundColor(xssfHeaderBgColor);
 		this.setCellStyleAligment(headerStyle, headerAlign);
-		headerStyle.setVerticalAlignment(CellStyle.VERTICAL_CENTER);
+		headerStyle.setVerticalAlignment(VerticalAlignment.CENTER);
 		styles.put(GridStyleType.headerStyle.name(), headerStyle);
 
 		XSSFFont dataFont = (XSSFFont) workbook.createFont();
@@ -169,38 +172,38 @@ public class GridStyleBuilder extends AbstractStyleBuilder {
 
 		XSSFCellStyle dataAlignLeftStyle = (XSSFCellStyle) this.createBorderCellStyle(workbook, true);
 		dataAlignLeftStyle.setFont(dataFont);
-		dataAlignLeftStyle.setFillPattern(CellStyle.SOLID_FOREGROUND);
+		dataAlignLeftStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
 		dataAlignLeftStyle.setFillForegroundColor(xssfContextBgColor);
-		dataAlignLeftStyle.setVerticalAlignment(CellStyle.ALIGN_CENTER);
+		dataAlignLeftStyle.setVerticalAlignment(VerticalAlignment.CENTER);
 		dataAlignLeftStyle.setWrapText(true);
-		dataAlignLeftStyle.setAlignment(CellStyle.ALIGN_LEFT);
+		dataAlignLeftStyle.setAlignment(HorizontalAlignment.LEFT);
 		styles.put(GridStyleType.dataAlignLeftStyle.name(), dataAlignLeftStyle);
 
 		XSSFCellStyle dataAlignCenterStyle = (XSSFCellStyle) this.createBorderCellStyle(workbook, true);
 		dataAlignCenterStyle.setFont(dataFont);
-		dataAlignCenterStyle.setFillPattern(CellStyle.SOLID_FOREGROUND);
+		dataAlignCenterStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
 		dataAlignCenterStyle.setFillForegroundColor(xssfContextBgColor);
-		dataAlignCenterStyle.setVerticalAlignment(CellStyle.ALIGN_CENTER);
+		dataAlignCenterStyle.setVerticalAlignment(VerticalAlignment.CENTER);
 		dataAlignCenterStyle.setWrapText(true);
-		dataAlignCenterStyle.setAlignment(CellStyle.ALIGN_CENTER);
+		dataAlignCenterStyle.setAlignment(HorizontalAlignment.CENTER);
 		styles.put(GridStyleType.dataAlignCenterStyle.name(), dataAlignCenterStyle);
 
 		XSSFCellStyle dataAlignRightStyle = (XSSFCellStyle) this.createBorderCellStyle(workbook, true);
 		dataAlignRightStyle.setFont(dataFont);
-		dataAlignRightStyle.setFillPattern(CellStyle.SOLID_FOREGROUND);
+		dataAlignRightStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
 		dataAlignRightStyle.setFillForegroundColor(xssfContextBgColor);
-		dataAlignRightStyle.setVerticalAlignment(CellStyle.ALIGN_CENTER);
+		dataAlignRightStyle.setVerticalAlignment(VerticalAlignment.CENTER);
 		dataAlignRightStyle.setWrapText(true);
-		dataAlignRightStyle.setAlignment(CellStyle.ALIGN_RIGHT);
+		dataAlignRightStyle.setAlignment(HorizontalAlignment.RIGHT);
 		styles.put(GridStyleType.dataAlignRightStyle.name(), dataAlignRightStyle);
 
 		XSSFCellStyle dateStyle = (XSSFCellStyle) this.createBorderCellStyle(workbook, true);
 		CreationHelper helper = workbook.getCreationHelper();
 		dateStyle.setDataFormat(helper.createDataFormat().getFormat("m/d/yy h:mm"));
 		dateStyle.setFont(dataFont);
-		dateStyle.setFillPattern(CellStyle.SOLID_FOREGROUND);
+		dateStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
 		dateStyle.setFillForegroundColor(xssfContextBgColor);
-		dateStyle.setVerticalAlignment(CellStyle.ALIGN_CENTER);
+		dateStyle.setVerticalAlignment(VerticalAlignment.CENTER);
 		this.setCellStyleAligment(dateStyle, contextFontAlign);
 		styles.put(GridStyleType.dateStyle.name(), dateStyle);
 
@@ -212,11 +215,11 @@ public class GridStyleBuilder extends AbstractStyleBuilder {
 		Font dataFont = workbook.createFont();
 		dataFont.setColor((short) 12);
 		dataFont.setFontHeightInPoints((short) 10);
-		dataStyle1.setFillPattern(CellStyle.SOLID_FOREGROUND);
+		dataStyle1.setFillPattern(FillPatternType.SOLID_FOREGROUND);
 		dataStyle1.setFillForegroundColor((short) 11);
 		dataStyle1.setFont(dataFont);
-		dataStyle1.setVerticalAlignment(CellStyle.ALIGN_CENTER);
-		dataStyle1.setAlignment(CellStyle.ALIGN_LEFT);
+		dataStyle1.setVerticalAlignment(VerticalAlignment.CENTER);
+		dataStyle1.setAlignment(HorizontalAlignment.LEFT);
 		dataStyle1.setIndention(Short.valueOf(String.valueOf((s))));
 		return dataStyle1;
 	}
