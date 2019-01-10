@@ -23,20 +23,19 @@ import com.bstek.bdf2.core.business.IUser;
 public class UrlAccessDecisionManager extends
 		AbstractAccessDecisionManager {
 	public static final String BEAN_ID="bdf2.accessDecisionManager";
-	@SuppressWarnings("rawtypes")
 	public UrlAccessDecisionManager(
-			List<AccessDecisionVoter> decisionVoters) {
+			List<AccessDecisionVoter<? extends Object>> decisionVoters) {
 		super(decisionVoters);
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public void decide(Authentication authentication, Object object,Collection<ConfigAttribute> configAttributes)throws AccessDeniedException, InsufficientAuthenticationException {
 		if((authentication.getPrincipal() instanceof IUser)){
 			IUser loginUser=(IUser)authentication.getPrincipal();
 			if(loginUser.isAdministrator())return;			
 		}
 		int result=10;
-		for (AccessDecisionVoter<Object> voter : getDecisionVoters()) {
+		for (AccessDecisionVoter voter : getDecisionVoters()) {
 			result = voter.vote(authentication, object, configAttributes);
 			if(result==AccessDecisionVoter.ACCESS_ABSTAIN){
 				continue;

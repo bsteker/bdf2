@@ -4,8 +4,8 @@
 	xsi:schemaLocation="http://www.springframework.org/schema/beans
            http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
            http://www.springframework.org/schema/security
-           http://www.springframework.org/schema/security/spring-security-3.1.xsd">
-	<http entry-point-ref="bdf2.authenticationEntryPoint" access-denied-page="${bdf2.accessDeniedPage}">
+           http://www.springframework.org/schema/security/spring-security-4.2.xsd">
+	<http entry-point-ref="bdf2.authenticationEntryPoint">
 		<custom-filter ref="bdf2.contextFilter" after="SECURITY_CONTEXT_FILTER" />
 		<custom-filter ref="bdf2.logoutFilter" position="LOGOUT_FILTER" />
 		<custom-filter ref="bdf2.preAuthenticatedProcessingFilter" position="PRE_AUTH_FILTER" />
@@ -16,6 +16,11 @@
 		<custom-filter ref="bdf2.basicAuthenticationFilter" position="BASIC_AUTH_FILTER" />
 		<custom-filter ref="bdf2.rememberMeLoginFilter" position="REMEMBER_ME_FILTER" />
 		<anonymous key="doesNotMatter" />
+		<csrf disabled="true"/>
+		<headers>
+            <frame-options policy="SAMEORIGIN"></frame-options>
+        </headers>
+		<access-denied-handler ref="bdf2.accessDeniedHandler"/>  
 		<session-management session-authentication-strategy-ref="${bdf2.loginCreateSessionStrategy}"></session-management>
 		<custom-filter ref="bdf2.controllerFilter" after="SESSION_MANAGEMENT_FILTER" />
 		<custom-filter ref="bdf2.filterSecurityInterceptor" before="FILTER_SECURITY_INTERCEPTOR" />
@@ -23,6 +28,10 @@
 
 	<!-- This filter handles a Single Logout Request from the CAS Server -->
 	<beans:bean id="singleLogoutFilter" class="org.jasig.cas.client.session.SingleSignOutFilter" />
+	
+	<beans:bean id="bdf2.accessDeniedHandler" class="org.springframework.security.web.access.AccessDeniedHandlerImpl">
+  		<beans:property name="errorPage" value="${bdf2.accessDeniedPage}"/>
+	</beans:bean>
 
 	<authentication-manager alias="bdf2.authenticationManager">
 		<authentication-provider ref="bdf2.casAuthenticationProvider" />
@@ -48,7 +57,7 @@
 	<beans:bean id="bdf2.concurrentSessionControlStrategy" class="com.bstek.bdf2.core.security.session.ConcurrentSessionControlStrategyImpl">
 		<beans:constructor-arg name="sessionRegistry" ref="bdf2.sessionRegistry" />
 		<beans:property name="maximumSessions" value="${bdf2.securityMaximumSessions}" />
-		<beans:property name="alwaysCreateSession" value="${bdf2.alwaysCreateSessionForLogin}" />
+		<!-- <beans:property name="alwaysCreateSession" value="${bdf2.alwaysCreateSessionForLogin}" /> -->
 	</beans:bean>
 
 	<beans:bean id="bdf2.rememberMeLoginFilter" class="com.bstek.bdf2.core.security.filter.RememberMeLoginFilter">
@@ -199,7 +208,7 @@
 
 	<beans:bean id="bdf2.basicAuthenticationFilter" class="com.bstek.bdf2.core.security.filter.BasicLoginAuthenticationFilter">
 		<beans:constructor-arg name="authenticationManager" ref="bdf2.authenticationManager"></beans:constructor-arg>
-		<beans:property name="authenticationEntryPoint" ref="bdf2.basicAuthenticationEntryPoint" />
+		<beans:constructor-arg name="authenticationEntryPoint" ref="bdf2.basicAuthenticationEntryPoint"></beans:constructor-arg>
 	</beans:bean>
 
 	<beans:bean id="bdf2.authenticationEntryPoint" class="com.bstek.bdf2.core.security.MultiAuthenticationEntryPoint">

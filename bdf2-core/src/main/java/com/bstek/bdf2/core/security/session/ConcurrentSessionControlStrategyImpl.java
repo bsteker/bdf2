@@ -4,10 +4,10 @@ import java.util.List;
 
 import org.springframework.security.core.session.SessionInformation;
 import org.springframework.security.core.session.SessionRegistry;
-import org.springframework.security.web.authentication.session.ConcurrentSessionControlStrategy;
+import org.springframework.security.web.authentication.session.ConcurrentSessionControlAuthenticationStrategy;
 import org.springframework.security.web.authentication.session.SessionAuthenticationException;
 
-public class ConcurrentSessionControlStrategyImpl extends ConcurrentSessionControlStrategy {
+public class ConcurrentSessionControlStrategyImpl extends ConcurrentSessionControlAuthenticationStrategy {
 	public ConcurrentSessionControlStrategyImpl(SessionRegistry sessionRegistry) {
 		super(sessionRegistry);
 	}

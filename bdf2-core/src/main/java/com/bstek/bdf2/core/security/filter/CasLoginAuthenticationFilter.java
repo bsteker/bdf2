@@ -9,6 +9,7 @@ import javax.servlet.http.HttpSession;
 
 import org.springframework.security.cas.web.CasAuthenticationFilter;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 
 import com.bstek.bdf2.core.business.IUser;
 import com.bstek.bdf2.core.context.ContextHolder;
@@ -26,21 +27,21 @@ public class CasLoginAuthenticationFilter extends CasAuthenticationFilter {
 	private IPositionService positionService;
 	private IGroupService groupService;
 	@Override
-	@Deprecated
-	protected void successfulAuthentication(HttpServletRequest request,
-			HttpServletResponse response, Authentication authResult)
-			throws IOException, ServletException {
-		super.successfulAuthentication(request, response, authResult);
-		HttpSession session=request.getSession();
-		IUser loginUser=(IUser)authResult.getPrincipal();
-		if(loginUser instanceof DefaultUser){
-			DefaultUser u=(DefaultUser)loginUser;
-			u.setDepts(deptService.loadUserDepts(u.getUsername()));
-			u.setPositions(positionService.loadUserPositions(u.getUsername()));
-			u.setGroups(groupService.loadUserGroups(u.getUsername()));
-		}
-		session.setAttribute(ContextHolder.LOGIN_USER_SESSION_KEY, loginUser);
-		session.setAttribute(ContextHolder.USER_LOGIN_WAY_KEY, "cas");
+	public Authentication attemptAuthentication(final HttpServletRequest request,
+			final HttpServletResponse response) throws AuthenticationException,
+			IOException {
+				Authentication authResult = super.attemptAuthentication(request, response);
+				HttpSession session=request.getSession();
+				IUser loginUser=(IUser)authResult.getPrincipal();
+				if(loginUser instanceof DefaultUser){
+					DefaultUser u=(DefaultUser)loginUser;
+					u.setDepts(deptService.loadUserDepts(u.getUsername()));
+					u.setPositions(positionService.loadUserPositions(u.getUsername()));
+					u.setGroups(groupService.loadUserGroups(u.getUsername()));
+				}
+				session.setAttribute(ContextHolder.LOGIN_USER_SESSION_KEY, loginUser);
+				session.setAttribute(ContextHolder.USER_LOGIN_WAY_KEY, "cas");
+				return authResult;
 	}
 	public IDeptService getDeptService() {
 		return deptService;

@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.security.web.util.UrlUtils;
 
@@ -16,8 +17,8 @@ import org.springframework.security.web.util.UrlUtils;
  * @since 2013-3-6
  */
 public class BasicLoginAuthenticationFilter extends BasicAuthenticationFilter {
-	public BasicLoginAuthenticationFilter(AuthenticationManager authenticationManager){
-		super(authenticationManager);
+	public BasicLoginAuthenticationFilter(AuthenticationManager authenticationManager, AuthenticationEntryPoint authenticationEntryPoint){
+		super(authenticationManager, authenticationEntryPoint);
 	}
 	@Override
 	protected void onSuccessfulAuthentication(HttpServletRequest request,
