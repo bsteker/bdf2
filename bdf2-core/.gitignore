@@ -1,3 +1,6 @@
-/target/
-/.metadata/
-/.settings/
+.DS_Store
+*/.DS_Store
+.metadata
+target/
+.settings/
+.metadata
